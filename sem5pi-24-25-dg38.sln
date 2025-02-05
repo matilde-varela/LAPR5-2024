@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDBackoffice", "MDBackoffice\MDBackoffice.csproj", "{ECE69BC6-2B13-446F-BE67-FEE7E277D023}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDBackofficeTests", "MDBackofficeTests\MDBackofficeTests.csproj", "{DB203F32-1A22-496D-90EA-B393A3B1EFEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECE69BC6-2B13-446F-BE67-FEE7E277D023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECE69BC6-2B13-446F-BE67-FEE7E277D023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECE69BC6-2B13-446F-BE67-FEE7E277D023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECE69BC6-2B13-446F-BE67-FEE7E277D023}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB203F32-1A22-496D-90EA-B393A3B1EFEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB203F32-1A22-496D-90EA-B393A3B1EFEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB203F32-1A22-496D-90EA-B393A3B1EFEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB203F32-1A22-496D-90EA-B393A3B1EFEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {449BFFC0-C193-4199-8C8C-16907682A5B4}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,29 @@
+pipelines:
+  default:
+    - step:
+        name: 'Build and Test MDPatientManagement'
+        image: node:18
+        caches:
+          - node
+        script:
+          - echo "Starting build and tests for Node.js application..."
+          - cd MDPatientManagement # Replace with the actual folder name
+          - npm install
+          - npm run build # Adjust if your app doesn't have a build step
+          - npm test
+        artifacts:
+          - MDPatientManagement/test-reports/** # Adjust this path if necessary
+    - step:
+        name: 'Build and Test MDBackoffice'
+        image: mcr.microsoft.com/dotnet/sdk:8.0
+        caches:
+          - dotnetcore
+        script:
+          - echo "Starting build and tests for .NET application..."
+          - REPORTS_PATH=./test-reports/build_${BITBUCKET_BUILD_NUMBER}
+          - dotnet restore
+          - dotnet build --no-restore --configuration Release
+          - dotnet test --no-build --configuration Release --test-adapter-path:. --logger:"junit;LogFilePath=$REPORTS_PATH/junit.xml"
+        artifacts:
+          - test-reports/**
+
