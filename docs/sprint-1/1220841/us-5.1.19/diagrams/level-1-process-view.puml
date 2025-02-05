@@ -1,0 +1,17 @@
+@startuml
+
+title "US 5.1.19. - Process View [Level 1]"
+
+autonumber
+
+actor Doctor as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate ADM
+ADM -> SYS : list operation requisitions
+activate SYS
+
+SYS --> ADM : operation requisitions
+deactivate SYS
+deactivate ADM
+@enduml

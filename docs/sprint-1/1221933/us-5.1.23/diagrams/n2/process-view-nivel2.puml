@@ -1,0 +1,71 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.23. Process View (Level 2)"
+
+autonumber
+
+participant "<<component>>\n Visualization (UI)" as UI
+participant "<<component>>\n Backoffice" as BACK
+
+
+[o-> UI : requests the list of operation types
+activate UI
+
+UI -> BACK : getAllOperationTypes(json)
+activate BACK
+
+BACK --> UI : operation type list
+deactivate BACK
+
+<-- UI : lists the operation types
+deactivate UI
+|||
+
+    opt search filters appliance
+        [o-> UI : applies search filters
+        activate UI
+
+            UI -> BACK : getFilterOperationTypeList(json)
+            activate BACK
+
+            BACK --> UI : filtered operation types list
+            deactivate BACK
+
+        <-- UI : presents the search results
+        deactivate UI
+    end opt
+
+[o-> UI : selects a operation type
+activate UI
+
+<-- UI : shows operation type
+deactivate UI
+
+    alt  edit operation type
+        [o-> UI : edit operation type
+        activate UI
+
+        UI -> BACK : US 5.1.21
+        activate BACK
+
+        BACK --> UI : answer
+        deactivate BACK
+
+
+    else deactivate operation type
+
+        [o-> UI : delete operation type
+
+        UI -> BACK : US 5.1.22
+        activate BACK
+
+        BACK --> UI : answer
+        deactivate BACK
+
+    end alt
+
+<-- UI : answer
+deactivate UI
+
+@enduml

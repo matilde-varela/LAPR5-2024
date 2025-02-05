@@ -1,0 +1,21 @@
+@startuml
+title "US 7.2.9 Process View (Level 3) | Visualization"
+
+actor Doctor
+participant "<<Component>>\n Edit-Appointment" as USER
+participant "<<Service>>\n AppointmentService" as SERV
+
+activate Doctor
+    Doctor -> USER : Asks to edit an appointment.
+    activate USER
+        USER --> Doctor: Asks for room, date,\ntime and/or team.
+        USER -> SERV : EditAppointment(time, date,\nroom, team)
+        activate SERV
+            SERV ->o] : PUT: api/appointment/edit-appointment(time, date,\nroom, team)
+            SERV <--o] : Ok(Success message)
+            SERV --> USER : Success message
+        deactivate SERV
+        USER --> Doctor : Success message
+    deactivate USER
+deactivate Doctor
+@enduml

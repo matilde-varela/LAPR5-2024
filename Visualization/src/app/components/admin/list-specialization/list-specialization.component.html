@@ -1,0 +1,81 @@
+<body>
+    <div>
+        <app-side-bar-admin></app-side-bar-admin>
+    </div>
+    <header>
+        <h1 class="main-title">Search Specialization</h1>
+    </header>
+
+    <!-- Filters Section -->
+    <div class="filters">
+        <input type="text" placeholder="Code" [(ngModel)]="filters.code" />
+        <input type="text" placeholder="Designation" [(ngModel)]="filters.denomination" />
+        <input type="text" placeholder="Description" [(ngModel)]="filters.description" />
+        <button (click)="applyFilters()">Search</button>
+    </div>
+
+    <div class="conteudo">
+        <div *ngIf="specializations && specializations.length > 0">
+            <p-table [value]="specializations" [(selection)]="selectedSpecialization" selectionMode="single"
+                [tableStyle]="{'border-collapse': 'collapse', 'table-layout': 'fixed', 'width': '100%'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 10%;">Select</th>
+                        <th style="width: 15%;">Code</th>
+                        <th style="width: 15%;">Designation</th>
+                        <th style="width: 60%;">Description</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-specialization>
+                    <tr [pSelectableRow]="specialization">
+                        <td>
+                            <p-tableRadioButton [value]="specialization"
+                                [name]="'specializationRadio'"></p-tableRadioButton>
+                        </td>
+                        <td>{{ specialization.code || "-" }}</td>
+                        <td>{{ specialization.denomination || "-" }}</td>
+                        <td>{{ specialization.description || "-" }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+
+            <div *ngIf="selectedSpecialization" class="action-buttons">
+                <button (click)="editSpecialization(selectedSpecialization)">Edit Specialization</button>
+                <button (click)="deleteSpecialization(selectedSpecialization)">Delete Specialization</button>
+            </div>
+            <br>
+
+
+            <div *ngIf="updateVisible" class="operation-update">
+                <h3>Specialization Update</h3>
+                <div class="form-section">
+                    <label for="denomination"><strong>Designation:</strong></label>
+                    <br>
+                    <textarea
+                        id="denomination"
+                        placeholder="Enter designation"
+                        [(ngModel)]="update.denomination"
+                        required
+                    ></textarea>
+                </div>
+                <div class="form-section">
+                    <label for="denomination"><strong>Description:</strong></label>
+                    <br>
+                    <textarea
+                    id="description"
+                    placeholder="Enter description"
+                    [(ngModel)]="update.description"
+                    required
+                ></textarea>
+                </div>
+                <div class="action-buttons">
+                    <button (click)="saveUpdateDetails()">Save changes</button>
+                    <button (click)="closeUpdate()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-message></app-message>
+</body>

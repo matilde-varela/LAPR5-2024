@@ -1,0 +1,47 @@
+@startuml
+
+title "US 7.2.14 - Process View [Level 3]"
+
+autonumber
+participant "Routing" as ROUTE <<route>>
+participant "PatientController" as CTRL <<controller>>
+participant "PatientService" as SVC <<service>>
+participant "PatientWithMedicalRecordDto" as WholeDTO <<dto>>
+participant "Patient" as ALL <<domain>>
+participant "PatientRepository" as REPO <<repository>>
+
+[o-> ROUTE: GET /api/Get-PatientProfiles
+activate ROUTE
+
+ROUTE -> CTRL: GetPatientProfiles()
+activate CTRL
+
+CTRL ->  SVC: GetAllAsysnc()
+activate SVC
+
+SVC -> REPO : GetAllAsync()
+activate REPO
+
+REPO --> SVC : patientProfiles
+deactivate REPO
+
+loop for all patients in the list
+SVC -> WholeDTO **
+end loop
+
+SVC --> CTRL: patientsWithRecordsDTOList
+deactivate SVC
+
+CTRL --> ROUTE: patientsWithRecordsDTOList
+deactivate CTRL
+
+alt 
+[o<-- ROUTE : 200 OK(patientsWithRecordsDTOList)
+
+else
+
+[o<-- ROUTE : 400 BAD REQUEST
+deactivate ROUTE
+end alt
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+
+title "US 6.2.20 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor Admin as USER 
+participant "RemoveOperationType" as UPP <<component>> 
+participant "OperationTypeService" as PS <<service>>
+
+USER -> UPP : remove operation type
+activate UPP
+
+UPP -> PS: GetAllActive()
+activate PS
+
+PS ->o] : GET: api/OperationTypes
+
+PS <--o] : Ok(operationTypes)
+
+PS --> UPP: operationTypes
+deactivate PS
+
+UPP --> USER : select operation type
+deactivate UPP
+
+USER -> UPP: selects operation type
+activate UPP
+
+UPP -> PS : RemoveOperationType(id)
+activate PS
+
+PS ->o] : DELETE: api/OperationTypes/id
+
+PS <--o] : Ok()
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+@enduml

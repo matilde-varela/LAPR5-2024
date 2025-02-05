@@ -1,0 +1,77 @@
+@startuml
+title "US 7.2.3 Process View (Level 3) | MDPatientManagement"
+
+autonumber
+
+participant "<<Route>>\nEditAppointmentRoute" as ROUTE
+participant "<<Dto>>\nEditAppointmentDTO" as UpdateDTO
+participant "<<Controller>>\nAppointmentController" as CTRL
+
+participant "<<Service>>\nAppointmentService" as SER
+participant "<<Repo>>\nAppointmentRepo" as REPO
+participant "<<Dto>>\nAppointmentDTO" as DTO
+participant "<<Domain>>\nAppointment" as Patient
+
+
+[o-> ROUTE : PUT(json)
+activate ROUTE
+
+ROUTE -> UpdateDTO ** : toDTO(json)
+
+
+ROUTE -> CTRL : editAppointment(id, editAppointmentDto)
+activate CTRL
+
+CTRL -> SER : UpdateAsync(id, editAppointmentDto)
+activate SER
+
+SER -> REPO : GetByIdAsync(id)
+activate REPO
+
+REPO --> SER : appointment
+deactivate REPO
+
+SER -> SER : testIfTimeMatches(appointment, editAppointmentDto)
+
+opt Check and update Patient fields if testIfTimeMatches return true
+SER -> Patient : ChangeRoom(room)
+activate Patient
+deactivate Patient
+
+SER -> Patient : ChangeTeam(team)
+activate Patient
+deactivate Patient
+
+SER -> Patient : ChangeDate(date)
+activate Patient
+deactivate Patient
+
+SER -> Patient : ChangeTime(time)
+activate Patient
+deactivate Patient
+
+end opt
+
+|||
+
+SER -> DTO : toDTO(appointment)
+activate DTO
+deactivate DTO
+
+
+SER --> CTRL : appointmentDto
+deactivate SER
+
+
+CTRL --> ROUTE : appointmentDto
+deactivate CTRL
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+@enduml

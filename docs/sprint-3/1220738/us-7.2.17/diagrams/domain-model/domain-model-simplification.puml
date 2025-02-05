@@ -1,0 +1,20 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+skinparam classBackgroundColor beige
+skinparam ArrowColor #222222
+
+
+entity User  {}
+entity Staff {}
+entity Room {}
+entity RoomType {}
+
+Staff -> "1" Room : creates
+User <-up-- "1" Staff
+Room -> "1" RoomType : described by
+
+
+@enduml
+

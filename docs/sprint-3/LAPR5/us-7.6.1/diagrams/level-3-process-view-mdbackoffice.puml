@@ -1,0 +1,67 @@
+@startuml
+
+title "US 7.6.1 - Process View [Level 3 | MDBackoffice]"
+
+autonumber
+participant "PatientRoute" as ROUTE <<route>>
+participant "ExportPatientDataDto" as pat_dto <<dto>>
+participant "PatientController" as CTRL <<controller>>
+participant "PatientService" as SVC <<service>>
+participant "UserService" as U_SVC <<service>>
+participant "PatientRepository" as REPO <<repository>>
+participant "ExportPatientDataAdapter" as ADAP <<adapter>>
+
+
+[o-> ROUTE: GET(json) /api/Patient/Export
+activate ROUTE
+
+ROUTE -> pat_dto **: create(json)
+
+ROUTE -> CTRL: ExportPatientData(filePath,password)
+activate CTRL
+
+CTRL -> SVC : ExportPatientData(filePath, password, token)
+activate SVC
+
+SVC -> U_SVC: GetLoggedInEmail(token)
+activate U_SVC
+
+U_SVC --> SVC : email
+deactivate U_SVC
+
+SVC -> U_SVC: ConfirmUserPassword(password, email)
+activate U_SVC
+
+U_SVC --> SVC : email
+deactivate U_SVC
+
+SVC -> REPO: GetMedicalRecordNumberOfPatientWithEmail(email)
+activate REPO
+
+REPO --> SVC : medicalRecordNumber
+deactivate REPO
+
+SVC -> ADAP : ExportMedicalRecordData(medicalRecordNumber,filePath,password)
+activate ADAP
+
+ADAP ->o] : GET(json): /api/medical-record/export
+
+ADAP <--o] : Ok()
+
+ADAP --> SVC: success
+deactivate ADAP
+
+SVC --> CTRL : success
+deactivate SVC
+
+CTRL --> ROUTE: success
+deactivate CTRL
+
+alt
+    [o<-- ROUTE: 200 Ok
+
+else
+    [o<-- ROUTE: 400 Bad Request
+end
+deactivate ROUTE
+@enduml

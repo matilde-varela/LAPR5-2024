@@ -1,0 +1,96 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+left to right direction
+
+actor "Admin" as Admin
+actor "BackOffice User" as Backoffice
+actor "Doctor" as Doctor
+actor "Patient" as Patient
+actor "Software Architect" as SoftwareArchitect
+actor "Staff" as Staff
+actor "System Administrator" as System
+
+Admin --> (register new backoffice users via an out-of-band process)
+Admin --> (create a new patient profile)
+Admin --> (edit an existing patient profile)
+Admin --> (delete a patient profile)
+Admin --> (list/search patient profiles to view the details, edit, and remove them)
+Admin --> (I want to create a new staff profile)
+Admin --> (edit a staff’s profile)
+Admin --> (deactivate a staff profile)
+Admin --> (list/search staff profiles to see the details, edit, and remove them)
+Admin --> (add new types of operations)
+Admin --> (edit existing operation types)
+Admin --> (remove obsolete or no longer performed operation types)
+Admin --> (list/search operation types to see the details, edit, and remove them)
+Admin --> (synchronization between the planning module and backoffice\n regarding staff, operation types, and operation requests)
+Admin --> (synchronization with planing module's plan of staff’s\n availability and operation schedule)
+Admin --> (obtain the better scheduling of a set of\n operations in a certain operation room in a specific day)
+Admin --> (obtain a good schedule, not necessarily\n the better, in useful time to be adopted)
+Admin --> (add new Allergy, so that the Doctors can use it to update the Patient Medical Record)
+Admin --> (add new Medical Condition, so that the Doctors can use it to update the Patient Medical Record)
+Admin --> (add new Types of rooms, so that I can reflect on the available medical procedures in the system)
+Admin --> (add new Specializations, so that I can update or correct information about the staff and operation type procedure)
+Admin --> (edit Specializations, so that I can update or correct information about the staff and operation type procedure)
+Admin --> (list/search Specializations, so that I can see the details, and edit and remove Specializations)
+Admin --> (update an allergy)
+Admin --> (create a room)
+Admin --> (assign a set of operations to several operation rooms assign is just to decide in which operation room the surgery will be done)
+Admin --> (schedule surgeries to several operations rooms using Genetic Algorithms Genetic Algorithm parameters need to be tuned according to conditions like number of genes, desired time for solution, etc)
+Admin --> (create a disaster recovery plan that meets the MBCO defined in sprint B)
+Admin --> (present with a justification for the change to be made to the infrastructure in order to ensure a MTD Maximum Tolerable Downtime of 20 minutes)
+Admin --> (present with a BIA of the final solution, adapting if and where applicable the risk identified in the previous sprint)
+Admin --> (access management to be implemented that meets the appropriate security criteria)
+Admin --> (create a clustering system to be implemented between the systems that implement the SPA in a justified manner)
+
+Patient --> (update my user profile)
+Patient --> (register for the healthcare application)
+Patient --> (delete my account and all associated data)
+Patient --> (log in to the healthcare system using my external IAM credentials)
+Patient --> (download my medical history in a portable and secure format, so that I can easily transfer it to another healthcare provider)
+Patient --> (request the deletion of my personal data, so that I can exercise my right to be forgotten under GDPR)
+Patient --> (know what data will be processed, in what manner, and how I can exercise my rights)
+Patient --> (know for how long my personal data will be kept)
+
+SoftwareArchitect --> (adopt a decentralized architecture of the backoffice module, so that it is composed of the existing SPA frontend and the .Net backend, and a new module responsible for managing, namely, Patient’s Medical Records, Allergies and Medical Conditions. This module must be implemented in Node.js, Express and MongoDB SGBD)
+
+Backoffice --> (reset my password if I forget it)
+Backoffice --> (log in to the system using my credentials)
+Backoffice --> (log in to the system using my credentials)
+
+Doctor --> (request an operation)
+Doctor --> (update an operation requisition)
+Doctor --> (remove an operation requisition)
+Doctor --> (list/search operation requisitions to see the details, edit, and remove them)
+Doctor --> (consult a 3D hospital floor simulation with in sync operation scheduling)
+Doctor --> (synchronization between planing module and\n the 3D visualization module regarding room availability)
+Doctor --> (search for Allergies, so that I can use it to update the Patient Medical Record)
+Doctor --> (search for Medical Conditions, so that I can use it to update the Patient Medical Record)
+Doctor --> (update the Patient Medical Record, namely respecting Medical Conditions and Allergies)
+Doctor --> (search for entries in the Patient Medical Record, namely respecting Medical Conditions and Allergies)
+Doctor --> (create a Surgery Appointment, so that the Patient doesn’t need to wait for the automatically generated planning)
+Doctor --> (update a Surgery Appointment, so that I can override the automatically generated planning)
+Doctor --> (include the access of the Patient Medical Record during the patient profile visualization and management, so that I manage it in that context)
+
+Staff --> (show on the 3D visualization module about room availability is in sync with the schedule that was generated by the planning module)
+Staff --> (select a room by left clicking on the corresponding surgical table. The camera should instantly move horizontally so that it targets the room center point)
+Staff --> (press the “i” key, I want to display/hide an overlay containing updated information about the selected room)
+Staff --> (select a different room, I want the camera to move smoothly instead of instantly. The animation can either be created or defined using some API, such as tween.js)
+
+System --> (deployment of a RFP modules in a\n DEI VM to be systematic, validating it on a scheduled\n basis with the test plan)
+System --> (restriction of access to the VM -  only DEI's internal network)
+System --> (define a public folder for all users registered on the system)
+System --> (log users with more than 3 incorrect access attempts)
+System --> (notify both users and the responsible\n authority in case of a data breach - GDPR compliance)
+System --> (make a backup copy of the DB to a Cloud environment using a script that renames it to the format _yyymmdd where is the name of the database, yyyy is the year the copy was made, mm is the month the copy was made and dd is the day the copy was made)
+System --> (create a script to be created using the backup prepared in previous US to manage the files resulting from this backup on the following schedule. 1 backup per month for the last year, 1 backup per week for the last month, 1 backup per day for the last week)
+System --> (make the US process of the DB backup to be kept in the Linux log, in an appropriate context, and alert the administrator when accessing the console if a serious failure occurs in this process)
+System --> (make the US backup of the DB backup to have a lifetime of no more than 7 days, except for the US retention of the monthly and annual copies)
+System --> (make the administrator to have SSH access to the virtual machine, by certificate only, without a password)
+System --> (create a public file share, in SMB/CIFS or NFS format, to speed things up between the various teams)
+System --> (ensure that backups have been carried out correctly if necessary. To do this, we must automate their recovery, validating that the system is working at the end )
+
+Manager --> (study of state of the art of application of Robots and Computer Vision in Hospitals, namely in the context of surgeries. The combination of human-based study and Generative AI is adequate. However, it must be clear what was done by each part)
+
+@enduml

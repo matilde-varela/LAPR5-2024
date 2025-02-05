@@ -1,0 +1,35 @@
+<body>
+    <div>
+        <app-side-bar-staff></app-side-bar-staff>
+    </div>
+    <header>
+        <h1 class="main-title">Add Staff Time Slots</h1>
+    </header>
+
+    <div class="information-input">
+        <p style="margin-left: 200px;" font-family="'Poppins', monospace">Please fill in the fields.</p>
+
+        <form #addSlotForm="ngForm" (ngSubmit)="onSubmit(addSlotForm)" novalidate>
+            <div class="input-field">
+                <input name="slot" #slot="ngModel" [(ngModel)]="addSlot.slot"
+                    placeholder="Slot [HH-MM]-[HH-MM]" [disabled]="isSubmitted" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <input name="date" #date="ngModel" [(ngModel)]="addSlot.date" placeholder="Date" [disabled]="isSubmitted" required
+                  [class.invalid-placeholder]="date.invalid && date.touched" />
+                <span></span>
+            </div>
+
+            <div class="button">
+                <button type="submit" class="add-button-submit"
+                    [disabled]="addSlotForm.invalid || isSubmitted">Submit</button>
+                <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+            </div>
+        </form>
+
+    </div>
+    <br>
+    <app-message></app-message>
+</body>

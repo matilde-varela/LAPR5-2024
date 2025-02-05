@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title US 6.2.18 Process View (Level 2)
+
+autonumber
+
+actor Admin
+participant "<<component>>\n Visualization (UI)" as UI
+participant "<<component>>\n Backoffice" as BACK
+
+
+Admin -> UI : create new operation type
+activate UI
+
+UI -> BACK : get specializations and functions
+activate BACK
+
+BACK --> UI : specializations and functions list
+deactivate BACK
+
+UI --> Admin : shows specializations and functions list
+deactivate UI
+activate Admin
+
+Admin -> UI : provides operation type data (name, estimated duration,\n activation status,phases and required staff)
+deactivate Admin
+activate UI
+
+UI -> BACK : OperationType(name, activation status, estimatedDuration, phases requiredStaff)
+activate BACK
+
+BACK --> UI : success/error
+deactivate BACK
+
+UI --> Admin : shows success/error message
+deactivate UI
+
+
+@enduml

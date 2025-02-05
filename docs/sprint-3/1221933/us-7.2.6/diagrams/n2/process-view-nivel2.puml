@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.6. Process View (Level 2)"
+
+autonumber
+actor Doctor as DOC
+participant "<<component>>\n Visualization (UI)" as UI
+participant "<<component>>\n Patient Management" as BACK
+
+activate DOC
+DOC-> UI : asks to edit patient medical record
+activate UI
+
+UI -> BACK : getPatientProfiles()
+activate BACK
+
+BACK --> UI : PatientProfilesList
+deactivate BACK
+
+UI -> BACK : getMedicalRecords()
+activate BACK
+
+BACK --> UI : medicalRecordsList
+deactivate BACK
+
+DOC <-- UI : shows list of patient profiles\n and their medical records
+deactivate UI
+
+
+DOC-> UI : selects a patient profile
+activate UI
+
+DOC <-- UI : shows the patient medical record
+deactivate UI
+
+
+DOC -> UI : edits patient medical record
+activate UI
+
+UI -> BACK : editPatientMedicalRecord(json)
+activate BACK
+
+BACK --> UI : answer
+deactivate BACK
+
+DOC <-- UI : confirms the update of the patient medical record
+deactivate UI
+deactivate DOC
+
+@enduml

@@ -1,0 +1,152 @@
+<body>
+  <!-- Sidebar -->
+  <div>
+    <app-side-bar-admin></app-side-bar-admin>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1 class="main-title">Search Patient Profiles</h1>
+  </header>
+
+  <!-- Filters Section -->
+  <div class="filters">
+    <!-- Filters Loop -->
+    <div class="filter-row" *ngFor="let filter of queryFiltersList; let i = index">
+      <input type="text" placeholder="Patient First Name" [(ngModel)]="filter.firstName" class="filter-input" />
+      <input type="text" placeholder="Patient Last Name" [(ngModel)]="filter.lastName" class="filter-input" />
+      <input type="email" placeholder="Email" [(ngModel)]="filter.email" class="filter-input" />
+      <input type="text" placeholder="Medical Record Number" [(ngModel)]="filter.medicalRecordNumber"
+        class="filter-input" />
+      <label for="dateBirth">Date of Birth:</label>
+      <input id="dateBirth" type="date" placeholder="Date Of Birth" [(ngModel)]="filter.dateBirth" />
+      <!-- Remove Button: Disabled for the First (Default) Filter -->
+      <button *ngIf="i > 0" (click)="removeFilter(i)" class="remove-filter">
+        Remove
+      </button>
+    </div>
+
+    <!-- Add Filter Button -->
+    <button (click)="addFilter()" class="add-filter-button">Add Filter</button>
+
+    <!-- Apply Filters -->
+    <button (click)="applyFilters()" class="search-button">Search</button>
+  </div>
+
+  <!-- Results Section -->
+  <div class="conteudo">
+    <!-- Table for Patient List -->
+    <div *ngIf="patientList && patientList.length > 0">
+      <p-table [value]="patientList" [(selection)]="selectedPatient" selectionMode="single"
+        [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 10%;">Select</th>
+            <th style="width: 15%;">Patient Name</th>
+            <th style="width: 18%;">Medical Record Number</th>
+            <th style="width: 30%;">Email</th>
+            <th style="width: 30%;">Phone</th>
+            <th style="width: 30%;">Date of Birth</th>
+            <th style="width: 30%;">Address</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-patient>
+          <tr [pSelectableRow]="patient">
+            <td>
+              <p-tableRadioButton [value]="patient" [name]="'patientRadio'"></p-tableRadioButton>
+            </td>
+            <td>{{ patient.name || '-' }}</td>
+            <td>{{ patient.patientId || '-' }}</td>
+            <td>{{ patient.email || '-' }}</td>
+            <td>{{ patient.phone || '-' }}</td>
+            <td>{{ patient.dateBirth || '-' }}</td>
+            <td>{{ patient.address || '-' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Action Buttons -->
+      <div *ngIf="selectedPatient" class="action-buttons">
+        <button (click)="toggleEdition(selectedPatient)">
+          Edit Patient Profile
+        </button>
+        <button (click)="deletePatientProfile(selectedPatient)">
+          Delete Patient Profile
+        </button>
+        <button (click)="toggleDetails(selectedPatient)">Show Details</button>
+      </div>
+    </div>
+
+    <!-- Patient Details -->
+    <div *ngIf="detailsVisible" class="patient-details">
+      <h3>Patient Profile Details</h3>
+      <p><strong>Name:</strong> {{ fullPatient.name || '-' }}</p>
+      <p><strong>Medical Record Number:</strong> {{ fullPatient.patientId || '-' }}</p>
+      <p><strong>Phone Number:</strong> {{ fullPatient.phone || '-' }}</p>
+      <p><strong>Email:</strong> {{ fullPatient.email || '-' }}</p>
+      <p><strong>Address:</strong> {{ fullPatient.address || '-' }}</p>
+      <p><strong>Date of Birth:</strong> {{ fullPatient.dateBirth || '-' }}</p>
+
+      <div class="action-buttons">
+        <button (click)="closeDetails()">Close</button>
+      </div>
+    </div>
+
+    <!-- Patient Edit -->
+    <div *ngIf="editDetails" class="patient-edition">
+      <h1 class="main-title-edit">Edit Patient Profile</h1>
+
+      <div class="information-input">
+        <p style="margin-left: 1px;" font-family="'Poppins', monospace">Please fill in only the fields of the
+          information
+          you wish to edit.</p>
+
+        <form #patientForm="ngForm" (ngSubmit)="onSubmit(patientForm)" novalidate>
+          <div class="input-field">
+            <input id="id" #id="ngModel" [(ngModel)]="patient.id" [ngModelOptions]="{standalone: true}"
+              placeholder="PatientId" [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <input name="name" #name="ngModel" [(ngModel)]="patient.name" placeholder="Name" [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <input name="phone" #phone="ngModel" [(ngModel)]="patient.phone" placeholder="Phone Number"
+              [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <input name="email" #email="ngModel" [(ngModel)]="patient.email" placeholder="Email"
+              [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <input name="address" #address="ngModel" [(ngModel)]="patient.address" placeholder="Address"
+              [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <input name="dateBirth" #dateBirth="ngModel" [(ngModel)]="patient.dateBirth"
+              placeholder="Date of Birth (YYYY-MM-DD)" [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="button-edit">
+            <button type="submit" class="add-button-submit-edit"
+              [disabled]="patientForm.invalid || isSubmitted">Submit</button>
+            <button type="button" class="add-button-clear-edit" (click)="clearForm()">Clear Input</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <app-message></app-message>
+</body>

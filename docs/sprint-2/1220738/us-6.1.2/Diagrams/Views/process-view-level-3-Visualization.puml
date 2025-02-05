@@ -1,0 +1,21 @@
+@startuml
+title "US 6.1.2 Process View (Level 3) - Vizualization"
+
+actor User
+participant "<<Component>>\n Login" as LOGIN
+participant "<<Service>>\n UserService" as SERV
+
+activate User
+    User -> LOGIN : login
+    activate LOGIN 
+        LOGIN -> SERV : loginExternal()\n/\nloginInternal()
+        activate SERV
+            SERV ->o] : GET: api/login-external\n/\napi/login-internal
+            SERV <--o] : Ok(token)
+            SERV --> LOGIN : success
+        deactivate SERV
+        LOGIN --> User : <Role> Menu
+    deactivate LOGIN 
+deactivate User
+
+@enduml

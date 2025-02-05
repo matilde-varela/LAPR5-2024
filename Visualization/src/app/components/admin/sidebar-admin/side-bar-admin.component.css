@@ -1,0 +1,85 @@
+/* Sidebar Styles */
+.sidebar {
+    overflow-y: auto; /* Enables vertical scrolling if content overflows */
+    overflow-x: hidden; /* Hides horizontal overflow (prevents horizontal scrolling) */
+    height: calc(100vh - 80px); /* Adjusts height to fit within the viewport minus the top offset */
+    width: 180px;
+    position: fixed;
+    top: 80px; /* Keeps the sidebar below the header (80px) */
+    left: 0;
+    background-color: #333;
+    padding-top: 20px;
+    z-index: 1; /* Ensures the sidebar is above other content */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sidebar Links */
+.sidebar a {
+    word-wrap: break-word;
+    padding: 15px 25px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #4a4a4a;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    background-color: #7a7a7a;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.dropdown-content a,
+.dropdown-content .dropdown-button {
+    word-wrap: break-word;
+    font-size: 16px;
+    color: #fff;
+    padding: 10px 25px;
+    text-decoration: none;
+    display: block;
+    background-color: #7a7a7a;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Merriweather', serif; 
+}
+
+.dropdown-content a:hover,
+.dropdown-content .dropdown-button:hover {
+    background-color: #666;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Logout Button */
+.logout {
+    position: absolute; /* Positions it relative to the sidebar */
+    bottom: 25px; /* Keeps it a bit above the bottom edge */
+    width: calc(100% - 50px); /* Matches the width of the sidebar links */
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    background-color: #333;
+    word-wrap: break-word;
+    padding: 15px 25px;
+    text-align: center;
+}
+
+.logout:hover {
+    background-color: #555;
+}

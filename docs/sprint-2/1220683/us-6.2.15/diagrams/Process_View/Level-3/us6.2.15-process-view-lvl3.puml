@@ -1,0 +1,202 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.15 Process View (Level 3)"
+
+autonumber
+
+participant "<<route>>\n Routing" as ROUTE
+participant "<<dto>>\n UpdateOperationRequestDto" as UpdateDTO
+participant "<<controller>>\n OperationRequestsController" as CONTROL
+
+participant "<<utility>>\n PrincipalExtensions" as Claims
+
+participant "<<service>>\n OperationRequestService" as OPREQServ
+participant "<<domain>>\n OperationRequest" as OPRequest
+participant "<<repository>>\n OperationRequestsRepository" as OPREQRepo
+participant "<<dto>>\n OperationRequestsDTO" as OPREQDTO
+
+participant "<<repository>>\n StaffRepository" as STAFFRepo
+participant "<<service>>\n UserService" as AUTHServ
+
+participant "<<service>>\n LogService" as LogServ
+participant "<<domain>>\n Log" as Log
+participant "<<repository>>\n LogRepository" as LogRepo
+
+[o-> ROUTE : GET() /api/OperationRequest
+activate ROUTE
+
+ROUTE -> CONTROL : getOperationRequestsByDoctor()
+activate CONTROL
+
+
+CONTROL -> Claims : FindFirstValue(ClaimTypes.Email)
+activate Claims
+
+Claims --> CONTROL : emailLoggedInUser
+deactivate Claims
+
+CONTROL -> OPREQServ : GetAllFromDoctorAsync(email)
+activate OPREQServ
+
+OPREQServ -> AUTHServ : FindByEmailAsync(email)
+activate AUTHServ
+
+AUTHServ --> OPREQServ : user
+deactivate AUTHServ
+
+OPREQServ -> STAFFRepo : FindStaffWithUserId(userId)
+activate STAFFRepo
+
+STAFFRepo --> OPREQServ : staff
+deactivate STAFFRepo
+
+OPREQServ -> OPREQRepo : GetAllFromDoctorAsync(staffId)
+activate OPREQRepo
+
+OPREQRepo --> OPREQServ : operationRequestsList
+deactivate OPREQRepo
+
+loop for all the elements in the list
+OPREQServ -> OPREQDTO ** : toDTO(operationRequests)
+
+end loop
+
+OPREQServ --> CONTROL : operationRequestsDTOList
+deactivate OPREQServ
+
+CONTROL --> ROUTE : operationRequestsDTOList
+deactivate CONTROL
+
+[o<- ROUTE : ok(operationRequestsDTOList)
+deactivate ROUTE
+
+|||
+
+[o-> ROUTE : PUT(json)
+activate ROUTE
+
+ROUTE -> UpdateDTO ** : toDTO(json)
+
+ROUTE -> CONTROL : Update(updateOperationRequestDto)
+activate CONTROL
+
+CONTROL -> Claims : FindFirstValue(ClaimTypes.Email)
+activate Claims
+
+Claims --> CONTROL : emailLoggedInUser
+deactivate Claims
+
+
+CONTROL -> OPREQServ : CheckDoctorIsRequestingDoctor(userEmail, dtoId)
+activate OPREQServ
+
+OPREQServ -> OPREQRepo : GetByIdAsync(id)
+activate OPREQRepo
+
+OPREQRepo --> OPREQServ : operationRequest
+deactivate OPREQRepo
+
+OPREQServ -> STAFFRepo : GetStaffWithEmail(userEmail)
+activate STAFFRepo
+
+STAFFRepo --> OPREQServ : staff
+deactivate STAFFRepo
+
+alt request.StaffId.Equals(doctor.Id)
+OPREQServ --> CONTROL : true
+deactivate OPREQServ
+end alt
+
+
+CONTROL -> OPREQServ : UpdateAsync(updatedOperationRequestsDTO)
+activate OPREQServ
+
+OPREQServ -> OPREQRepo : GetByIdAsync(dto.Id)
+activate OPREQRepo
+
+OPREQRepo --> OPREQServ : operationRequest
+deactivate OPREQRepo
+|||
+OPREQServ -> OPRequest : ChangeDeadLineDate(dto.DeadLineDate)
+activate OPRequest
+deactivate OPRequest
+
+OPREQServ -> LogServ : CreateEditLog(operationRequestId, operationRequestClass, logDescription)
+activate LogServ
+
+LogServ -> Log ** : Log(getSequentialNumber(), objectClass, objectReference, 3, description)
+note right
+3 represents the
+Log type - Edition
+end note
+
+LogServ -> LogRepo : AddAsync(log)
+activate LogRepo
+
+LogRepo --> LogServ : log
+deactivate LogRepo
+
+LogServ --> OPREQServ : log
+deactivate LogServ
+
+|||
+OPREQServ -> OPRequest : ChangePriority(dto.Priority)
+activate OPRequest
+deactivate OPRequest
+
+OPREQServ -> LogServ : CreateEditLog(operationRequestId, operationRequestClass, logDescription)
+activate LogServ
+
+LogServ -> Log ** : Log(getSequentialNumber(), objectClass, objectReference, 3, description)
+
+LogServ -> LogRepo : AddAsync(log)
+activate LogRepo
+
+LogRepo --> LogServ : log
+deactivate LogRepo
+
+LogServ --> OPREQServ : log
+deactivate LogServ
+
+|||
+OPREQServ -> OPRequest : ChangeDescription(dto.Description);
+activate OPRequest
+deactivate OPRequest
+
+OPREQServ -> LogServ : CreateEditLog(operationRequestId, operationRequestClass, logDescription)
+activate LogServ
+
+LogServ -> Log ** : Log(getSequentialNumber(), objectClass, objectReference, 3, description)
+
+LogServ -> LogRepo : AddAsync(log)
+activate LogRepo
+
+LogRepo --> LogServ : log
+deactivate LogRepo
+
+LogServ --> OPREQServ : log
+deactivate LogServ
+
+|||
+
+OPREQServ -> OPREQDTO ** : toDTO(operationRequest)
+
+OPREQServ --> CONTROL : operationRequestDto
+deactivate OPREQServ
+
+CONTROL --> ROUTE : operationRequestDto
+deactivate CONTROL
+
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+
+@enduml

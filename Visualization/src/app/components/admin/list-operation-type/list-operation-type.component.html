@@ -1,0 +1,212 @@
+<body>
+    <div>
+        <app-side-bar-admin></app-side-bar-admin>
+    </div>
+    <header>
+        <h1 class="main-title">Manage Operation Types</h1>
+    </header>
+
+    <!-- Filters Section -->
+    <div class="filters">
+        <input type="text" placeholder="Name" [(ngModel)]="filters.name" />
+        <input type="text" placeholder="specialization" [(ngModel)]="filters.specialization" />
+
+        <select [(ngModel)]="filters.status">
+            <option value="">Select Status</option>
+            <option value="true">Active</option>
+            <option value="false">Desactive</option>
+        </select>
+
+        <!-- Add a button to trigger the filter function -->
+        <button (click)="applyFilters()">Search</button>
+    </div>
+
+    <div class="conteudo">
+        <div *ngIf="operationTypes && operationTypes.length > 0">
+            <p-table [value]="operationTypes" [(selection)]="selectedOperationType" selectionMode="single"
+                [tableStyle]="{'border-collapse': 'collapse', 'table-layout': 'fixed', 'width': '100%'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 10%;">Select</th>
+                        <th style="width: 20%;">Name</th>
+                        <th style="width: 50%;">Required Staff</th>
+                        <th style="width: 50%;">Total Time</th>
+                        <th style="width: 20%;">Status</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-operationType>
+                    <tr [pSelectableRow]="operationType">
+                        <td>
+                            <p-tableRadioButton [value]="operationType"
+                                [name]="'operationTypeRadio'"></p-tableRadioButton>
+                        </td>
+                        <td>{{ operationType.name || "-" }}</td>
+                        <td>
+                            <ul>
+                                <li *ngFor="let staff of operationType.requiredStaff">
+                                    {{ staff.staffQuantity }} {{ staff.function }} ({{ staff.specialization }})
+                                </li>
+                            </ul>
+                        </td>
+                        <td>{{ operationType.estimatedDuration || "-" }}</td>
+                        <td>{{ operationType.status ? 'Active' : 'Desactive' }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+
+            <div *ngIf="selectedOperationType" class="action-buttons">
+                <button (click)="toggleEdition(selectedOperationType)">Edit Operation Type</button>
+                <button (click)="deleteOperationType(selectedOperationType)">Delete Operation Type</button>
+                <button (click)="toggleDetails(selectedOperationType)">Show Details</button>
+            </div>
+            <br>
+            <div *ngIf="detailsVisible" class="operation-details">
+                <h3>Operation Request Details</h3>
+                <p><strong>Name:</strong> {{ fullOperationType.name || '-' }}</p>
+                <p><strong>Estimated Duration:</strong> {{ fullOperationType.estimatedDuration || '-' }}</p>
+                <p><strong>Status:</strong> {{ fullOperationType.status ? 'Active' : 'Desactive' }}</p>
+
+                <p><strong>Required Staff:</strong></p>
+                <ul *ngIf="fullOperationType.requiredStaff && fullOperationType.requiredStaff.length > 0; else noRequiredStaff">
+                    <li *ngFor="let staff of fullOperationType.requiredStaff">
+                        {{ staff.staffQuantity }} {{ staff.function }} ({{ staff.specialization }})
+                    </li>
+                </ul>
+                <ng-template #noRequiredStaff>
+                    <p>-</p>
+                </ng-template>
+
+                <p><strong>Phases:</strong></p>
+                <ul *ngIf="fullOperationType.phases && fullOperationType.phases.length > 0; else noPhases">
+                    <li *ngFor="let phase of fullOperationType.phases">
+                        {{ phase.description }} - Duration: {{ phase.duration }} minutes
+                    </li>
+                </ul>
+                <ng-template #noPhases>
+                    <p>-</p>
+                </ng-template>
+
+                <div class="action-buttons">
+                    <button (click)="closeDetails()">Close</button>
+                    <button (click)="toggleDetails(selectedOperationType)">Update</button>
+                </div>
+            </div>
+
+            <div *ngIf="editDetails" class="operation-edition">
+                <h3>Operation Request Edition</h3>
+                <form #newOperationTypeForm="ngForm" (ngSubmit)="editOperationType(newOperationTypeForm)" novalidate>
+                    <!-- Operation Name -->
+                    <label><strong>Operation Name</strong></label>
+                    <div class="input-field">
+                      <input name="name" #name="ngModel" [(ngModel)]="newOperationType.name" placeholder="Operation Type Name" [disabled]="isSubmitted" required
+                      [class.invalid-placeholder]="name.invalid && name.touched"
+                      />
+                      <span></span>
+                    </div>
+
+                    <br>
+
+                    <!-- Status -->
+                    <div class="input-field">
+                      <label><strong>Status:</strong></label>
+                      <div>
+                        <label>
+                          <input type="radio" name="status" [(ngModel)]="newOperationType.status" [value]="true" required />
+                          Active
+                        </label>
+                        <label>
+                          <input type="radio" name="status" [(ngModel)]="newOperationType.status" [value]="false" required />
+                          Inactive
+                        </label>
+                      </div>
+                    </div>
+
+                    <br>
+
+                    <!-- Phases -->
+                    <div class="input-field">
+                      <label><strong>Phases:</strong></label>
+                      <div *ngFor="let phase of newOperationType.phases; let i = index">
+                        <br>
+                        <label><strong>{{ phase.description }}</strong></label>
+                        <input type="number" [(ngModel)]="phase.duration" name="phaseDuration-{{ i }}" placeholder="Duration in minutes" required min="1" [disabled]="isSubmitted" />
+                        <br><br>
+                      </div>
+                    </div>
+
+                    <br>
+
+                    <!-- Estimated Duration -->
+                    <div class="input-field">
+                      <label><strong>Total Estimated Duration:</strong></label>
+                      <input
+                        type="number"
+                        [(ngModel)]="newOperationType.estimatedDuration"
+                        name="estimatedDuration"
+                        placeholder="Total duration (auto-calculated)"
+                        [value]="calculateTotalDuration()"
+                        disabled
+                      />
+                    </div>
+
+                    <br>
+
+              <!-- Required Staff -->
+              <div class="input-field">
+                <label><strong>Required Staff:</strong></label>
+                <div *ngFor="let staff of newOperationType.requiredStaff; let i = index" class="staff-entry">
+                  <br>
+                  <div class="input-field">
+                    <label for="function">Select Function:</label>
+                    <select name="function-{{ i }}" [(ngModel)]="staff.function" [disabled]="isSubmitted" required>
+                      <option *ngFor="let function of functions" [value]="function">
+                        {{ function }}
+                      </option>
+                    </select>
+                  </div>
+                  <br>
+                  <div class="input-field">
+                    <label for="specialization">Select Specialization:</label>
+                    <select name="specialization-{{ i }}" [(ngModel)]="staff.specialization" [disabled]="isSubmitted" required>
+                      <option *ngFor="let specialization of specializations" [value]="specialization">
+                        {{ specialization }}
+                      </option>
+                    </select>
+                  </div>
+                  <br>
+                  <input
+                    type="number"
+                    name="staffQuantity-{{ i }}"
+                    placeholder="Staff Quantity"
+                    [(ngModel)]="staff.staffQuantity"
+                    required
+                    min="1"
+                  />
+                  <br>
+                  <br>
+                  <!-- Remove button for each staff -->
+                  <button type="button" (click)="removeStaff(i)">Remove</button>
+                </div>
+
+                <br>
+                <!-- Add Staff button OUTSIDE the loop -->
+                <button type="button" (click)="addStaff()">+ Add Staff</button>
+              </div>
+
+
+                    <br>
+
+                    <div class="button">
+                      <button type="submit" class="add-button-submit" [disabled]="newOperationTypeForm.invalid || isSubmitted">Submit</button>
+                      <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+                    </div>
+
+                  </form>
+            </div>
+
+        </div>
+    </div>
+    <app-message></app-message>
+</body>

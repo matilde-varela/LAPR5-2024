@@ -1,0 +1,19 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+skinparam classBackgroundColor beige
+skinparam ArrowColor #222222
+
+package "<<aggregate Allergy>>" {
+    entity Allergy <<entity>><<root>>{}
+    class AllergyDesignation <<(V,#FF8B40)value object>> {}
+    class AllergyCode <<(V,#FF8B40)value object>> <<identifier>> {}
+    class AllergyDescription <<(V,#FF8B40)value object>>  {}
+}
+
+
+Allergy --> "1" AllergyCode
+Allergy --> "0..1" AllergyDescription
+Allergy --> "1" AllergyDesignation
+
+@enduml

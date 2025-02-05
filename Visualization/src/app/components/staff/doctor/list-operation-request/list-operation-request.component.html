@@ -1,0 +1,121 @@
+<body>
+    <div>
+        <app-side-bar-doctor></app-side-bar-doctor>
+    </div>
+    <header>
+        <h1 class="main-title">Search Operation Request</h1>
+    </header>
+
+    <!-- Filters Section -->
+    <div class="filters">
+        <input type="text" placeholder="Patient Name" [(ngModel)]="filters.name" />
+        <input type="text" placeholder="Operation Type" [(ngModel)]="filters.operationType" />
+
+        <select [(ngModel)]="filters.priority">
+            <option value="">Select Priority</option>
+            <option value="Elective">Elective Surgery</option>
+            <option value="Urgent">Urgent Surgery</option>
+            <option value="Emergency">Emergency Surgery</option>
+        </select>
+
+        <select [(ngModel)]="filters.status">
+            <option value="">Select Status</option>
+            <option value="Planned">Planned</option>
+            <option value="Requested">Requested</option>
+        </select>
+
+        <label for="dateOfRequest">Date of Request:</label>
+        <input id="dateOfRequest" type="date" placeholder="Date Of Request" [(ngModel)]="filters.dateOfRequest" />
+
+        <label for="deadlineDate">Deadline Date:</label>
+        <input id="deadlineDate" type="date" [(ngModel)]="filters.deadlineDate" />
+
+        <!-- Add a button to trigger the filter function -->
+        <button (click)="applyFilters()">Search</button>
+    </div>
+
+    <div class="conteudo">
+        <div *ngIf="operationRequests && operationRequests.length > 0">
+            <p-table [value]="operationRequests" [(selection)]="selectedOperationRequest" selectionMode="single"
+                [tableStyle]="{'border-collapse': 'collapse', 'table-layout': 'fixed', 'width': '100%'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 10%;">Select</th>
+                        <th style="width: 15%;">Patient Name</th>
+                        <th style="width: 15%;">Status</th>
+                        <th style="width: 60%;">Operation Type</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-operationRequest>
+                    <tr [pSelectableRow]="operationRequest">
+                        <td>
+                            <p-tableRadioButton [value]="operationRequest"
+                                [name]="'operationRequestRadio'"></p-tableRadioButton>
+                        </td>
+                        <td>{{ operationRequest.patientName || "-" }}</td>
+                        <td>{{ operationRequest.status || "-" }}</td>
+                        <td>{{ operationRequest.operationType || "-" }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+
+            <div *ngIf="selectedOperationRequest" class="action-buttons">
+                <button (click)="editOperationRequest(selectedOperationRequest)">Edit Operation Request</button>
+                <button (click)="deleteOperationRequest(selectedOperationRequest)">Delete Operation Request</button>
+                <button (click)="toggleDetails(selectedOperationRequest)">Show Details</button>
+            </div>
+            <br>
+            <div *ngIf="detailsVisible" class="operation-details">
+                <h3>Operation Request Details</h3>
+                <p><strong>Status:</strong> {{ fullOperationRequest.status || '-' }}</p>
+                <p><strong>Operation Type:</strong> {{ fullOperationRequest.operationTypeId || '-' }}</p>
+                <p><strong>Description:</strong> {{ fullOperationRequest.description || '-' }}</p>
+                <p><strong>Priority:</strong> {{ fullOperationRequest.priority || '-' }}</p>
+                <p><strong>Deadline Date:</strong> {{ fullOperationRequest.deadLineDate.split('/')[0] || '-' }}</p>
+                <p><strong>Date of Request:</strong> {{ fullOperationRequest.dateOfRequest.split('/')[0] || '-' }}</p>
+
+                <div class="action-buttons">
+                    <button (click)="closeDetails()">Close</button>
+                    <button (click)="toggleDetails(selectedOperationRequest)">Update</button>
+                </div>
+            </div>
+
+            <div *ngIf="updateVisible" class="operation-update">
+                <h3>Operation Request Update</h3>
+                <div class="form-section">
+                    <p><strong>Status:</strong> {{ fullOperationRequest.status || '-' }}</p>
+                    <p><strong>Operation Type:</strong> {{ fullOperationRequest.operationTypeId || '-' }}</p>
+                    <label for="description"><strong>Description:</strong></label>
+                    <br>
+                    <textarea
+                        id="description"
+                        placeholder="Enter description"
+                        [(ngModel)]="update.description"
+                        required
+                    ></textarea>
+                    <br>
+                    <br>
+                    <label for="priority"><strong>Priority:</strong></label>
+                    <select id="priority" [(ngModel)]="update.priority" required>
+                        <option value="Elective">Elective Surgery</option>
+                        <option value="Urgent">Urgent Surgery</option>
+                        <option value="Emergency">Emergency Surgery</option>
+                    </select>
+                    <br>
+                    <br>
+                    <label for="deadlineDate"><strong>Deadline Date:</strong></label>
+                    <input id="deadlineDate" type="date" [(ngModel)]="update.deadlineDate" />
+            
+                    <p><strong>Date of Request:</strong> {{ fullOperationRequest.dateOfRequest.split('/')[0] || '-' }}</p>
+                </div>
+                <div class="action-buttons">
+                    <button (click)="saveUpdateDetails()">Save changes</button>
+                    <button (click)="closeUpdate()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-message></app-message>
+</body>

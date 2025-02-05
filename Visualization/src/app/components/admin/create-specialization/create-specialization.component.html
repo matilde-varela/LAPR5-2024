@@ -1,0 +1,51 @@
+<body>
+    <div>
+        <app-side-bar-admin></app-side-bar-admin>
+    </div>
+    <header>
+        <h1 class="main-title">Create a Specialization</h1>
+    </header>
+
+    <br>
+
+    <div class="information-input">
+        <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before
+            submitting:</p>
+
+        <form #specializationForm="ngForm" (ngSubmit)="onSubmit(specializationForm)" novalidate>
+            <!-- Specialization Code -->
+            <div class="input-field">
+                <input name="code" #code="ngModel" [(ngModel)]="specialization.code" placeholder="Specialization Code"
+                    [disabled]="isSubmitted" required [class.invalid-placeholder]="code.invalid && code.touched" />
+                <span></span>
+            </div>
+
+            <!-- Specialization Designation -->
+            <div class="input-field">
+                <input name="denomination" #denomination="ngModel" [(ngModel)]="specialization.denomination"
+                    placeholder="Specialization Denomination" [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="denomination.invalid && denomination.touched" />
+                <span></span>
+            </div>
+
+            <!-- Specialization Description -->
+            <div class="input-field">
+                <input name="description" #description="ngModel" [(ngModel)]="specialization.description"
+                    placeholder="Specialization Description" [disabled]="isSubmitted" />
+                <span></span>
+            </div>
+
+            <div class="button">
+                <button type="submit" class="add-button-submit" [disabled]="specializationForm.invalid || isSubmitted">
+                    Submit
+                </button>
+                <button type="button" class="add-button-clear" (click)="clearForm()">
+                    Clear Input
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <br>
+    <app-message></app-message>
+</body>

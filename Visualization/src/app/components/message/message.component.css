@@ -1,0 +1,41 @@
+/* Message container */
+.message-container {
+  margin-left: 12%; /* Offset from the sidebar */
+  margin-right: 0.5%; /* Adjust margin to ensure full width is used */
+  max-width: calc(100% - 12%); /* Make the message container take the remaining space */
+  text-align: center; /* Center the content inside the container */
+  background-color: #f4f4f4; /* Light background color */
+  padding: 20px; /* Adds padding around the content */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(209, 217, 250, 0.172); /* Adds a subtle shadow for depth */
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 150px; /* Fixed width for uniformity */
+  text-align: center; /* Center the text inside the button */
+  transition: background-color 0.3s ease;
+  display: inline-block; /* Make button inline for centering */
+}
+
+
+.clear {
+  background-color: #0074d9; /* Same background color as submit */
+  color: #fff;
+  border: none;
+}
+
+.clear:hover {
+  background-color: #0056b3; /* Same hover effect as submit */
+}
+
+/* Style for h2 inside the message */
+h2 {
+  color: #0056b3;
+  font-family: 'Poppins', monospace;
+  font-weight: bold;
+  margin-bottom: 1rem; /* Adds spacing below the heading */
+}

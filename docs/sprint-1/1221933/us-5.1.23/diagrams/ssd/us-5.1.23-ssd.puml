@@ -1,0 +1,46 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.23 - System Sequence Diagram"
+
+autonumber
+
+actor Admin as ADM
+participant System as SYS
+
+activate ADM
+
+ADM -> SYS : requests the list of the operation types
+activate SYS
+
+SYS --> ADM : lists the operation types
+
+ loop until the Admin desires
+
+opt search filters appliance
+        ADM -> SYS : applies search filters
+
+        SYS --> ADM : shows filtered list
+        end opt
+    end loop
+
+    opt Admin wants to select an\n operation type
+
+    ADM -> SYS : selects an operation type
+    SYS --> ADM : shows operation type
+
+        alt
+        |||
+        ref over ADM, SYS : US 5.1.21 (edit operation type)
+
+        else
+        |||
+            ref over ADM, SYS : US 5.1.22 (deactivate operation type)
+        end alt
+    end opt
+
+deactivate ADM
+deactivate SYS
+
+
+@enduml

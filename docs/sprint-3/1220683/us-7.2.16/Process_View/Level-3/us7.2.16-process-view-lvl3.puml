@@ -1,0 +1,101 @@
+@startuml
+
+title "US 7.2.16 - Process View [Level 3] | MDPatientManagement "
+
+autonumber
+participant "Routing" as ROUTE <<route>>
+participant "AllergyUpdateDto" as UpdateDTO <<dto>>
+participant "AllergyController" as CTRL <<controller>>
+participant "AllergyService" as SVC <<service>>
+participant "AllergyDto" as DTO <<dto>>
+participant "Allergy" as ALL <<domain>>
+participant "AllergyRepository" as REPO <<repository>>
+
+[o-> ROUTE: GET /api/Get-AllAllergies
+activate ROUTE
+
+ROUTE -> CTRL: GetAllAllergies()
+activate CTRL
+
+CTRL ->  SVC: getAllAllergies()
+activate SVC
+
+SVC -> REPO : findAll()
+activate REPO
+
+REPO --> SVC : allergies
+deactivate REPO
+
+loop for all allergies in the list
+SVC -> DTO **
+end loop
+
+SVC --> CTRL: allergiesDTOList
+deactivate SVC
+
+CTRL --> ROUTE: allergiesDTOList
+deactivate CTRL
+
+alt 
+[o<-- ROUTE : 200 OK(allergiesDTOList)
+
+else
+
+[o<-- ROUTE : 400 BAD REQUEST
+deactivate ROUTE
+end alt
+
+|||
+
+[o-> ROUTE: PATCH /api/update-allergy
+activate ROUTE
+
+ROUTE -> UpdateDTO **
+
+ROUTE -> CTRL: updateAllergy(AllergyUpdateDto)
+activate CTRL
+
+CTRL ->  SVC: updateAllergy(AllergyUpdateDto)
+activate SVC
+
+SVC -> REPO : findByCode(AllergyUpdateDto.code)
+activate REPO
+
+REPO --> SVC : allergy
+deactivate REPO
+
+SVC -> ALL : changeDescription(AllergyUpdateDto.description)
+activate ALL
+
+ALL --> SVC
+deactivate ALL
+
+SVC -> ALL : changeDesignation(AllergyUpdateDto.designation)
+activate ALL
+
+ALL --> SVC
+deactivate ALL
+
+SVC -> REPO : save(allergy)
+activate REPO
+
+REPO --> SVC
+deactivate REPO
+
+SVC --> CTRL: success
+deactivate SVC
+
+CTRL --> ROUTE: success
+deactivate CTRL
+
+alt
+[o<-- ROUTE : 200 OK
+
+else
+
+[o<-- ROUTE : 400 BAD REQUEST
+deactivate ROUTE
+end alt
+
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+title "US 7.2.16 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Admin" as USER
+participant "AllergyUpdate" as UPP <<component>>
+participant "AllergyService" as PS <<service>>
+
+USER -> UPP : wants to edit an allergy
+activate UPP
+
+UPP -> PS : getAllAllergies()
+activate PS
+
+PS ->o] : GET: api/Get-AllAllergies
+
+PS <--o] : allergiesDTOList
+
+PS --> UPP: allergiesDTOList
+deactivate PS
+
+UPP --> USER: shows the list of allergies
+deactivate UPP
+
+USER -> UPP : selects an allergy from the list, and fills in the data to update
+activate UPP
+
+UPP --> USER: confirms the allergy edition success
+deactivate UPP
+
+@enduml

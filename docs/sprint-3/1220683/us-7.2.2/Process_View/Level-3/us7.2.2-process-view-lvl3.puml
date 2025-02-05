@@ -1,0 +1,51 @@
+@startuml
+
+title "US 7.2.2 - Process View [Level 3] MDPatientManagement"
+
+autonumber
+participant "Routing" as ROUTE <<route>>
+participant "AllergyController" as CTRL <<controller>>
+participant "AllergyService" as SVC <<service>>
+participant "AllergyDTO" as DTO <<dto>>
+participant "Allergy" as ALL <<domain>>
+participant "AllergyRepository" as REPO <<repository>>
+
+[o-> ROUTE: POST(json) /api/Allergy/create-Allergy
+activate ROUTE
+
+ROUTE -> DTO **: create(json)
+
+ROUTE -> CTRL: create(allergyDto)
+activate CTRL
+
+CTRL ->  SVC: createAllergy(allergyDto)
+activate SVC
+
+SVC -> ALL ** : create(code, designation, description)
+
+SVC -> REPO : save(allergy)
+activate REPO
+
+REPO --> SVC : allergy
+deactivate REPO
+
+SVC -> DTO : toDTO(allergy)
+
+
+SVC --> CTRL: allergyDto
+deactivate SVC
+
+CTRL --> ROUTE: allergyDto
+deactivate CTRL
+
+alt 
+[o<-- ROUTE : 200 OK
+
+else
+
+[o<-- ROUTE : 400 BAD REQUEST
+deactivate ROUTE
+end alt
+
+
+@enduml

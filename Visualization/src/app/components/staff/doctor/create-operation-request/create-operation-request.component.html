@@ -1,0 +1,103 @@
+<body>
+  <div>
+    <app-side-bar-doctor></app-side-bar-doctor>
+  </div>
+  <header>
+    <h1 class="main-title">Create Operation Request</h1>
+  </header>
+
+  <div class="information-input">
+    <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before
+      submitting:</p>
+
+    <form #operationRequestForm="ngForm" (ngSubmit)="onSubmit(operationRequestForm)" novalidate>
+      <!-- Existing input fields -->
+      <div class="input-field">
+        <input name="deadLineDate" #deadLineDate="ngModel" [(ngModel)]="operationRequest.deadLineDate"
+          placeholder="DeadLine Date" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="deadLineDate.invalid && deadLineDate.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="priority" #priority="ngModel" [(ngModel)]="operationRequest.priority" placeholder="Priority"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="priority.invalid && priority.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="dateOfRequest" #dateOfRequest="ngModel" [(ngModel)]="operationRequest.dateOfRequest"
+          placeholder="Date of Request" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="dateOfRequest.invalid && dateOfRequest.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="status" #status="ngModel" [(ngModel)]="operationRequest.status" placeholder="Status"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="status.invalid && status.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="staffId" #staffId="ngModel" [(ngModel)]="operationRequest.staffId" placeholder="StaffId"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="staffId.invalid && staffId.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="description" #description="ngModel" [(ngModel)]="operationRequest.description"
+          placeholder="Description" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="description.invalid && description.touched" />
+        <span></span>
+      </div>
+      <div class="input-field">
+        <input name="patientId" #patientId="ngModel" [(ngModel)]="operationRequest.patientId" placeholder="PatientId"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="patientId.invalid && patientId.touched" />
+        <span></span>
+      </div>
+
+      <br>
+
+      <div class="input-field">
+        <label for="operationTypeId">Select Operation Type:</label>
+        <select name="operationTypeId" #operationTypeId="ngModel" [(ngModel)]="operationRequest.operationTypeId"
+          [disabled]="isSubmitted" required>
+          <option *ngFor="let operationTypeId of operationTypes" [value]="operationTypeId">
+            {{ operationTypeId }}
+          </option>
+        </select>
+      </div>
+
+      <div class="button">
+        <button type="submit" class="add-button-submit"
+          [disabled]="operationRequestForm.invalid || isSubmitted">Submit</button>
+        <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+      </div>
+    </form>
+
+    <div *ngIf="operationRequestCreated && !isSubmittedToPatient" class="add-operation-to-patient">
+      <div class="button">
+        <button type="button" class="add-button-patient" (click)="toggleAddToPatientForm()">
+          Add to Patient's Medical History
+        </button>
+      </div>
+    </div>
+    
+    <div *ngIf="(operationRequestCreated && showAddToPatientForm) || (mainTitleCheck && operationRequestCreated)" class="patient-history-title">
+      <header>
+        <h1 class="main-second-title">Add Operation Request to Patient Medical History</h1>
+      </header>
+      <div *ngIf="showAddToPatientForm && operationRequestCreated && !isSubmittedToPatient" class="patient-history-form">
+      <p style="margin-left: 200px; margin-bottom: 30px;" font-family="'Poppins', monospace">Click on the button to submit to add the operation request created to the patient medical history!</p>
+      <form #operationRequestToPatientForm="ngForm" (ngSubmit)="addToPatient(operationRequestToPatientForm)" novalidate>
+        <div class="button">
+          <button type="submit" class="add-button-add-patient" [disabled]="operationRequestToPatientForm.invalid || isSubmittedToPatient">Submit</button>
+        </div>
+      </form>
+    </div>
+    </div>
+  </div>
+
+  <br>
+  <app-message></app-message>
+</body>

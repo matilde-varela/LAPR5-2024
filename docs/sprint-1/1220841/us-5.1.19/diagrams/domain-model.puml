@@ -1,0 +1,61 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+skinparam classBackgroundColor beige
+skinparam ArrowColor #222222
+
+package "<<aggregate>> Patient" {
+    entity Patient <<entity>> <<root>> {}
+    class Name <<(V,#FF8B40)value object>> {}
+    class FirstName <<(V,#FF8B40)value object>> {}
+    class LastName <<(V,#FF8B40)value object>> {}
+    class FullName <<(V,#FF8B40)value object>> {}
+}
+
+
+package "<<aggregate Doctor>>" {
+    entity Doctor <<entity>><<root>>{}
+}
+
+package "<<aggregate OperationRequest>>"{
+    entity OperationRequest <<entity>> <<root>> {}
+    class OperationRequestId <<(V,#FF8B40)value object>> <<identifier>> {}
+    class Priority <<(V,#FF8B40)value object>> <<identifier>> {}
+    class Status <<(V,#FF8B40)value object>> <<identifier>> {}
+    class DateOfRequest <<(V,#FF8B40)value object>> <<identifier>> {}
+    class DeadlineDate <<(V,#FF8B40)value object>> <<identifier>> {}
+}
+
+package "<<aggregate OperationType>>"{
+    entity OperationType <<entity>> <<root>> {}
+    class OperationTypeId <<(V,#FF8B40)value object>> <<identifier>> {}
+    class OperationTypeName <<(V,#FF8B40)value object>>  {}
+    class RequiredStaff <<(V,#FF8B40)value object>>  {}
+    note left: review this
+    class EstimatedDuration <<(V,#FF8B40)value object>>  {}
+}
+
+
+
+Name --> FirstName
+Name --> LastName
+Name --> FullName
+
+OperationType --> "1" OperationTypeId
+OperationType --> "1" OperationTypeName
+OperationType ---> "1" RequiredStaff
+OperationType ---> "1" EstimatedDuration
+
+OperationRequest --> "1" OperationRequestId
+OperationRequest --> "1" Priority
+OperationRequest ---> "1" Patient : made for
+OperationRequest -> "1" Doctor : registed by
+OperationRequest ---> "1" OperationType : defined by
+OperationRequest --> "1" DateOfRequest
+OperationRequest --> "1" DeadlineDate
+OperationRequest --> "1" Status
+
+Patient --> "1" Name
+
+
+@enduml

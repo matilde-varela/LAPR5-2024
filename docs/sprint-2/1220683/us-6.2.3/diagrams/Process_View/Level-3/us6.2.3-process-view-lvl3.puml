@@ -1,0 +1,232 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.3 Process View (Level 3)"
+
+autonumber
+
+participant "<<route>>\n Routing" as ROUTE
+participant "<<controller>>\n UserController" as CONTROL
+
+participant "<<service>>\n UserService" as AUTHServ
+
+participant "<<service>>\n UserManager" as AUTHRepo
+
+participant "<<service>>\n TokenService" as TOKENServ
+participant "<<domain>>\n Token" as TOKEN
+participant "<<dto>>\n TokenDTO" as TokenDTO
+participant "<<repository>>\n TokenRepository" as TOKENRepo
+
+participant "<<service>>\n PatientService" as PATIENTServ
+participant "<<repository>>\n PatientRepository" as PATIENTRepo
+participant "<<domain>>\n Patient" as PATIENT
+
+participant "<<service>>\n EmailService" as EMAILServ
+participant "<<dto>>\n EmailMessageDTO" as EmailDTO
+
+participant "<<service>>\n LogService" as LogServ
+participant "<<domain>>\n Log" as Log
+participant "<<repository>>\n LogRepository" as LogRepo
+
+
+
+ [o-> ROUTE : DELETE() /api/patients
+activate ROUTE
+
+ROUTE -> CONTROL : DeletePatientAccountRequest()
+activate CONTROL
+
+CONTROL -> CONTROL : GetUserInfo()
+activate CONTROL
+
+CONTROL --> CONTROL : userInfo
+note left
+userInfo is an OkObjectResult
+which contains the user email
+and id
+end note
+deactivate CONTROL
+
+CONTROL -> TOKENServ : CreateAccountDeletionToken(email)
+activate TOKENServ
+
+TOKENServ -> TOKEN ** :
+
+TOKENServ -> TOKENRepo : AddAsync(token)
+activate TOKENRepo
+
+TOKENRepo --> TOKENServ : tokenDTO
+deactivate TOKENRepo
+
+TOKENServ --> CONTROL :tokenDTO
+deactivate TOKENServ
+
+CONTROL -> PATIENTServ : ConfirmPatientAccountDeletionEmail(confirmationLink, email)
+activate PATIENTServ
+
+PATIENTServ -> EmailDTO ** : toDTO(HOSPITAL_EMAIL, email, "Account Deletion Confirmation", emailBody)
+
+PATIENTServ -> EMAILServ : SendAccountDeletionEmail(emailMessageDto)
+activate EMAILServ
+deactivate EMAILServ
+
+PATIENTServ --> CONTROL : return
+deactivate PATIENTServ
+
+CONTROL --> ROUTE : ok()
+deactivate CONTROL
+
+[o<-- ROUTE : 200 OK
+deactivate ROUTE
+
+|||
+
+'CONFIRMATION
+
+[o-> ROUTE : PUT(userId, token)
+activate ROUTE
+note left
+After clicking on the
+link of the account
+deletion confirmation email
+end note
+
+ROUTE -> CONTROL : ConfirmPatientAccountDeletionNotProfile(userId, token)
+activate CONTROL
+
+CONTROL -> AUTHServ : UserExistsById(userId)
+activate AUTHServ
+
+AUTHServ --> CONTROL : true
+deactivate AUTHServ
+|||
+CONTROL -> TOKENServ : TokenExistsById(token)
+activate TOKENServ
+
+TOKENServ --> CONTROL : true
+deactivate TOKENServ
+
+|||
+CONTROL -> TOKENServ : IsTokenExpired(token)
+activate TOKENServ
+
+TOKENServ --> CONTROL : true
+deactivate TOKENServ
+
+|||
+CONTROL -> TOKENServ : IsTokenActive(token)
+activate TOKENServ
+
+TOKENServ --> CONTROL : true
+deactivate TOKENServ
+
+CONTROL -> AUTHServ : DeletePatientAccount(userId, token)
+activate AUTHServ
+
+AUTHServ -> TOKENServ : InactivateAsync(token)
+activate TOKENServ
+
+TOKENServ -> TOKENRepo : GetByIdAsync(tokenid)
+activate TOKENRepo
+
+TOKENRepo --> TOKENServ : token
+deactivate TOKENRepo
+
+TOKENServ -> TOKEN : MarkAsInative()
+activate TOKEN
+deactivate TOKEN
+
+TOKENServ -> TokenDTO **
+
+TOKENServ --> AUTHServ : tokenDTO
+deactivate TOKENServ
+
+AUTHServ -> AUTHServ :  DeleteAsync(userId)
+activate AUTHServ
+
+AUTHServ -> AUTHRepo : FindByIdAsync(userId)
+activate AUTHRepo
+
+AUTHRepo --> AUTHServ : user
+deactivate AUTHRepo
+
+|||
+
+AUTHServ -> AUTHRepo : DeleteAsync(user)
+activate AUTHRepo
+
+AUTHRepo --> AUTHServ : return
+deactivate AUTHRepo
+
+AUTHServ -> LogServ : CreateDeletionLog(userId, userClass, logDescription)
+activate LogServ
+
+LogServ -> Log ** : Log(getSequentialNumber(), objectClass, objectReference, 1, description)
+
+LogServ -> LogRepo : AddAsync(log)
+activate LogRepo
+
+LogRepo --> LogServ : log
+deactivate LogRepo
+
+LogServ --> AUTHServ : log
+deactivate LogServ
+
+AUTHServ --> AUTHServ : userEmail
+deactivate AUTHServ
+
+AUTHServ --> CONTROL : return
+deactivate AUTHServ
+
+|||
+
+CONTROL -> PATIENTServ : AnonymizeProfile(userEmail)
+activate PATIENTServ
+
+PATIENTServ -> PATIENTRepo : GetPatientWithEmail(email)
+activate PATIENTRepo
+
+PATIENTRepo --> PATIENTServ : patient
+deactivate PATIENTRepo
+
+|||
+
+PATIENTServ -> PATIENT : RemoveUser()
+activate PATIENT
+deactivate PATIENT
+
+PATIENTServ -> PATIENT : Anonymize()
+activate PATIENT
+deactivate PATIENT
+
+
+PATIENTServ -> LogServ : CreateDeletionLog(patientId, patientClass, logDescription)
+activate LogServ
+
+LogServ -> Log ** : Log(getSequentialNumber(), objectClass, objectReference, 1, description)
+
+LogServ -> LogRepo : AddAsync(log)
+activate LogRepo
+
+LogRepo --> LogServ : log
+deactivate LogRepo
+
+LogServ --> PATIENTServ : log
+deactivate LogServ
+
+PATIENTServ --> CONTROL : return
+deactivate PATIENTServ
+
+CONTROL --> ROUTE : return
+deactivate CONTROL
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+@enduml

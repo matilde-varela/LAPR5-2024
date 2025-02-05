@@ -1,0 +1,137 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.N. Process View (Level 3)"
+
+autonumber
+
+participant "<<route>>\n Routing" as ROUTE
+participant "<<controller>>\n XProfileListingController" as CONTROL
+
+participant "<<dto>>\n XQueryParametersDto" as QueryDTO
+
+participant "<<service>>\n XService" as XServ
+participant "<<repository>>\n XRepository" as XRepo
+participant "<<dto>>\n XDTO" as XDTO
+
+[o-> ROUTE : GET() /api/Xs
+activate ROUTE
+
+ROUTE -> CONTROL : getAllXProfiles()
+activate CONTROL
+
+CONTROL -> XServ : getAllProfiles()
+activate XServ
+
+XServ -> XRepo : findAll()
+activate XRepo
+
+XRepo --> XServ : XprofilesList
+deactivate XRepo
+
+    loop for all the profiles in the list
+        XServ -> XDTO ** : toDTO(Xprofile)
+
+    end loop
+
+XServ --> CONTROL : XprofileDTOList
+deactivate XServ
+
+CONTROL -> CONTROL : json(XprofileDTOList)
+activate CONTROL
+deactivate CONTROL
+
+CONTROL --> ROUTE : json
+deactivate CONTROL
+
+[o<-- ROUTE : ok(json)
+deactivate ROUTE
+
+|||
+
+[o-> ROUTE : POST(json)
+activate ROUTE
+ROUTE -> QueryDTO ** : toDTO(json)
+
+ROUTE -> CONTROL : GetFilteredXProfiles(queryParametersDTO)
+activate CONTROL
+
+CONTROL -> XServ : FilterStaffProfiles(queryParametersDTO)
+activate XServ
+
+
+XServ -> XRepo : FilterXProfiles(queryParametersDTO)
+activate XRepo
+
+XRepo --> XServ : XprofilesList
+deactivate XRepo
+
+    loop for all the profiles in the list
+        XServ -> XDTO ** : toDTO(Xprofile)
+
+    end loop
+
+XServ --> CONTROL : filteredXProfilesDTOList
+deactivate XServ
+
+CONTROL -> CONTROL : json(XprofileDTOList)
+activate CONTROL
+deactivate CONTROL
+
+CONTROL --> ROUTE : json
+deactivate CONTROL
+
+[o<-- ROUTE : ok(json)
+deactivate ROUTE
+
+|||
+
+alt edit X profile
+
+    [o-> ROUTE : PUT(json)
+    activate ROUTE
+
+    ROUTE -> CONTROL : updateXProfile(json)
+    activate CONTROL
+
+    CONTROL -> XDTO ** : toDto(json)
+
+    ref over CONTROL
+
+    **US 6.2.Y.**
+    end ref
+
+    CONTROL --> ROUTE : return
+    deactivate CONTROL
+
+else
+
+    [o-> ROUTE : DELETE(json)
+
+    ROUTE -> CONTROL : deleteXProfile(json)
+    activate CONTROL
+
+    CONTROL -> XDTO ** : toDto(json)
+
+    ref over CONTROL
+
+    **US 6.2.Z.**
+    end ref
+
+    CONTROL --> ROUTE : return
+    deactivate CONTROL
+
+end alt
+
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+
+@enduml

@@ -1,0 +1,128 @@
+<body>
+  <div>
+    <app-side-bar-admin></app-side-bar-admin>
+  </div>
+  <header>
+    <h1 class="main-title">Create Patient Profile</h1>
+  </header>
+
+  <div class="information-input">
+    <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before submitting:</p>
+
+    <form #patientForm="ngForm" (ngSubmit)="onSubmit(patientForm)" novalidate>
+      <div class="input-field">
+        <input name="firstName" #firstName="ngModel" [(ngModel)]="patient.firstName" placeholder="First Name" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="firstName.invalid && firstName.touched" />
+          <span></span>
+      </div>
+    
+      <div class="input-field">
+        <input name="lastName" #lastName="ngModel" [(ngModel)]="patient.lastName" placeholder="Last Name" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="lastName.invalid && lastName.touched" />
+          <span></span>
+      </div>
+    
+      <div class="input-field">
+        <input name="phone" #phone="ngModel" [(ngModel)]="patient.phone" placeholder="Phone Number" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="phone.invalid && phone.touched" />
+          <span></span>
+      </div>
+    
+      <div class="input-field">
+        <input name="emergencyContact" #emergencyContact="ngModel" [(ngModel)]="patient.emergencyContact" placeholder="Emergency Contact" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="emergencyContact.invalid && emergencyContact.touched" />
+        <span></span>
+      </div>
+    
+      <div class="input-field">
+        <input name="email" #email="ngModel" [(ngModel)]="patient.email" placeholder="Email" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="email.invalid && email.touched" />
+          <span></span>
+      </div>
+    
+      <div class="input-field">
+        <input name="address" #address="ngModel" [(ngModel)]="patient.address" placeholder="Address" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="address.invalid && address.touched" />
+          <span></span>
+      </div>
+    
+      <div class="input-field">
+        <input name="gender" #gender="ngModel" [(ngModel)]="patient.gender" placeholder="Gender" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="gender.invalid && gender.touched" />
+          <span></span>
+      </div>
+    
+      <div class="input-field">
+        <input name="dateBirth" #dateBirth="ngModel" [(ngModel)]="patient.dateBirth" placeholder="Date of Birth" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="dateBirth.invalid && dateBirth.touched" />
+          <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="description" #description="ngModel" [(ngModel)]="patient.description" placeholder="Description" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="description.invalid && description.touched" />
+          <span></span>
+      </div>
+
+      <br>
+
+      <div class="input-field">
+        <h2>Medical Conditions</h2>
+        <br>
+        <div *ngIf="patient.medicalConditions.length === 0">
+          <p>No medical conditions associated yet.</p>
+        </div>
+
+        <div *ngFor="let condition of patient.medicalConditions; let i = index" class="blue-panel">
+          <p><strong>Designation:</strong> {{ condition.designation || '-' }}</p>
+          <p><strong>Description:</strong> {{ condition.description || 'No description.' }}</p>
+          <p><strong>Symptoms:</strong> {{ condition.symptoms || 'No symptons described.' }}</p>
+          <button (click)="removeMedicalCondition(i)">Remove</button>
+          <br>
+        </div>
+
+        <br>
+
+        <div>
+          <p-dropdown [options]="allMedicalConditionsDesignations" #inputRef placeholder="Select Medical Condition">
+          </p-dropdown>
+          <button type="button" (click)="addMedicalCondition(inputRef.value)">Add</button>
+        </div>
+      </div>
+
+        <br>
+
+        <div class="input-field">
+        <h2>Allergies</h2>
+        <div *ngIf="patient.allergies.length === 0">
+          <p>No allergies associated yet.</p>
+        </div>
+
+        <div *ngFor="let condition of patient.allergies; let i = index" class="blue-panel">
+          <p><strong>Designation:</strong> {{ condition.designation || '-' }}</p>
+          <p><strong>Description:</strong> {{ condition.description || 'No description.' }}</p>
+          <button (click)="removeAllergy(i)">Remove</button>
+          <br>
+        </div>
+
+        <br>
+
+        <div>
+          <p-dropdown [options]="allAllergiesDesignations" #inputRefe placeholder="Select Allergies">
+          </p-dropdown>
+          <button type="button" class="add-button-allergy" (click)="addAllergy(inputRefe.value)">Add</button>
+        </div>
+      </div>
+
+      <br>
+    
+      <div class="button">
+        <button type="submit" class="add-button-submit" [disabled]="patientForm.invalid || isSubmitted">Submit</button>
+        <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+      </div>
+    </form>
+    
+  </div>
+  <br>
+  <app-message></app-message>
+</body>

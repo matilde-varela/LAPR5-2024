@@ -1,0 +1,41 @@
+@startuml
+
+title "US 6.2.18 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Admin" as USER
+participant "CreateOperationTypeComponent" as AOT <<component>>
+participant "OperationTypeService" as OTS <<service>>
+
+AOT -> OTS : getAllSpecializationsAvailable()
+activate AOT
+activate OTS
+
+OTS ->o] : GET : api/Specializations
+
+OTS <--o]  : specializations
+
+OTS --> AOT : specializations
+deactivate OTS
+
+AOT --> USER : specializations
+deactivate AOT
+
+
+USER -> AOT : create a new operation type
+activate AOT
+
+AOT -> OTS : createOperationType(operationType)
+activate OTS
+
+OTS ->o] : POST: api/OperationTypes
+
+OTS <--o] : Ok()
+
+OTS --> AOT: success
+deactivate OTS
+
+AOT --> USER: success
+deactivate AOT
+
+@enduml

@@ -1,0 +1,61 @@
+@startuml
+title "US 7.3.1 Process View (Level 3) | Room Distribution"
+
+participant "distribute_operations/4" as DistributeOperations
+participant "initialize_room_schedules/3" as InitializeRoomSchedules
+participant "distribute_operations_recursive/4" as RecursiveDistribution
+participant "schedule_operation_in_room/5" as ScheduleInRoom
+participant "try_schedule_operation/5" as TrySchedule
+participant "free_agenda0/2" as FreeAgenda
+participant "filter_full_intervals1/3" as FilterFull
+participant "update_schedule/4" as UpdateSchedule
+
+[o-> DistributeOperations
+activate DistributeOperations
+DistributeOperations -> InitializeRoomSchedules: initialize_room_schedules(Rooms, Day, InitialSchedules)
+activate InitializeRoomSchedules
+InitializeRoomSchedules -> InitializeRoomSchedules: Fetch agenda for each room
+
+InitializeRoomSchedules --> DistributeOperations: Return InitialSchedules
+deactivate InitializeRoomSchedules
+
+DistributeOperations -> RecursiveDistribution: distribute_operations_recursive(Operations, Rooms, Day, InitialSchedules, RoomSchedules)
+activate RecursiveDistribution
+
+RecursiveDistribution -> ScheduleInRoom: schedule_operation_in_room(Operation, Rooms, Day, CurrentSchedules, UpdatedSchedules)
+activate ScheduleInRoom
+
+ScheduleInRoom -> TrySchedule: try_schedule_operation(Operation, Room, Day, CurrentSchedules, TempSchedules)
+activate TrySchedule
+
+TrySchedule -> FreeAgenda: free_agenda0(CurrentAgenda, FreeIntervals)
+activate FreeAgenda
+TrySchedule <-- FreeAgenda: Return FreeIntervals
+deactivate FreeAgenda
+
+TrySchedule -> FilterFull: filter_full_intervals1(FreeIntervals, TotalTime, SuitableIntervals)
+activate FilterFull
+FilterFull --> TrySchedule: Return SuitableIntervals
+deactivate FilterFull
+
+TrySchedule -> UpdateSchedule: update_schedule(Room, NewAgenda, CurrentSchedules, UpdatedSchedules)
+activate UpdateSchedule
+UpdateSchedule -> UpdateSchedule: Update room's schedule with NewAgenda
+
+UpdateSchedule --> TrySchedule: Return UpdatedSchedules
+deactivate UpdateSchedule
+
+TrySchedule --> ScheduleInRoom: Return TempSchedules
+deactivate TrySchedule
+
+ScheduleInRoom --> RecursiveDistribution: Return UpdatedSchedules
+deactivate ScheduleInRoom
+
+RecursiveDistribution -> RecursiveDistribution: Recursively process remaining operations
+
+RecursiveDistribution --> DistributeOperations: Return FinalSchedules
+deactivate RecursiveDistribution
+
+[o<-- DistributeOperations
+deactivate DistributeOperations
+@enduml

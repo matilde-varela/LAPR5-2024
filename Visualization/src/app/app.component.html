@@ -1,0 +1,18 @@
+<!-- <main class="app-container"> -->
+  <div style="text-align: center">
+    <div class="main-title-container">
+      <img src="/android-chrome-512x512.png" alt="Logo" class="title-logo">
+      <h1 class="main-title">HEALTHCARE SYSTEM</h1>
+      <!-- <div class="button-container"> -->
+        <button class="login-button" (click)="logout()" routerLink="">Main Page</button>
+        <button *ngIf="isAuthenticated" class="logout-button" (click)="logout()" routerLink="">Logout</button>
+        <button *ngIf="!isAuthenticated" class="register-button" routerLink="/patient/registration">Register</button>
+      <!-- </div> -->
+      
+    </div>
+  </div>
+
+  <div class="router-outlet-container">
+    <router-outlet></router-outlet>
+  </div>
+<!-- </main> -->

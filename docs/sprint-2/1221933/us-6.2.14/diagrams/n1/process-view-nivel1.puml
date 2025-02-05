@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.14. Process View (Level 1)"
+
+autonumber
+actor Doctor as DOC
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate DOC
+
+DOC -> SYS : creates operation request
+activate SYS
+
+SYS --> DOC : answer
+deactivate SYS
+
+DOC -> SYS : adds operation request to patient
+activate SYS
+
+SYS --> DOC : answer
+deactivate SYS
+
+@enduml

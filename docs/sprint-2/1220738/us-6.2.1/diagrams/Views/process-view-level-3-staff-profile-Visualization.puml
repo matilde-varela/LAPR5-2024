@@ -1,0 +1,20 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) | Visualization - Creating a Patient Profile"
+
+actor Admin
+participant "<<Component>>\n Profiles" as PROF
+participant "<<Service>>\n PatientService" as SERV
+
+activate Admin
+    Admin -> PROF : create patient profile
+    activate PROF 
+        PROF -> SERV : CreatePatientProfile(\nfirstName, lastName,\naddress, phone,\nemail, emergencyContact,\ngender, date)
+        activate SERV
+            SERV ->o] : POST: api/Create-PatientProfile
+            SERV <--o] : Ok(patientInfo)
+            SERV --> PROF : success
+        deactivate SERV
+        PROF --> Admin : success
+    deactivate PROF 
+deactivate Admin
+@enduml

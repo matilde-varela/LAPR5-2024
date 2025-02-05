@@ -1,0 +1,26 @@
+@startuml
+title "US 6.3.1 Process View (Level 3) | MDBackoffice"
+
+participant "<<Route>>\n OperationRequestRoute" as ROUTE
+participant "<<Controller>>\n OperationRequestController" as CONTROL
+participant "<<DTO>>\n OpReqScheduleDto" as OPREQDTO
+participant "<<Service>>\n OperationRequestService" as OPREQSERV
+
+[o-> ROUTE : GET: Get-BetterScheduling(jsonData)
+activate ROUTE
+    ROUTE -> CONTROL : GetBetterScheduling(jsonData)
+    activate CONTROL
+        CONTROL -> OPREQDTO** : ToDto(jsonData)
+        CONTROL -> OPREQSERV : GetBetterScheduling(\nOpReqScheduleDto.roomCode,\nOpReqScheduleDto.opCode,\nOpReqScheduleDto.date)
+        activate OPREQSERV
+            OPREQSERV ->o] : GetBetterScheduling
+            note bottom : It will communicate with\nthe Planning Module.
+            OPREQSERV <--o] : InfoSchedule
+            OPREQSERV --> CONTROL : InfoSchedule
+        deactivate OPREQSERV
+        CONTROL --> ROUTE : Ok(InfoSchedule)
+    deactivate CONTROL
+    [o<- ROUTE : Json
+deactivate ROUTE
+
+@enduml

@@ -1,0 +1,108 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.6. Process View (Level 3 | MDPatientManagement)"
+
+autonumber
+
+participant "route:\nEditPatientMedicalRecordRoute" as ROUTE
+participant "dto:\nEditMedicalRecordDTO" as UpdateDTO
+participant "controller:\nMedicalRecordController" as CTRL
+
+participant "service:\nMedicalRecordService" as MEDSER
+participant "repository:\nMedicalRecordRepo" as MEDREPO
+participant "dto:\nMedicalRecordDTO" as MEDDTO
+participant "domain:\nMedicalRecord" as MEDREC
+
+
+[o-> ROUTE : GET()
+activate ROUTE
+
+ROUTE -> CTRL : getMedicalRecords()
+activate CTRL
+
+CTRL -> MEDSER : getMedicalRecords()
+activate MEDSER
+
+MEDSER -> MEDREPO : findAll()
+activate MEDREPO
+
+MEDREPO --> MEDSER : MedicalRecords
+deactivate MEDREPO
+
+loop for all the profiles in the list
+MEDSER -> MEDDTO ** : toDTO(medicalRecord)
+
+
+end loop
+
+MEDSER --> CTRL : medicalRecordDTOList
+deactivate MEDSER
+
+CTRL --> ROUTE : medicalRecordDTOList
+deactivate CTRL
+
+<- ROUTE : ok(medicalRecordDTOList)
+deactivate ROUTE
+
+|||
+
+[o-> ROUTE : PATCH(json)
+activate ROUTE
+
+ROUTE -> UpdateDTO ** : toDTO(json)
+
+
+ROUTE -> CTRL : updateMedicalRecord(editMedicalRecordDto)
+activate CTRL
+
+CTRL -> MEDSER : updateMedicalRecord(editMedicalRecordDto)
+activate MEDSER
+
+MEDSER -> MEDREPO : findByDomainId(medicalRecordNumber)
+activate MEDREPO
+
+MEDREPO --> MEDSER : medicalRecord
+deactivate MEDREPO
+
+opt Check and update Medical Record fields
+MEDSER -> MEDREC : ChangeMedicalCondition(medicalConditions)
+activate MEDREC
+deactivate MEDREC
+
+MEDSER -> MEDREC : ChangeAllergy(Allergys)
+activate MEDREC
+deactivate MEDREC
+
+MEDSER -> MEDREC : ChangeDescription(Description)
+activate MEDREC
+deactivate MEDREC
+
+MEDSER -> MEDREPO : save(medicalRecord)
+activate MEDREPO
+deactivate MEDREPO
+
+end opt
+
+MEDSER -> MEDDTO : toDTO(medicalRecord)
+activate MEDDTO
+deactivate MEDDTO
+
+
+MEDSER --> CTRL : medicalRecordDto
+deactivate MEDSER
+
+
+CTRL --> ROUTE : medicalRecordDto
+deactivate CTRL
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+@enduml

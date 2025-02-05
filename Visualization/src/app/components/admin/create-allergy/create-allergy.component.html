@@ -1,0 +1,80 @@
+<body>
+  <div>
+    <app-side-bar-admin></app-side-bar-admin>
+  </div>
+  <header>
+    <h1 class="main-title">Create an Allergy</h1>
+  </header>
+  
+  <br>
+
+  <div class="information-input">
+    <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before
+      submitting:</p>
+
+    <form #allergyForm="ngForm" (ngSubmit)="onSubmit(allergyForm)" novalidate>
+      <!-- Allergy Code -->
+      <label><strong>Allergy Code</strong></label>
+      <div class="input-field">
+        <input 
+          name="code" 
+          #code="ngModel" 
+          [(ngModel)]="allergy.code" 
+          placeholder="Allergy ICD-11 Code"
+          [disabled]="isSubmitted" 
+          required 
+          [class.invalid-placeholder]="code.invalid && code.touched" 
+        />
+        <span></span>
+      </div>
+
+      <!-- Allergy Designation -->
+      <label><strong>Allergy Designation</strong></label>
+      <div class="input-field">
+        <input 
+          name="designation" 
+          #designation="ngModel" 
+          [(ngModel)]="allergy.designation" 
+          placeholder="Allergy Designation"
+          [disabled]="isSubmitted" 
+          required 
+          [class.invalid-placeholder]="designation.invalid && designation.touched" 
+        />
+        <span></span>
+      </div>
+
+      <!-- Allergy Description -->
+      <label><strong>Allergy Description</strong></label>
+      <div class="input-field">
+        <input 
+          name="description" 
+          #description="ngModel" 
+          [(ngModel)]="allergy.description" 
+          placeholder="Allergy Description"
+          [disabled]="isSubmitted" 
+        />
+        <span></span>
+      </div>
+
+      <div class="button">
+        <button 
+          type="submit" 
+          class="add-button-submit"
+          [disabled]="allergyForm.invalid || isSubmitted"
+        >
+          Submit
+        </button>
+        <button 
+          type="button" 
+          class="add-button-clear" 
+          (click)="clearForm()"
+        >
+          Clear Input
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <br>
+  <app-message></app-message>
+</body>

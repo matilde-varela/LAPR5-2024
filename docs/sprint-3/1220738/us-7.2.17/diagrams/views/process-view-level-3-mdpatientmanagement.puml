@@ -1,0 +1,42 @@
+@startuml
+title "US 7.2.17 Process View (Level 3) | MDPatientManagement"
+
+participant "<<Route>>\n RoomRoute" as ROUTE
+participant "<<Controller>>\n RoomController" as CONTROL
+participant "<<Service>>\n RoomService" as STAFFSERV
+participant "<<Repository>>\n RoomRepository" as ALLERGYREPO
+participant "<<DTO>>\n RoomDto" as ALLERGYLISTDTO
+participant "<<Domain>>\n Room" as ALLERGY
+
+[o-> ROUTE : POST()
+note right : getting the \nlist of profiles
+
+Activate ROUTE
+
+ROUTE -> CONTROL : CreateRoom()
+
+Activate CONTROL
+
+CONTROL -> STAFFSERV : CreateRoom(createRoomDto)
+Activate STAFFSERV
+
+STAFFSERV -> ALLERGY**:
+
+STAFFSERV -> ALLERGYREPO : save(room)
+Activate ALLERGYREPO
+
+ALLERGYREPO --> STAFFSERV : success
+Deactivate ALLERGYREPO
+
+STAFFSERV -> ALLERGYLISTDTO**
+
+STAFFSERV --> CONTROL : createRoomDto
+Deactivate STAFFSERV
+
+CONTROL -> CONTROL : Ok(createRoomDto)
+
+CONTROL --> ROUTE : json
+Deactivate CONTROL
+<-- ROUTE : json
+deactivate ROUTE
+@enduml

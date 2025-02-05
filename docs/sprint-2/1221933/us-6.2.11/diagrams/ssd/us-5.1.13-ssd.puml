@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.13 - System Sequence Diagram"
+
+autonumber
+
+actor Admin as ADM
+participant System as SYS
+
+activate ADM
+
+ADM -> SYS : asks to edit a staff's profile, to update their information
+activate SYS
+
+SYS --> ADM : gives staff's list
+
+ADM -> SYS : selects the staff profile
+
+SYS --> ADM : shows staff information
+
+loop until the admin wants
+
+ADM -> SYS : changes the editable fields (contact information,\n specialization)
+
+end loop
+
+SYS --> ADM : confirms the alteration of the chosen fields
+
+deactivate SYS
+
+
+@enduml

@@ -1,0 +1,107 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.2. Process View (Level 3)"
+
+autonumber
+
+participant "route:\nUserRoute" as ROUTE
+participant "controller:\nUserController" as CTRL
+participant "service:\nUserService" as UserServ
+participant "service:\nTokenManagementService" as TOKENServ
+participant "service:\nUserManager" as UserMan
+participant "domain:\nUser" as USER
+participant "repository:\nTokenRepository" as TOKENRepo
+
+
+[o-> ROUTE : PUT(email)
+activate ROUTE
+
+ROUTE -> CTRL : ResetPassword(email)
+activate CTRL
+
+CTRL -> UserServ : ResetPassword(email)
+activate UserServ
+
+UserServ -> UserMan : FindByEmailAsync(email)
+activate UserMan
+
+UserMan --> UserServ : user or exception
+deactivate UserMan
+
+UserServ -> USER : changeStatus(false)
+activate USER
+deactivate USER
+
+UserServ -> UserMan : GenerateEmailConfirmationToken(user)
+activate UserMan
+UserMan --> UserServ : token
+deactivate UserMan
+
+UserServ -> UserServ : ConfigureUrlPasswordConfirmation(token, user)
+activate UserServ
+deactivate UserServ
+
+UserServ -> UserServ : SendPasswordEmail(email, token)
+activate UserServ
+deactivate UserServ
+
+
+UserServ --> CTRL : success/failure
+deactivate UserServ
+
+CTRL --> ROUTE : return message
+deactivate CTRL
+
+<-- ROUTE : return message
+deactivate ROUTE
+
+[o-> ROUTE : PUT(email, token, newPassword)
+activate ROUTE
+
+ROUTE -> CTRL : UpdatePassword(email, token, newPassword)
+activate CTRL
+
+CTRL -> UserServ : UpdatePassword(email, token, newPassword)
+activate UserServ
+
+UserServ -> TOKENServ : ConfirmEmailToken(userId, token)
+activate TOKENServ
+
+TOKENServ -> UserMan : findByIdAsync(userId)
+activate UserMan
+
+UserMan --> TOKENServ : user
+deactivate UserMan
+
+TOKENServ -> UserMan : ConfirmEmailAsync(user, token)
+activate UserMan
+
+UserMan --> TOKENServ : result
+deactivate UserMan
+
+TOKENServ --> UserServ : result
+deactivate TOKENServ
+
+
+opt result is true
+UserServ -> UserMan : ResetPasswordAsync(user, token, newPassword)
+activate UserMan
+deactivate UserMan
+
+UserServ -> USER : changeStatus(true)
+activate USER
+deactivate USER
+
+end opt
+
+UserServ --> CTRL : success/failure
+deactivate UserServ
+
+CTRL --> ROUTE : return Ok("Password was changed successfully.")
+deactivate CTRL
+
+<-- ROUTE : message
+deactivate ROUTE
+
+@enduml

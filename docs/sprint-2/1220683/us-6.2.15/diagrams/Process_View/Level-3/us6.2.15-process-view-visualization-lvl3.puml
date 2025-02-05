@@ -1,0 +1,42 @@
+@startuml
+
+title "US 6.2.15 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Doctor" as USER
+participant "ListOperationRequestComponent" as UOR <<component>>
+participant "OperationRequestService" as ORS <<service>>
+
+USER -> UOR : selects an operation request to update
+activate UOR
+
+UOR -> ORS : editOperationRequest(operationRequest)
+activate ORS
+
+ORS ->o] : GET : api/OperationRequest/${id}
+
+ORS <--o] : Ok(realOperationRequest)
+
+ORS --> UOR: realOperationRequest
+deactivate ORS
+
+UOR --> USER: realOperationRequest
+deactivate UOR
+
+USER -> UOR : edits the operation request
+activate UOR
+
+UOR -> ORS : updateOperationRequest(updatedInfo)
+activate ORS
+
+ORS ->o] : PUT: api/OperationRequest/Update
+
+ORS <--o] : Ok()
+
+ORS --> UOR: success
+deactivate ORS
+
+UOR --> USER: success
+deactivate UOR
+
+@enduml

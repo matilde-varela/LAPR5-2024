@@ -1,0 +1,25 @@
+<body>
+  <div>
+    <app-side-bar-patient></app-side-bar-patient>
+  </div>
+  <header>
+    <h1 class="main-title">Patient Profile Preferences</h1>
+  </header>
+
+  <app-privacy-policy style="margin-left: 60px;"></app-privacy-policy>
+  <br />
+
+  <div class="information-input">
+      <div class="button">
+        <button 
+          type="button" 
+          class="delete-account-button" 
+          (click)="confirmDelete()">
+          Delete Account
+        </button>
+      </div>
+  </div>
+  <br />
+
+  <app-message></app-message>
+</body>

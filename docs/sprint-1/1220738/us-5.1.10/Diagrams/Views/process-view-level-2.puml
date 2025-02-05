@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.10. Process View (Level 2)"
+
+autonumber
+
+participant "<<component>>\n UI" as PLAN
+participant "<<component>>\n Backoffice" as BACK
+
+[o-> PLAN : Chooses a\npatient profile
+activate PLAN
+<-- PLAN : Asks for\nconfirmation
+
+[o-> PLAN : Confirms
+
+PLAN -> BACK : DeleteProfile()
+activate BACK
+BACK --> PLAN : Sucess
+deactivate BACK
+
+<-- PLAN : Sucess
+deactivate PLAN
+
+@enduml

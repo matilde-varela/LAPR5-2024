@@ -1,0 +1,41 @@
+@startuml
+
+title "US 6.2.17 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor Doctor as USER 
+participant "ListOperationRequests" as UPP <<component>> 
+participant "OperationRequestService" as SS <<service>>
+
+activate USER
+USER -> UPP : list operation requests
+activate UPP
+
+UPP --> USER: select filters
+deactivate UPP
+
+alt doctors wants to filter operation requests
+
+USER -> UPP: selects filters
+activate UPP
+
+end alt 
+
+UPP -> SS: GetOperationRequestByFilters(filters)
+activate SS
+note right of SS: **filters** represent the various variables\npassed as parameters.
+
+SS ->o] : GET: api/OperationRequest/filtered?filters
+
+SS <--o] : Ok(operationRequests)
+
+SS --> UPP: operationRequests
+deactivate SS
+
+UPP --> USER: operationRequests
+deactivate UPP
+deactivate USER
+
+
+
+@enduml

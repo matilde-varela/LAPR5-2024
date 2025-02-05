@@ -1,0 +1,29 @@
+@startuml
+
+title "US 6.2.4 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Backoffice User" as USER
+participant "Login" as UPP <<component>>
+participant "UserService" as PS <<service>>
+
+USER -> UPP : login
+activate UPP
+
+UPP -> PS : login(userEmail, password)
+activate PS
+
+PS ->o] : GET: api/login-internal
+
+PS <--o] : Ok(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+
+
+
+@enduml

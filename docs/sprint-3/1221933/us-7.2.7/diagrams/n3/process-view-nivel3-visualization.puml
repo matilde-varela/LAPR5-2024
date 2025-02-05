@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.7. Process View (Level 3 | Visualization)"
+
+autonumber
+actor "Doctor" as USER
+participant "ListMedicalRecords" as UPP <<component>>
+participant "MedicalRecordService" as PS <<service>>
+
+activate USER
+USER -> UPP : asks to search for patient medical records
+activate UPP
+
+UPP -> PS : getAllMedicalRecords()
+activate PS
+
+PS ->o] : GET: api/medicalRecord/get-all-medical-records
+
+PS <--o] : Ok(medicalRecordsDTOList)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: shows list of patient medical records
+deactivate UPP
+
+opt search filters appliance
+    USER-> UPP : applies search filters
+    activate UPP
+
+        UPP -> PS : getFilteredMedicalRecords(json)
+        activate PS
+
+        PS ->o] : GET: /api/medicalRecord/get-filtered-medical-records
+
+        PS <--o] : Ok(filterMedicalRecordsDTOList)
+
+        PS --> UPP : filtered medical records list
+        deactivate PS
+
+    USER <-- UPP : shows the patient medical records with\n the selected filters
+    deactivate UPP
+end opt
+
+
+@enduml

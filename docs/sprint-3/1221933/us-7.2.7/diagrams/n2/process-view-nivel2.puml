@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.7. Process View (Level 2)"
+
+autonumber
+actor Doctor as DOC
+participant "<<component>>\n Visualization (UI)" as UI
+participant "<<component>>\n Patient Management" as BACK
+
+activate DOC
+DOC-> UI : asks to search for patient medical records
+activate UI
+
+UI -> BACK : getAllMedicalRecords()
+activate BACK
+
+BACK --> UI : medical records list
+deactivate BACK
+
+DOC <-- UI : shows list of patient medical records
+deactivate UI
+|||
+
+opt search filters appliance
+    DOC-> UI : applies search filters
+    activate UI
+
+        UI -> BACK : getFilteredMedicalRecords(json)
+        activate BACK
+
+        BACK --> UI : filtered medical records list
+        deactivate BACK
+
+    DOC <-- UI : shows the patient medical records with\n the selected filters
+    deactivate UI
+end opt
+
+deactivate DOC
+
+@enduml

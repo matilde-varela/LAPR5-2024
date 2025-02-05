@@ -1,0 +1,20 @@
+@startuml
+title "US 6.3.1 Process View (Level 3) | Visualization"
+
+actor Admin
+participant "<<Component>>\n OperationRequest" as OPREQ
+participant "<<Service>>\n OperationRequestService" as SERV
+
+activate Admin
+    Admin -> OPREQ : get better scheduling
+    activate OPREQ
+        OPREQ -> SERV : GetBetterScheduling()
+        activate SERV
+            SERV ->o] : GET: api/Get-BetterScheduling()
+            SERV <--o] : Ok(schedule)
+            SERV --> OPREQ : schedule
+        deactivate SERV
+        OPREQ --> Admin : schedule
+    deactivate OPREQ
+deactivate Admin
+@enduml

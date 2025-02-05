@@ -1,0 +1,184 @@
+<body>
+    <!-- Sidebar -->
+    <div>
+        <app-side-bar-admin></app-side-bar-admin>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1 class="main-title">Operation Request Scheduler</h1>
+    </header>
+
+    <!-- Results Section -->
+    <div class="conteudo">
+
+        <!-- Scheduling Data Section -->
+        <label style="font-size: 24px;"><strong>Scheduling Data</strong></label>
+        <br>
+        <div *ngFor="let scheduling of schedulingBackend.schedulingData; let i = index">
+            <fieldset style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
+                <legend>Scheduling Entry {{ i + 1 }}</legend>
+
+                <!-- Select Staff -->
+                <label style="font-size: 20px;"><strong>Select Staff for this Scheduling</strong></label>
+                <div *ngIf="staffList && staffList.length > 0">
+                    <p-table [value]="staffList" [(selection)]="scheduling.staff" selectionMode="multiple"
+                        [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 10%;">Select</th>
+                                <th style="width: 15%;">Staff Name</th>
+                                <th style="width: 15%;">Licence Number</th>
+                                <th style="width: 15%;">Function</th>
+                                <th style="width: 10%;">Specialization</th>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-staff>
+                            <tr [pSelectableRow]="staff">
+                                <td>
+                                    <p-tableCheckbox [value]="staff"></p-tableCheckbox>
+                                </td>
+                                <td>{{ staff.name || '-' }}</td>
+                                <td>{{ staff.id || '-' }}</td>
+                                <td>{{ staff.function || '-' }}</td>
+                                <td>{{ staff.specializationId || '-' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+
+                <br />
+
+                <!-- Select Operation Request -->
+                <label style="font-size: 20px;"><strong>Select Operation Request</strong></label>
+                <div *ngIf="operationRequestList && operationRequestList.length > 0">
+                    <p-table [value]="operationRequestList" [(selection)]="scheduling.operationRequestID"
+                        selectionMode="single"
+                        [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 10%;">Select</th>
+                                <th style="width: 20%;">Operation Type</th>
+                                <th style="width: 15%;">Priority</th>
+                                <th style="width: 15%;">Deadline</th>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-operationRequest>
+                            <tr [pSelectableRow]="operationRequest">
+                                <td>
+                                    <p-tableRadioButton [value]="operationRequest.id"
+                                        [name]="'operationRequestRadio' + i"></p-tableRadioButton>
+                                </td>
+                                <td>{{ operationRequest.operationTypeId || '-' }}</td>
+                                <td>{{ operationRequest.priority || '-' }}</td>
+                                <td>{{ operationRequest.deadLineDate.split('/')[0] || '-' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+
+                <br />
+
+                <!-- Remove Button -->
+                <button [disabled]="schedulingBackend.schedulingData.length === 1" (click)="removeSchedulingData(i)"
+                    style="background-color: red; color: white; padding: 5px 10px;">
+                    Remove
+                </button>
+            </fieldset>
+        </div>
+
+        <!-- Add New Scheduling Data -->
+        <button (click)="addSchedulingData()"
+            style="background-color: green; color: white; padding: 10px 20px; margin-top: 10px;">
+            Add New Scheduling Entry
+        </button>
+
+        <br />
+        <br />
+
+        <!-- Other Sections -->
+        <label style="font-size: 24px;"><strong>Select the Room for the scheduling</strong></label>
+        <div *ngIf="roomList && roomList.length > 0">
+            <p-table [value]="roomList" [(selection)]="selectedRoom" selectionMode="multiple"
+                [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }"
+                (selectionChange)="updateAlgorithmOptions()">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 10%;">Select</th>
+                        <th style="width: 15%;">Room Number</th>
+                        <th style="width: 15%;">Type</th>
+                        <th style="width: 10%;">Capacity</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-room>
+                    <tr [pSelectableRow]="room">
+                        <td>
+                            <p-tableCheckbox [value]="room"></p-tableCheckbox>
+                        </td>
+                        <td>{{ room.roomNumber || '-' }}</td>
+                        <td>{{ room.type || '-' }}</td>
+                        <td>{{ room.capacity || '-' }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <br />
+        <br />
+
+        <!-- Scheduling Algorithms -->
+        <div class="input-field">
+            <label style="font-size: 24px;"><strong>Scheduling Algorithm Method</strong></label>
+            <br />
+            <br />
+            <div>
+                <label style="font-size: 20px;">
+                    <input type="radio" name="scheduling" [(ngModel)]="algorithm" [value]="'better-solution'"
+                        [disabled]="isRoomRestricted" required />
+                    Better Scheduling Algorithm
+                </label>
+                <br />
+                <label style="font-size: 20px;">
+                    <input type="radio" name="scheduling" [(ngModel)]="algorithm" [value]="'first-doctor'"
+                        [disabled]="isRoomRestricted" required />
+                    Good Scheduling Algorithm (first available doctor)
+                </label>
+                <br />
+                <label style="font-size: 20px;">
+                    <input type="radio" name="scheduling" [(ngModel)]="algorithm" [value]="'highest-occupancy'"
+                        [disabled]="isRoomRestricted" required />
+                    Good Scheduling Algorithm (highest doctor occupancy)
+                </label>
+                <br />
+                <label style="font-size: 20px;">
+                    <input type="radio" name="scheduling" [(ngModel)]="algorithm" [value]="'genetic-room-distribution'"
+                        [disabled]="false" required />
+                    Genetic Algorithm With Room Distribution
+                </label>
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        <!-- Day -->
+        <div class="input-field">
+            <label style="font-size: 24px;"><strong>Day of the Schedule</strong></label>
+            <br />
+            <input type="date" [(ngModel)]="day" />
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button [disabled]="!schedulingBackend.schedulingData.length || !selectedRoom || algorithm == '' || !day"
+                (click)="scheduleOperationRequest()">
+                Schedule
+            </button>
+        </div>
+    </div>
+
+    <app-message></app-message>
+</body>

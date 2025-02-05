@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.16 - System Sequence Diagram"
+
+autonumber
+
+actor Doctor as DOC
+participant System as SYS
+
+activate DOC
+
+DOC -> SYS : asks request an operation
+activate SYS
+
+SYS --> DOC : asks to provide the patient information
+
+DOC -> SYS : provides patient information
+
+SYS --> DOC : asks to provide operation type
+
+DOC -> SYS : provides operation type
+
+SYS --> DOC : asks to provide priority
+
+DOC -> SYS : provides priority
+
+SYS --> DOC : asks to provide suggested deadline
+
+DOC -> SYS : provides suggested deadline
+
+SYS --> DOC : confirms the successful\n submission of the operation request
+
+deactivate SYS
+
+
+@enduml

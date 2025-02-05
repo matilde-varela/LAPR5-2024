@@ -1,0 +1,28 @@
+@startuml
+title "US 5.1.10. Process View (Level 1)"
+
+
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.10. Process View (Level 1)"
+
+autonumber
+
+actor Admin
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+Admin -> SYS : chooses a profile
+deactivate Admin
+activate SYS
+
+SYS --> Admin : asks for confirmation
+deactivate SYS
+activate Admin
+
+Admin -> SYS : confirms
+deactivate Admin
+activate SYS
+
+SYS --> Admin : marks for deletion
+deactivate SYS
+@enduml

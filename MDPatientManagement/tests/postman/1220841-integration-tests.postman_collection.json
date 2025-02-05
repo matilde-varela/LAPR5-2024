@@ -1,0 +1,755 @@
+{
+	"info": {
+		"_postman_id": "2533d2b7-4526-4d90-a1e7-80ea4a6c557b",
+		"name": "sprint3-1220841-integration-tests",
+		"description": "Here are the integration tests with external isolation.\n\nSince we are using pair programming, the tests were developed by Rita Barbosa (1220841), while the features were implemented by José Santos (1220738). The corresponding user stories for the developed tests are:\n\n> us-7.2.3  \nus-7.2.4  \nus-7.2.9",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38849391"
+	},
+	"item": [
+		{
+			"name": "us-7.2.3",
+			"item": [
+				{
+					"name": "setup",
+					"item": [
+						{
+							"name": "Login-Doctor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"var jsonResponse = pm.response.json();\r",
+											"var token = jsonResponse.token; \r",
+											"\r",
+											"pm.collectionVariables.set(\"auth-token-doctor\", token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " {\r\n    \"email\": \"anaogute@gmail.com\",\r\n    \"password\": \"Abcde12345!\"\r\n }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Login-Internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Login-Internal"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search Allergies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify if status code is the expected one\", function () {\r",
+									"    var statusCode = pm.response.code;\r",
+									"    pm.expect(statusCode).to.be.oneOf([201, 404]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify response body\", function () {\r",
+									"    if (pm.response.code === 404) {     \r",
+									"        pm.expect(true).to.eql(true);\r",
+									"    } else {\r",
+									"        var jsonData = pm.response.json();\r",
+									"        \r",
+									"        pm.expect(jsonData).to.be.an('array').that.is.not.empty;\r",
+									"        pm.expect(jsonData[0]).to.have.property('code').that.equals('BZ02.2');\r",
+									"        pm.expect(jsonData[0]).to.have.property('designation').that.equals('Seafood Allergy');\r",
+									"        pm.expect(jsonData[0]).to.have.property('description').that.equals('Green skin and mucus.');\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth-token-doctor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"queryfilters\": [\r\n        {\r\n            \"code\" : \"BZ02.2\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/Allergy/get-allergies-filtered",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"Allergy",
+								"get-allergies-filtered"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "us-7.2.4",
+			"item": [
+				{
+					"name": "setup",
+					"item": [
+						{
+							"name": "Login-Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"var jsonResponse = pm.response.json();\r",
+											"var token = jsonResponse.token; \r",
+											"\r",
+											"pm.collectionVariables.set(\"auth-token-admin\", token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " {\r\n    \"email\": \"admin@email.com\",\r\n    \"password\": \"Abcde12345!\"\r\n }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Login-Internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Login-Internal"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create Medical Condition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Verify if status code is the expected one\", function () {\r",
+									"    var statusCode = pm.response.code;\r",
+									"    pm.expect(statusCode).to.be.oneOf([200]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify response body\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"    pm.expect(jsonData).to.have.property('id').that.equals('TS00.1');\r",
+									"    pm.expect(jsonData).to.have.property('designation').that.equals('valid designation');\r",
+									"    pm.expect(jsonData).to.have.property('description').that.equals('valid description');\r",
+									"    pm.expect(jsonData).to.have.property('symptoms').that.is.an('array').that.includes.members(['Symptom 1', 'Symptom 2']);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth-token-admin}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"TS00.1\",\r\n    \"designation\": \"valid designation\",\r\n    \"description\": \"valid description\",\r\n    \"symptoms\": [\"Symptom 1\", \"Symptom 2\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/medicalCondition/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"medicalCondition",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "us-7.2.9",
+			"item": [
+				{
+					"name": "setup",
+					"item": [
+						{
+							"name": "Create Room",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"roomNumber\": \"R000\",\r\n    \"typeDesignation\": \"Bloco Operatório\",\r\n    \"Capacity\": 5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Room/create",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Room",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login-Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"var jsonResponse = pm.response.json();\r",
+											"var token = jsonResponse.token; \r",
+											"\r",
+											"pm.collectionVariables.set(\"auth-token-doctor\", token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " {\r\n    \"email\": \"admin@email.com\",\r\n    \"password\": \"Abcde12345!\"\r\n }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Login-Internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Login-Internal"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Specialization",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token-admin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\r\n{\r\n    \"code\" : \"00000000\",\r\n    \"denomination\": \"test-spec\",\r\n    \"description\": \"test-spec-description\"\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Specialization",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Specialization"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Operation Type",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token-admin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"test-type\",\r\n  \"estimatedDuration\": 155,\r\n  \"status\": true,\r\n  \"requiredStaff\": [\r\n    {\r\n      \"staffQuantity\": 1,\r\n      \"function\": \"Doctor\",\r\n      \"specialization\": \"00000000\"\r\n    }\r\n  ],\r\n  \"phases\": [\r\n    {\r\n      \"description\": \"Anesthesia\",\r\n      \"duration\": 45\r\n    },\r\n    {\r\n      \"description\": \"Surgery\",\r\n      \"duration\": 80\r\n    },\r\n    {\r\n      \"description\": \"Cleaning\",\r\n      \"duration\": 30\r\n    }\r\n  ]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/OperationTypes",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"OperationTypes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Staff",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract ID from response and store it in a variable\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    \r",
+											"    // Extract the 'id' and store it in a variable\r",
+											"    var id = jsonData.id;\r",
+											"    \r",
+											"    // Save the 'id' variable to the environment (or collection) for later use\r",
+											"    pm.collectionVariables.set(\"staff-id\", id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token-admin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"licenseNumber\": \"00000\",\r\n  \"firstName\": \"Test\",\r\n  \"lastName\": \"Person\",\r\n  \"phone\": \"+351 100000001\",\r\n  \"email\": \"test@p.com\",\r\n  \"address\" : \"Portugal, 4590-850, Rua da Sardinha\",\r\n  \"function\": \"doctor\",\r\n  \"specializationId\": \"00000000\"\r\n} ",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Staff/Create-StaffProfile",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Staff",
+										"Create-StaffProfile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login-Doctor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"var jsonResponse = pm.response.json();\r",
+											"var token = jsonResponse.token; \r",
+											"\r",
+											"pm.collectionVariables.set(\"auth-token-doctor\", token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " {\r\n    \"email\": \"anaogute@gmail.com\",\r\n    \"password\": \"Abcde12345!\"\r\n }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Login-Internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Login-Internal"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Operation Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract ID from response and store it in a variable\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    \r",
+											"    // Extract the 'id' and store it in a variable\r",
+											"    var id = jsonData.id;\r",
+											"    \r",
+											"    // Save the 'id' variable to the environment (or collection) for later use\r",
+											"    pm.collectionVariables.set(\"operation-request-id\", id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token-doctor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"deadLineDate\": \"2025-10-29\",\r\n  \"priority\": \"Elective\",\r\n  \"dateOfRequest\": \"2025-10-23\",\r\n  \"status\": \"requested\",\r\n  \"staffId\": \"{{staff-id}}\",\r\n  \"description\": \"test operation request\",\r\n  \"patientId\": \"202412000001\",\r\n  \"operationTypeId\": \"test-type\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/OperationRequest",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"OperationRequest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Appointment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract ID from response and store it in a variable\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    \r",
+											"    // Extract the 'id' and store it in a variable\r",
+											"    var id = jsonData.id;\r",
+											"    \r",
+											"    // Save the 'id' variable to the environment (or collection) for later use\r",
+											"    pm.collectionVariables.set(\"appointment-id\", id);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token-doctor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"status\": \"Scheduled\",\r\n  \"operationRequestId\": \"{{operation-request-id}}\",\r\n  \"roomNumber\": \"R000\",\r\n  \"startTime\": \"10:10\",\r\n  \"endTime\": \"11:11\",\r\n  \"startDate\": \"2025-10-10\",\r\n  \"endDate\": \"2025-10-10\",\r\n  \"staffList\" : [\"{{staff-id}}\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Appointment",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Appointment"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update Appointment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth-token-doctor}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"AppointmentId\" : \"{{appointment-id}}\",\r\n    \"NewRoomNumber\": \"R101\",\r\n    \"NewStartTime\": \"12:12\",\r\n    \"NewEndTime\": \"13:13\",\r\n    \"NewStartDate\": \"2025-10-11\",\r\n    \"NewEndDate\": \"2025-10-11\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/Appointment/update-appointment",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"Appointment",
+								"update-appointment"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth-token-doctor",
+			"value": ""
+		},
+		{
+			"key": "auth-token-admin",
+			"value": ""
+		},
+		{
+			"key": "staff-id",
+			"value": ""
+		},
+		{
+			"key": "operation-request-id",
+			"value": ""
+		},
+		{
+			"key": "appointment-id",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

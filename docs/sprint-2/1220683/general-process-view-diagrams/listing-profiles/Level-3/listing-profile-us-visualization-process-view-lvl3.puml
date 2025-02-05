@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "Listing US 6.2.X - Process View [Level 3 | Visualization]"
+
+autonumber
+
+actor "Admin" as USER
+participant "X Profiles Listing" as PPL <<component>>
+participant "XService" as XS <<service>>
+
+USER -> PPL : get all profiles
+activate PPL
+
+PPL -> XS : getXByFilters(queryParameters)
+note right
+if queryParameters is empty
+then no filters are applied
+and the whole list of profiles
+is retrieved from the backend
+end note
+activate XS
+
+XS ->o] : GET: /api/X/Get-XProfiles
+
+XS <--o] : Ok(list)
+
+
+XS --> PPL : X profiles list
+deactivate XS
+
+PPL -> USER : X profiles list
+deactivate PPL
+
+@enduml

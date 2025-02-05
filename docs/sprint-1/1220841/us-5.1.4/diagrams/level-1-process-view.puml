@@ -1,0 +1,30 @@
+@startuml
+
+title "US 5.1.4. - Process View [Level 1]"
+
+autonumber
+
+actor Patient as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate ADM
+ADM -> SYS : update user profile
+activate SYS
+
+SYS --> ADM : select information to edit
+deactivate SYS
+
+ADM --> SYS : selects information to edit
+activate SYS
+
+SYS --> ADM : input information
+deactivate SYS
+
+ADM --> SYS : inputs information
+activate SYS
+
+SYS --> ADM : success/insucess
+deactivate SYS
+deactivate ADM
+
+@enduml

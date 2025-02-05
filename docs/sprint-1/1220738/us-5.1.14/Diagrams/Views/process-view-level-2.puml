@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.14. Process View (Level 2)"
+
+autonumber
+
+participant "<<component>>\n Backoffice" as BACK
+participant "<<component>>\n Planning" as PLAN
+
+[o-> BACK : getActiveRoster()
+activate BACK
+
+<-- BACK : shows active roster list
+deactivate BACK
+
+[o-> BACK : chooses a profile
+activate BACK
+BACK -> BACK : deactivate profile
+BACK -> PLAN : updateWithNewRoster(roster)
+activate PLAN
+
+PLAN -> PLAN : updateSchedules()
+PLAN --> BACK : return
+deactivate PLAN
+
+<-- BACK : sucess
+deactivate BACK
+
+@enduml

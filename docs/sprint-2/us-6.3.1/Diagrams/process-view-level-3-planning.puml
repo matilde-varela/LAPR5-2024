@@ -1,0 +1,62 @@
+@startuml
+title "US 6.3.1 Process View (Level 3) | Planning"
+
+participant "US 6.3.1/3" as US
+participant "availability_operation/5" as AvailabilityOp
+participant "surgery_id/2" as SurgeryID
+participant "surgery/4" as Surgery
+participant "findall/3" as LAllStaff
+participant "include/3" as IncludeStaffs
+participant "intersect_all_agendas/3" as IntersectAgendas
+participant "agenda_operation_room1/3" as RoomAgenda
+participant "free_agenda0/2" as FreeAgenda
+participant "intersect_2_agendas/3" as IntersectAgendasRoom
+participant "filter_full_intervals1/3" as FilterFull
+participant "filter_by_availability/4" as FilterAvail
+participant "filter_by_surgery_availability/5" as FilterSurg
+participant "filter_by_cleaning_availability/6" as FilterClean
+participant "append/3" as AppendAppend
+participant "schedule_first_interval/5" as Schedule
+participant "remove_unf_intervals/3" as RemoveUnf
+participant "insert_agenda/3" as InsertAgenda
+participant "insert_agenda_doctors/3" as InsertAgendaDoctors
+
+[o-> US
+US -> AvailabilityOp: availability_operation_changed2(OpCode, Room, Day, LPossibilities, LParticipants)
+AvailabilityOp -> SurgeryID: surgery_id(OpCode, OpType)
+AvailabilityOp -> Surgery: surgery(OpType, _, TSurgery, _)
+AvailabilityOp -> LAllStaff: findall(Staff,assignment_surgery(OpCode, Staff),LAllStaff)
+AvailabilityOp -> IncludeStaffs: include(is_doctor, LAllStaff, LSurgeons)
+AvailabilityOp -> IncludeStaffs: include(is_anaesthetist, LAllStaff, LAnesth)
+AvailabilityOp -> IncludeStaffs: include(is_assistant, LAllStaff, LCleaners)
+AvailabilityOp -> IntersectAgendas: intersect_all_agendas(LSurgeons, Day, LFreeSurgeons)
+AvailabilityOp -> IntersectAgendas: intersect_all_agendas(LAnesth, Day, LFreeAnesth)
+AvailabilityOp -> IntersectAgendas: intersect_all_agendas(LCleaners, Day, LFreeCleaners)
+AvailabilityOp -> RoomAgenda: agenda_operation_room1(Room, Day, LAgenda)
+AvailabilityOp -> FreeAgenda: free_agenda0(LRoomAgenda, LFreeRoom)
+AvailabilityOp -> FilterFull: filter_full_intervals1(LFreeRoom, TotalTime, FullIntervals)
+AvailabilityOp -> FilterAvail: filter_by_availability(FullIntervals, LFreeAnesth, TimeAnesthSurgery, IntervalsAnesth)
+AvailabilityOp -> FilterSurg: filter_by_surgery_availability(IntervalsAnesth, LFreeSurgeons, TAnesthesia, TSurgery, IntervalsSurgeons)
+AvailabilityOp -> FilterClean: filter_by_cleaning_availability(IntervalsSurgeons, LFreeCleaners, TAnesthesia, TSurgery, TCleaning, LPossibilities)
+AvailabilityOp -> AppendAppend: append(LAnesth, LSurgeons, TempParticipants)
+AvailabilityOp -> AppendAppend: append(TempParticipants, LCleaners, LParticipants)
+
+
+US -> Schedule: schedule_first_interval(TAnesthesia,TSurgery,TCleaning,[(Tin,_)|_],(Tin,TfinS))
+US <-- Schedule:
+
+US -> InsertAgenda: insert_agenda((TinS, TfinS, OpCode), Agenda, Agenda1)
+
+InsertAgenda -> InsertAgenda: insert operation into room's agenda
+InsertAgenda --> US: return updated room agenda (Agenda1)
+
+US -> InsertAgendaDoctors: insert_agenda_doctors((TinS, TfinS, OpCode), Day, LDoctors)
+
+InsertAgendaDoctors -> InsertAgendaDoctors: update each doctor's agenda
+InsertAgendaDoctors -> InsertAgenda: call insert_agenda for each doctor
+InsertAgenda --> InsertAgendaDoctors: return updated agenda for doctor
+InsertAgendaDoctors --> US: confirm insertion in doctor agendas
+
+[o<-- US:
+
+@enduml

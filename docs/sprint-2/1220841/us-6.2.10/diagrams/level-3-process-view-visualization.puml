@@ -1,0 +1,45 @@
+@startuml
+
+title "US 6.2.10 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor Admin as USER 
+participant "CreateStaff" as UPP <<component>> 
+participant "SpecializationService" as SS <<service>>
+participant "StaffService" as PS <<service>>
+
+activate USER
+USER -> UPP : create staff profile
+activate UPP
+
+UPP -> SS: getAllSpecializationsAvailable()
+activate SS
+
+SS ->o] : GET: api/Specializations
+SS <--o] : specializations
+
+SS --> UPP: specializations
+deactivate SS
+UPP --> USER : select specialization
+deactivate UPP
+
+USER -> UPP: selects specialization
+activate UPP
+
+UPP -> PS : createStaff(StaffInformation)
+activate PS
+
+PS ->o] : POST: api/Staff/Create-StaffProfile
+
+PS <--o] : Created(StaffDto)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+deactivate USER
+
+
+
+@enduml

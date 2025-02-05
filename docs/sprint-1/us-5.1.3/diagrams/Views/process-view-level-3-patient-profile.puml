@@ -1,0 +1,45 @@
+@startuml
+title "US 5.1.3. Process View (Level 3) - Creating a Patient Profile"
+
+participant "<<Route>>\n PatientRoute" as ROUTE
+participant "<<Controller>>\n PatientController" as CONTROL
+participant "<<DTO>>\n CreatingPatientDto" as StaffDTO
+participant "<<Service>>\n PatientService" as STAFFServ
+participant "<<Repository>>\n PatientRepository" as STAFFRepo
+participant "<<Domain>>\n Patient" as STAFF
+
+[o-> ROUTE : POST(PatientProfileData)
+Activate ROUTE
+
+ROUTE -> CONTROL : createPatientProfile(patientProfileData)
+Activate CONTROL
+
+CONTROL -> StaffDTO** : toDTO(patientProfileData)
+CONTROL -> STAFFServ : createPatientProfile(staffDTO)
+Activate STAFFServ
+
+STAFFServ -> STAFFRepo : existsById(creatingPatientDto.email)
+Activate STAFFRepo
+
+STAFFRepo --> STAFFServ : boolean
+note right : Checks if a patient\ndoesn't exist with\nthat email.
+Deactivate STAFFRepo
+
+STAFFServ -> STAFF**
+STAFFServ -> STAFFRepo : save(patient)
+Activate STAFFRepo
+
+STAFFRepo --> STAFFServ : patient
+Deactivate STAFFRepo
+
+STAFFServ --> CONTROL : return
+deactivate STAFFServ
+
+CONTROL --> ROUTE : return
+deactivate CONTROL
+
+Deactivate CONTROL
+<-- ROUTE : success/error
+
+Deactivate ROUTE
+@enduml

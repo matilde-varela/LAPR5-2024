@@ -1,0 +1,130 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.23. Process View (Level 3)"
+autonumber
+
+participant "route:\nOperationTypeRoute" as ROUTE
+participant "controller:\nOperationTypeController" as CTRL
+participant "query:\nOperationTypeQueryParametersDto" as QueryDTO
+participant "service:\n OperationTypeService" as SER
+participant "repository:\nOperationTypeRepository" as REPO
+participant "dto:\nOperationTypeDTO" as DTO
+
+[o-> ROUTE : GET() /api/Xs
+activate ROUTE
+
+ROUTE -> CTRL : getAllOperationTypes()
+activate CTRL
+
+CTRL -> SER : getAllOperationTypes()
+activate SER
+
+SER -> REPO : findAll()
+activate REPO
+
+REPO --> SER : operationTypeList
+deactivate REPO
+
+    loop for all the operation types in the list
+        SER -> DTO ** : toDTO(operationType)
+
+    end loop
+
+SER --> CTRL : operationTypeDTOList
+deactivate SER
+
+
+CTRL -> CTRL : json(operationTypeDTOList)
+activate CTRL
+deactivate CTRL
+
+CTRL --> ROUTE : json
+deactivate CTRL
+
+[o<-- ROUTE : ok(json)
+deactivate ROUTE
+
+|||
+
+[o-> ROUTE : POST(json)
+activate ROUTE
+
+ROUTE -> CTRL : GetFilteredOperationTypes(json)
+activate CTRL
+
+CTRL -> QueryDTO ** : toDTO(json)
+
+CTRL -> SER : FilterOperationTypes(queryParametersDTO)
+activate SER
+
+
+SER -> REPO : FilterOperationTypes(queryParametersDTO)
+activate REPO
+
+REPO --> SER : operationTypesList
+deactivate REPO
+
+    loop for all the operation types in the list
+        SER -> DTO ** : toDTO(operationType)
+    end loop
+
+SER --> CTRL : filterOperationTypesDTOList
+deactivate SER
+
+CTRL -> CTRL : json(OperationTypeDTOList)
+activate CTRL
+deactivate CTRL
+
+CTRL --> ROUTE : json
+deactivate CTRL
+
+<-- ROUTE : ok(json)
+deactivate ROUTE
+
+|||
+
+alt edit operation type
+
+    [o-> ROUTE : PUT(json)
+    activate ROUTE
+
+    ROUTE -> CTRL : editOperationType(updatedProfileData)
+    activate CTRL
+
+    ref over CTRL
+
+    **US 5.1.21.**
+    end ref
+
+    CTRL --> ROUTE : answer
+    deactivate CTRL
+
+else delete operation type
+
+    [o-> ROUTE : DELETE(json)
+
+    ROUTE -> CTRL : deleteOperationType(operationType)
+    activate CTRL
+
+    ref over CTRL
+
+    **US 5.1.22.**
+    end ref
+
+    CTRL --> ROUTE : answer
+    deactivate CTRL
+
+end alt
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+
+@enduml

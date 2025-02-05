@@ -1,0 +1,30 @@
+@startuml
+
+title "US 6.2.5 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Patient" as USER 
+participant "Login" as UPP <<component>> 
+participant "UserService" as PS <<service>>
+
+activate USER
+USER -> UPP : login
+activate UPP
+
+UPP -> PS : loginExternal(userEmail, password)
+activate PS
+
+PS ->o] : GET: api/login-external
+
+PS <--o] : Accepted(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+deactivate USER
+
+
+
+@enduml

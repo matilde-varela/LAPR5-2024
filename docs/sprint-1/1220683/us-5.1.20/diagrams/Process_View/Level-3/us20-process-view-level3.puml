@@ -1,0 +1,210 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title US 5.1.20 Process View (Level 3)
+
+autonumber
+
+participant "<<route>>\n Routing" as ROUTE
+participant "<<controller>>\n OperationTypeController" as CONTROL
+
+participant "<<service>>\n SpecializationService" as SpecializationServ
+participant "<<repository>>\n SpecializationRepository" as SpecializationRepo
+participant "<<dto>>\n SpecializationDTO" as SpecializationDTO
+
+participant "<<dto>>\n SpecializationAndFunctionResponseDTO " as ResponseDTO
+
+participant "<<service>>\n OperationTypeService" as OPTYServ
+participant "<<dto>>\n OperationTypeDTO" as OPTYDTO
+participant "<<domain>>\n Function" as Function
+participant "<<dto>>\n FunctionDTO" as FunctionDTO
+
+participant "<<repository>>\n OperationTypeRepository" as OPTYRepo
+participant "<<domain>>\n OperationType" as OPTY
+
+participant "<<service>>\n OperationTypeRecordService" as OPTYRecordServ
+participant "<<domain>>\n OperationTypeRecord" as Record
+
+participant "<<domain>>\n RequiredStaffRecord" as STAFFRecord
+
+participant "<<domain>>\n Phase" as PHASE
+participant "<<domain>>\n RequiredStaff" as STAFF
+
+participant "<<repository>>\n OperationTypeRecordRepository" as OPTYRecordRepo
+participant "<<domain>>\n OperationTypeRecord" as Record
+
+participant "<<service>>\n LogService" as LogServ
+participant "<<domain>>\n Log" as Log
+participant "<<repository>>\n LogRepository" as LogRepo
+
+
+[o-> ROUTE : GET() /api/operationtypes
+activate ROUTE
+
+ROUTE -> CONTROL : getAllSpecializationsAndFunctions()
+activate CONTROL
+
+CONTROL -> SpecializationServ : GetAllAsync()
+activate SpecializationServ
+
+SpecializationServ -> SpecializationRepo : findAll()
+activate SpecializationRepo
+
+SpecializationRepo --> SpecializationServ : specializationsList
+deactivate SpecializationRepo
+
+loop for each specialization in the list
+
+SpecializationServ -> SpecializationDTO ** : toDTO(specialization)
+end loop
+
+SpecializationServ --> CONTROL : specializationListDTO
+deactivate SpecializationServ
+
+CONTROL -> OPTYServ : getAllFunctionsList()
+activate OPTYServ
+
+OPTYServ -> Function : getAll()
+activate Function
+
+Function --> OPTYServ : functionsList
+deactivate Function
+
+loop for all functions
+OPTYServ -> FunctionDTO** : toDto(function)
+end loop
+
+OPTYServ --> CONTROL : functionListDTO
+deactivate OPTYServ
+
+CONTROL -> ResponseDTO ** : toDTO(specializationListDTO, functionListDTO)
+
+CONTROL -> CONTROL : json(responseDTO)
+activate CONTROL
+deactivate CONTROL
+
+CONTROL --> ROUTE : json
+deactivate CONTROL
+
+[o<-- ROUTE : OK(json)
+deactivate ROUTE
+
+|||
+
+'probably json
+[o-> ROUTE : POST(json)
+activate ROUTE
+
+ROUTE -> OPTYDTO ** : toDto(json)
+
+ROUTE -> CONTROL : Create(operationTypeDTO)
+activate CONTROL
+
+CONTROL -> OPTYServ : AddAsync(operationTypeDTO)
+activate OPTYServ
+
+
+OPTYServ -> OPTY ** : OperationType(dto.Name, dto.EstimatedDuration, dto.Status, dto.RequiredStaff, dto.Phases)
+activate OPTY
+
+loop for each RequiredStaffDto within operationTypeDto
+
+OPTY -> STAFF ** : RequiredStaff(StaffQuantity, Function, Specialization)
+end loop
+
+loop for all 3 phases (Anesthesia, Surgery, Cleaning)
+
+OPTY -> PHASE ** : Phase(description, duration)
+deactivate OPTY
+end loop
+
+OPTYServ -> OPTYRepo : AddAsync(operationType)
+activate OPTYRepo
+
+OPTYRepo --> OPTYServ : operationTypeDto
+deactivate OPTYRepo
+
+OPTYServ -> LogServ : CreateCreationLog(operationTypeId, operationTypeClass, logDescription)
+activate LogServ
+
+LogServ -> Log ** : Log(getSequentialNumber(), objectClass, objectReference, 3, description)
+note right
+2 represents the
+Log type - Creation
+end note
+
+LogServ -> LogRepo : AddAsync(log)
+activate LogRepo
+
+LogRepo --> LogServ : log
+deactivate LogRepo
+
+LogServ --> OPTYServ : log
+deactivate LogServ
+
+OPTYServ -> OPTYRecordServ : AddAsync(operation)
+activate OPTYRecordServ
+
+OPTYRecordServ -> Record ** : OperationTypeRecord(todayDate, 0, Id, Name, EstimatedDuration, Status, RequiredStaff, Phases)
+
+OPTYRecordServ -> OPTYRecordRepo : AddAsync(operationRecord)
+activate OPTYRecordRepo
+
+OPTYRecordRepo --> OPTYRecordServ : operationTypeRecord
+deactivate OPTYRecordRepo
+
+OPTYRecordServ -> LogServ : CreateCreationLog(operationRecordId, operationRecordClass, logDescription)
+activate LogServ
+
+LogServ -> Log ** : Log(getSequentialNumber(), objectClass, objectReference, 2, description)
+
+LogServ -> LogRepo : AddAsync(log)
+activate LogRepo
+
+LogRepo --> LogServ : log
+deactivate LogRepo
+
+LogServ --> OPTYRecordServ : log
+deactivate LogServ
+
+OPTYRecordServ --> OPTYServ : operationTypeRecordDto
+deactivate OPTYRecordServ
+
+
+OPTYServ --> CONTROL : operationTypeDto
+deactivate OPTYServ
+
+CONTROL -> OPTYServ : GetByIdAsync(operationTypeDto.Name)
+activate OPTYServ
+
+OPTYServ -> OPTYRepo : GetByIdWithStaffAsync(operationTypeId)
+activate OPTYRepo
+
+OPTYRepo --> OPTYServ : operationTypeWithRequiredStaffList
+deactivate OPTYRepo
+
+OPTYServ -> OPTYServ : toDTO(operationTypeWithRequiredStaffList)
+activate OPTYServ
+
+OPTYServ -> OPTYDTO **
+
+OPTYServ --> OPTYServ : operationTypeDto
+deactivate OPTYServ
+
+OPTYServ --> CONTROL : operationTypeDto
+deactivate OPTYServ
+
+CONTROL --> ROUTE : operationTypeDto
+deactivate CONTROL
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+
+@enduml

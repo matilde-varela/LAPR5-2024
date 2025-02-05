@@ -1,0 +1,35 @@
+<body>
+    <div>
+      <app-side-bar-patient></app-side-bar-patient>
+    </div>
+    <header>
+      <h1 class="main-title">Download Medical Record</h1>
+    </header>
+  
+    <div class="information-input">
+      <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before submitting:</p>
+  
+      <form #downloadForm="ngForm" (ngSubmit)="onSubmit(downloadForm)" novalidate>
+        <div class="input-field">
+            <input name="filePath" #filePath="ngModel" [(ngModel)]="download.filePath" placeholder="File Path" [disabled]="isSubmitted" required
+              [class.invalid-placeholder]="filePath.invalid && filePath.touched" />
+              <span></span>
+          </div>
+      
+        <div class="input-field">
+          <input name="password" #password="ngModel" [(ngModel)]="download.password" placeholder="Password" [disabled]="isSubmitted" required
+            [class.invalid-placeholder]="password.invalid && password.touched" />
+            <span></span>
+        </div>
+      
+        <div class="button">
+          <button type="submit" class="add-button-submit" [disabled]="downloadForm.invalid || isSubmitted">Submit</button>
+          <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+        </div>
+      </form>
+      
+    </div>
+    <br>
+    <app-message></app-message>
+  </body>
+  

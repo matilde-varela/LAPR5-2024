@@ -1,0 +1,30 @@
+@startuml
+
+title "US 7.6.1 - Process View [Level 1]"
+
+autonumber
+
+actor Patient as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate ADM
+ADM -> SYS : request to export medical record
+activate SYS
+
+SYS --> ADM : ask for file path
+deactivate SYS
+
+ADM -> SYS : provide file path
+activate SYS
+
+SYS --> ADM : ask for password
+deactivate SYS
+
+ADM -> SYS : provide password
+activate SYS
+
+SYS --> ADM : success/failure
+deactivate SYS
+deactivate ADM
+
+@enduml

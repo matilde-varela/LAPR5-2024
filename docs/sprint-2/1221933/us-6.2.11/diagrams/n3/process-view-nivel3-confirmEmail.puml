@@ -1,0 +1,98 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.11. Process View - Confirm Contact Information Change (Level 3 | MDBackoffice)"
+
+autonumber
+
+participant "route:\nEditStaffRoute" as ROUTE
+participant "controller:\nStaffController" as CTRL
+
+participant "service:\nStaffService" as SER
+participant "repository:\nStaffRepo" as REPO
+participant "service:\nUserService" as UserServ
+participant "domain:\nUser" as USER
+participant "service:\nTokenService" as TOKENServ
+participant "service:\nUserManager" as UserMan
+
+
+participant "domain:\nStaff" as Staff
+
+
+[o-> ROUTE : PUT(userId, staffId, token)
+activate ROUTE
+
+ROUTE -> CTRL : ConfirmEmailStaff(userId, staffId, token)
+activate CTRL
+
+CTRL -> SER : ConfirmEmailStaff(userId, staffId, token)
+activate SER
+
+SER -> REPO : GetByIdAsync(id)
+activate REPO
+
+REPO --> SER : staff
+deactivate REPO
+
+
+SER -> UserServ : ConfirmEmailStaffWithoutPassword(userId, token)
+activate UserServ
+
+UserServ -> UserServ : ConfirmEmailVerifications(userId, token)
+activate UserServ
+
+UserServ -> UserMan : findByIdAsync(userId)
+activate UserMan
+
+UserMan --> UserServ : user
+deactivate UserMan
+
+UserServ -> TOKENServ : ConfirmEmailToken(userId, token)
+activate TOKENServ
+
+TOKENServ -> UserMan : findByIdAsync(userId)
+activate UserMan
+
+UserMan --> TOKENServ : user
+deactivate UserMan
+
+TOKENServ -> UserMan : ConfirmEmailAsync(user, token)
+activate UserMan
+
+UserMan --> TOKENServ : result
+deactivate UserMan
+
+TOKENServ --> UserServ : result
+deactivate TOKENServ
+deactivate UserServ
+
+UserServ -> USER : changeStatus(true)
+activate USER
+deactivate USER
+
+UserServ -> UserServ : UpdateAsync(user)
+activate UserServ
+deactivate UserServ
+
+opt result is true
+UserServ -> Staff : ActivateProfile()
+activate Staff
+deactivate Staff
+
+end opt
+
+UserServ --> SER : success/failure
+deactivate UserServ
+
+SER --> CTRL : success/failure
+deactivate SER
+
+CTRL --> ROUTE : return Ok("Email confirmed successfully and\n contact information changed.")
+deactivate CTRL
+
+<-- ROUTE : message
+deactivate ROUTE
+
+
+
+@enduml

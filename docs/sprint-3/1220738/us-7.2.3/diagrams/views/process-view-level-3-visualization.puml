@@ -1,0 +1,20 @@
+@startuml
+title "US 7.2.3 Process View (Level 3) | Visualization"
+
+actor Doctor
+participant "<<Component>>\n Get-Allergies" as USER
+participant "<<Service>>\n AllergyService" as SERV
+
+activate Doctor
+    Doctor -> USER : Asks to show list of allergies.
+    activate USER
+        USER -> SERV : GetAllAllergies(name)
+        activate SERV
+            SERV ->o] : GET: api/allergy/get-allergies(name)
+            SERV <--o] : Ok(allergies)
+            SERV --> USER : allergies
+        deactivate SERV
+        USER --> Doctor : allergies
+    deactivate USER
+deactivate Doctor
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+
+title "US 7.2.10 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor Admin as USER 
+participant "CreateRoomType" as UPP <<component>> 
+participant "RoomTypeService" as PS <<service>>
+
+activate USER
+USER -> UPP : add new room type
+activate UPP
+
+UPP -> PS : CreateRoomType(PatientInformation)
+activate PS
+
+PS ->o] : POST: api/room-type
+
+PS <--o] : Created(RoomTypeDto)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+deactivate USER
+
+
+
+@enduml

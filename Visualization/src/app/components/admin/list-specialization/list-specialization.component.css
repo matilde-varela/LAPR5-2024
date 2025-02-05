@@ -1,0 +1,247 @@
+.main-title {
+    font-family: 'Poppins', monospace;
+    font-size: 45px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #0066cc, #45a0a0);
+    color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192);
+    margin-left: 0px;
+    max-width: 50%;
+  }
+  
+  /* Layout for the content section */
+  .conteudo {
+    margin-left: 220px;
+    margin-right: 1rem;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+  }
+  
+  /* Styling for the operation request table */
+  p-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+  }
+  
+  th {
+    font-weight: bold;
+    background-color: #0066cc;
+    color: #fff;
+  }
+  
+  td {
+    background-color: #fff;
+  }
+  
+  /* Button styling inside action buttons */
+  .action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  button {
+    background-color: #0074d9;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Specific styling for the header */
+  header {
+    margin-top: 2%;
+    margin-left: 220px;
+    text-align: center;
+  }
+  
+  /* Adjusted layout for left-aligned text */
+  .titulo {
+    text-align: left;
+  }
+  
+  /* Styling for the content paragraphs */
+  .conteudo p {
+    font-size: 18px;
+  }
+  
+  /* Styling for the operation details section */
+  .operation-details {
+    margin-left: 17%;
+    margin-right: 17%;
+    padding: 20px;
+    background-color: #f0f0f0fb;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: calc(100% - 34%);
+    box-sizing: content-box;
+  }
+  
+  
+  .operation-update {
+    margin-left: 17%;
+    margin-right: 17%;
+    padding: 20px;
+    background-color: #f0f0f0fb;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: calc(100% - 34%);
+    box-sizing: content-box;
+    text-align: left;
+  }
+  
+  .operation-update h3 {
+    font-family: 'Poppins', monospace;
+    font-size: 24px;
+    color: #0066cc;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .operation-update p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    text-align: left; /* Aligns text centrally */
+  }
+  
+  .operation-update strong {
+    color: #333;
+  }
+  
+  .operation-update .action-buttons {
+    display: flex;
+    justify-content: center; /* Centers buttons */
+    gap: 1rem;
+    margin-top: 20px;
+  }
+  
+  
+  /* Header for operation details */
+  .operation-details h3 {
+    font-family: 'Poppins', monospace;
+    font-size: 24px;
+    color: #0066cc;
+    margin-bottom: 15px;
+  }
+  
+  /* Paragraphs inside operation details */
+  .operation-details p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  
+  /* Strong tags for labels */
+  .operation-details strong {
+    color: #333;
+  }
+  
+  /* Consistent styling for the operation details to match the rest of the page */
+  .operation-details p,
+  .operation-details h3 {
+    text-align: center;
+  }
+  
+  /* Styling for filter section */
+  /* Styling for filter section */
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Automatically adjusts columns based on screen size */
+    gap: 15px;
+    margin-left: 220px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #e8f4fa;
+  }
+  
+  /* Styling for filter inputs, selects, and button */
+  .filters input, .filters select {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+    font-size: 14px;
+  }
+  
+  .filters button {
+    background-color: #0056b3;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    grid-column: span 2; /* Button spans 2 columns on larger screens */
+    max-width: 200px; /* Limit button width */
+    margin-top: 10px;
+  }
+  
+  .filters button:hover {
+    background-color: #024a97;
+  }
+  
+  /* Styling for filter labels */
+  .filters label {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    margin-bottom: 5px; /* Spacing between label and input/select */
+  }
+  
+  /* Styling for select dropdowns and inputs */
+  .filters input, .filters select {
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .filters {
+      margin-left: 0;
+      grid-template-columns: 1fr; /* Stacks filter fields on smaller screens */
+    }
+  
+    .filters button {
+      grid-column: span 1; /* Button takes up one column on smaller screens */
+      width: 100%;
+    }
+  
+    .conteudo {
+      margin-left: 0;
+      padding: 15px;
+    }
+  
+    header {
+      margin-left: 0;
+    }
+  
+    .operation-details {
+      margin-left: 5%;
+      margin-right: 5%;
+      max-width: calc(100% - 10%);
+    }
+  }
+  

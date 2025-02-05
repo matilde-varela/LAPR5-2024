@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.1.3 Process View (Level 1)"
+
+autonumber
+
+actor "BackOffice User" as BACK
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+BACK -> SYS : wants to see the 3D simulation of an hospital floor
+activate SYS
+
+SYS --> BACK : shows the 3D simulation
+deactivate SYS
+activate BACK
+
+BACK -> SYS : changes simulation time
+deactivate BACK
+activate SYS
+
+SYS -> BACK : updates the hospital rooms availability
+deactivate SYS
+activate BACK
+
+BACK -> SYS : clicks on a room's tooltip
+deactivate BACK
+activate SYS
+
+
+SYS --> BACK : presents detailed information about the surgery happening
+deactivate SYS
+
+@enduml

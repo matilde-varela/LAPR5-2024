@@ -1,0 +1,42 @@
+.main-title {
+  font-family: 'Poppins', monospace;
+  font-size: 45px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #0066cc, #45a0a0);    
+  color: #ffffff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192);
+  margin-left: 200px;
+  max-width: 50%;
+}
+
+/* Delete Account Button */
+.delete-account-button {
+  background-color: #ff4d4d; /* Bright red color */
+  color: white;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.delete-account-button:hover {
+  background-color: #e60000; /* Darker red on hover */
+}
+
+.delete-account-button:active {
+  background-color: #cc0000; /* Even darker red when clicked */
+}
+
+/* Button Container */
+.button {
+  display: flex;
+  margin-left: 200px;
+  justify-content: left;
+  gap: 20px;
+  margin-top: 20px;
+}

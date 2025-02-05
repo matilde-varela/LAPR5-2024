@@ -1,0 +1,235 @@
+{
+    "agRoom": [
+        {
+        "roomId": "or1",
+        "date": "20241028",
+        "occupied": [
+                {"start": 520, "end": 579, "operationId": "so100000"},
+                {"start": 1000, "end": 1059, "operationId": "so099999"}
+        ]
+        }
+    ],
+  "staff":
+        [
+            {
+                "staffId" : "d001",
+                "function": "doctor",
+                "spec" : "orthopaedist",
+                "assocOp" : ["so2","so3","so4"]
+            },
+            {
+                "staffId": "d002",
+                "function": "doctor",
+                "spec": "orthopaedist",
+                "assocOp": ["so2", "so3", "so4"]
+            },
+            {
+                "staffId": "d003",
+                "function": "doctor",
+                "spec": "orthopaedist",
+                "assocOp": ["so2", "so3", "so4"]
+            },
+            {
+                "staffId": "d004",
+                "function": "doctor",
+                "spec": "anaesthetist",
+                "assocOp": ["so2", "so3", "so4"]
+            },
+            {
+                "staffId": "n001",
+                "function": "nurse",
+                "spec": "instrumenting",
+                "assocOp": ["so2", "so3", "so4"]
+            },
+            {
+                "staffId": "n002",
+                "function": "nurse",
+                "spec": "circulating",
+                "assocOp": ["so2", "so3", "so4"]
+            },
+            {
+                "staffId": "n003",
+                "function": "nurse",
+                "spec": "anaesthetist",
+                "assocOp": ["so2", "so3", "so4"]
+            },
+            {
+                "staffId": "a001",
+                "function": "assistant",
+                "spec": "medical",
+                "assocOp": ["so2", "so3", "so4"]
+            }
+        ],
+ "surgery": [
+        {
+            "surgeryId": "so2",
+            "prepTime": 45,
+            "surgeryDuration": 60,
+            "recoveryTime": 45
+        },
+        {
+            "surgeryId": "so3",
+            "prepTime": 45,
+            "surgeryDuration": 90,
+            "recoveryTime": 45
+        },
+        {
+            "surgeryId": "so4",
+            "prepTime": 45,
+            "surgeryDuration": 75,
+            "recoveryTime": 45
+        }
+    ],
+    "agStaff": [
+        {
+            "staffId": "d001",
+            "date": 20241028,
+            "schedule": [
+                {"start": 720, "end": 790, "operationId": "m01"},
+                {"start": 1080, "end": 1140, "operationId": "c01"}
+            ]
+        },
+        {
+            "staffId": "d002",
+            "date": 20241028,
+            "schedule": [
+                {"start": 850, "end": 900, "operationId": "m02"},
+                {"start": 901, "end": 960, "operationId": "m03"},
+                {"start": 1380, "end": 1440, "operationId": "c02"}
+            ]
+        },
+        {
+            "staffId": "d003",
+            "date": 20241028,
+            "schedule": [
+                {"start": 720, "end": 790, "operationId": "m01"},
+                {"start": 910, "end": 980, "operationId": "m02"}
+            ]
+        },
+        {
+            "staffId": "d004",
+            "date": 20241028,
+            "schedule": [
+                {"start": 940, "end": 980, "operationId": "c04"}
+            ]
+        },
+        {
+            "staffId": "n001",
+            "date": 20241028,
+            "schedule": [
+                {"start": 720, "end": 790, "operationId": "m01"},
+                {"start": 1380, "end": 1440, "operationId": "c02"}
+            ]
+        },
+        {
+            "staffId": "n002",
+            "date": 20241028,
+            "schedule": [
+                {"start": 850, "end": 900, "operationId": "m02"},
+                {"start": 940, "end": 980, "operationId": "c04"}
+            ]
+        },
+        {
+            "staffId": "n003",
+            "date": 20241028,
+            "schedule": [
+                {"start": 1010, "end": 1070, "operationId": "m01"},
+                {"start": 1080, "end": 1140, "operationId": "c01"}
+            ]
+        },
+        {
+            "staffId": "a001",
+            "date": 20241028,
+            "schedule": [
+                {"start": 850, "end": 900, "operationId": "m02"},
+                {"start": 1380, "end": 1440, "operationId": "c02"}
+            ]
+        }
+    ],
+    "timetable": [
+        {
+            "staffId": "d001",
+            "date": 20241028,
+            "availability": {"start": 480, "end": 1200}
+        },
+        {
+            "staffId": "d002",
+            "date": 20241028,
+            "availability": {"start": 500, "end": 1440}
+        },
+        {
+            "staffId": "d003",
+            "date": 20241028,
+            "availability": {"start": 530, "end": 1320}
+        },
+        {
+            "staffId": "d004",
+            "date": 20241028,
+            "availability": {"start": 300, "end": 1400}
+        },
+        {
+            "staffId": "n001",
+            "date": 20241028,
+            "availability": {"start": 480, "end": 1200}
+        },
+        {
+            "staffId": "n002",
+            "date": 20241028,
+            "availability": {"start": 500, "end": 1140}
+        },
+        {
+            "staffId": "n003",
+            "date": 20241028,
+            "availability": {"start": 400, "end": 1320}
+        },
+        {
+            "staffId": "a001",
+            "date": 20241028,
+            "availability": {"start": 500, "end": 1440}
+        }
+    ],
+    "surgeryId": [
+        {
+            "operationId": "so100001",
+            "surgeryId": "so2"
+        },
+        {
+            "operationId": "so100002",
+            "surgeryId": "so3"
+        }
+    ],
+    "assignSurgery": [
+        {
+            "operationId": "so100001",
+            "staffId": "d001"
+        },
+        {
+            "operationId": "so100001",
+            "staffId": "d004"
+        },
+        {
+            "operationId": "so100001",
+            "staffId": "n001"
+        },
+        {
+            "operationId": "so100001",
+            "staffId": "a001"
+        },
+        {
+            "operationId": "so100002",
+            "staffId": "d002"
+        },
+        {
+            "operationId": "so100002",
+            "staffId": "d004"
+        },
+        {
+            "operationId": "so100002",
+            "staffId": "n002"
+        },
+        {
+            "operationId": "so100002",
+            "staffId": "a001"
+        }
+    ]
+}

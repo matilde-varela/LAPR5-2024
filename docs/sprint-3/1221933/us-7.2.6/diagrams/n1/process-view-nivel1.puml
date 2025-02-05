@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.6. Process View (Level 1)"
+
+actor Doctor as DOC
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate DOC
+DOC -> SYS : asks to edit patient medical record
+activate SYS
+
+SYS --> DOC : shows list of the patient profiles
+deactivate SYS
+
+DOC -> SYS : selects a patient profile
+activate SYS
+
+SYS --> DOC : shows the patient medical record
+deactivate SYS
+
+DOC -> SYS : edits patient medical record
+activate SYS
+
+SYS --> DOC : confirms the update of the patient medical record
+deactivate SYS
+
+
+@enduml

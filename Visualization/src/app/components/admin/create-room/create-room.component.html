@@ -1,0 +1,67 @@
+<body>
+    <div>
+        <app-side-bar-admin></app-side-bar-admin>
+    </div>
+    <header>
+        <h1 class="main-title">Create Room</h1>
+    </header>
+
+    <div class="information-input">
+        <p style="margin-left: 200px;" font-family="'Poppins', monospace">
+            Insert the following information before submitting:
+        </p>
+
+        <form #roomForm="ngForm" (ngSubmit)="onSubmit(roomForm)" novalidate>
+            <!-- Existing input fields -->
+            <div class="input-field">
+                <label for="roomNumber">Room Number:</label>
+                <input id="roomNumber" name="roomNumber" #roomNumber="ngModel" [(ngModel)]="room.roomNumber"
+                    placeholder="Room Number" [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="roomNumber.invalid && roomNumber.touched" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <label for="typeDesignation">Select Room Type:</label>
+                <select name="typeDesignation" #typeDesignation="ngModel" [(ngModel)]="room.typeDesignation" [disabled]="isSubmitted" required>
+                    <option *ngFor="let typeDesignation of typeDesignations" [value]="typeDesignation">
+                        {{ typeDesignation }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="input-field">
+                <label for="capacity">Capacity:</label>
+                <input id="capacity" name="capacity" #capacity="ngModel" [(ngModel)]="room.capacity"
+                    placeholder="Capacity" [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="capacity.invalid && capacity.touched" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <label for="availableEquipment">Available Equipment:</label>
+                <input id="availableEquipment" name="availableEquipment" #availableEquipment="ngModel"
+                    [(ngModel)]="room.availableEquipment"
+                    placeholder="Available Equipment : Equipment, Equipment, ..." [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="availableEquipment.invalid && availableEquipment.touched" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <label for="maintenanceSlots">Maintenance Slots:</label>
+                <input id="maintenanceSlots" name="maintenanceSlots" #maintenanceSlots="ngModel"
+                    [(ngModel)]="room.maintenanceSlots"
+                    placeholder="Maintenance Slots : [HH:MM]-[HH:MM], [HH:MM]-[HH:MM], ..." [disabled]="isSubmitted"
+                    required [class.invalid-placeholder]="maintenanceSlots.invalid && maintenanceSlots.touched" />
+                <span></span>
+            </div>
+
+            <div class="button">
+                <button type="submit" class="add-button-submit" [disabled]="roomForm.invalid || isSubmitted">Submit</button>
+                <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+            </div>
+        </form>
+    </div>
+    <br>
+    <app-message></app-message>
+</body>

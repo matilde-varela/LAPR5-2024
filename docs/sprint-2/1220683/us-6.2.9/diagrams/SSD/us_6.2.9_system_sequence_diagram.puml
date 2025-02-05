@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.9 - System Sequence Diagram"
+
+autonumber
+
+participant Admin as ADM
+participant System as SYS
+
+ADM -> SYS : requests the list of the patient profiles
+activate ADM
+activate SYS
+
+SYS --> ADM : lists the patient profiles
+
+    loop until the Admin desires
+
+    ADM -> SYS : applies search filters (name, email, date of birth, or medical record number)
+
+    SYS --> ADM : presents the search results
+    end loop
+
+    opt Admin wants to select a profile
+
+    ADM -> SYS : selects a profile
+    SYS --> ADM : shows profile
+
+autonumber stop
+        alt edit profile
+
+        ADM --> SYS : US 6.2.7
+
+        else deactivate profile
+
+            ADM --> SYS : US 6.2.8
+
+        end alt
+
+    end opt
+
+autonumber stop
+
+deactivate ADM
+deactivate SYS
+
+@enduml

@@ -1,0 +1,116 @@
+/* Main Title Styling */
+.main-title {
+  font-family: 'Poppins', monospace;
+  font-size: 45px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #0066cc, #45a0a0);
+  color: #ffffff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192);
+  margin-left: 16%;
+  max-width: 50%;
+}
+
+/* Layout for the content section */
+.conteudo {
+  margin-left: 220px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 5px;
+}
+
+/* Styling for the operation request table */
+p-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  font-weight: bold;
+  background-color: #0066cc;
+  color: #fff;
+}
+
+td {
+  background-color: #fff;
+}
+
+/* Panel styling for the Edit Allergy section */
+.edit-panel {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+}
+
+/* Title inside the edit panel */
+.main-title-edit {
+  font-family: 'Poppins', monospace;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  background: linear-gradient(90deg, #0066cc, #45a0a0);
+  color: #ffffff;
+  padding: 1rem 1rem;
+  border-radius: 8px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192);
+  margin: 30px auto 10px; /* Top, horizontal, bottom margins */
+  width: calc(100% - 40px); /* Adjust width as needed */
+  max-width: 600px; /* Optional: Limit width for larger screens */
+}
+
+
+.bold-label {
+  font-weight: bold;
+}
+
+/* Input fields */
+.input-field {
+  margin-bottom: 10px;
+}
+
+.input-field input,
+.input-field textarea {
+  width: calc(100% - 20px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: none;
+}
+
+/* Buttons */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+button {
+  background-color: #0074d9;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

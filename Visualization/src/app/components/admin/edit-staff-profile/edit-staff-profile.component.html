@@ -1,0 +1,63 @@
+<body>
+    <div>
+        <app-side-bar-admin></app-side-bar-admin>
+    </div>
+    <header>
+        <h1 class="main-title">Edit Staff Profile</h1>
+    </header>
+
+    <div class="information-input">
+        <p style="margin-left: 200px;" font-family="'Poppins', monospace">Please fill in only the fields of the
+            information you wish to edit.</p>
+
+        <form #staffForm="ngForm" (ngSubmit)="onSubmit(staffForm)" novalidate>
+            <div class="input-field">
+                <input id="id" #id="ngModel" [(ngModel)]="staff.id" [ngModelOptions]="{standalone: true}"
+                    placeholder="StaffId" [disabled]="isSubmitted" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <input name="phone" #phone="ngModel" [(ngModel)]="staff.phone" placeholder="Phone Number"
+                    [disabled]="isSubmitted" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <input name="email" #email="ngModel" [(ngModel)]="staff.email" placeholder="Email"
+                    [disabled]="isSubmitted" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <input name="address" #address="ngModel" [(ngModel)]="staff.address" placeholder="Address"
+                    [disabled]="isSubmitted" />
+                <span></span>
+            </div>
+
+            <!-- <div class="input-field">
+                <input name="specialization" #specialization="ngModel" [(ngModel)]="staff.specialization"
+                    placeholder="Specialization" [disabled]="isSubmitted" />
+                <span></span>
+            </div> -->
+
+            <div class="input-field">
+                <label for="specialization">Select Specialization:</label>
+                <select name="specialization" #specialization="ngModel" [(ngModel)]="staff.specializationId" [disabled]="isSubmitted">
+                  <option *ngFor="let specialization of specializations" [value]="specialization">
+                    {{ specialization }}
+                  </option>
+                </select>
+              </div>
+
+            <div class="button">
+                <button type="submit" class="add-button-submit"
+                    [disabled]="staffForm.invalid || isSubmitted">Submit</button>
+                <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+            </div>
+        </form>
+
+    </div>
+    <br>
+    <app-message></app-message>
+</body>

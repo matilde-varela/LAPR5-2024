@@ -1,0 +1,92 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.8. Process View (Level 3 | MDBackoffice)"
+
+autonumber
+
+participant "route:\nCreateAppointmentRoute" as ROUTE
+participant "dto:\nAppointmentDTO" as DTO
+participant "controller:\nAppointmentController" as CTRL
+
+participant "service:\nAppointmentService" as SER
+participant "repository:\nAppointmentRepository" as REPO
+participant "repository:\nOperationRequestRepository" as OpReqREPO
+participant "repository:\nOperationTypeRepository" as OpTyREPO
+participant "repository:\nRoomRepository" as RoomREPO
+participant "repository:\nStaffRepository" as StaffREPO
+participant "domain:\nAppointment" as APP
+
+[o-> ROUTE : POST(json)
+activate ROUTE
+
+ROUTE -> DTO ** : create(json)
+
+ROUTE -> CTRL : Create(appointmentDto)
+activate CTRL
+
+CTRL -> SER : AddAsync(appointmentDto)
+activate SER
+
+SER -> OpReqREPO : GetByIdAsync(operationRequestId)
+activate OpReqREPO
+deactivate OpReqREPO
+
+SER -> OpTyREPO : GetByIdAsync(operationTypeId)
+activate OpTyREPO
+deactivate OpTyREPO
+
+SER -> OpTyREPO : GetRequiredStaffByOperationTypeIdAsync(operationTypeId)
+activate OpTyREPO
+
+OpTyREPO --> SER : requiredStaffList
+deactivate OpTyREPO
+
+loop for each required staff
+
+loop for each staff on the dto staff list
+SER -> StaffREPO : GetByIdAsync(staffId)
+activate StaffREPO
+deactivate StaffREPO
+
+alt if staffIsAvailable and function and specialization are the same as the requiredStaff
+SER -> SER : staffList.Add(staff)
+activate SER
+SER --> SER :
+deactivate SER
+|||
+
+end alt
+end loop
+
+
+SER -> RoomREPO : GetByIdAsync(RoomNumber)
+activate RoomREPO
+deactivate RoomREPO
+
+SER -> RoomREPO : IsRoomAvailableAsync(room)
+activate RoomREPO
+deactivate RoomREPO
+
+
+SER -> APP **: create(status, operationRequestId, roomNumber, startTim, endTime, startDate, endDate, staffList)
+
+SER -> REPO : save(appointment)
+activate REPO
+deactivate REPO
+
+SER --> CTRL: success
+deactivate SER
+CTRL --> ROUTE: success
+deactivate CTRL
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+@enduml

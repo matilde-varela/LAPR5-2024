@@ -1,0 +1,37 @@
+<body>
+    <div class="sidebar">
+        <a routerLink="/doctor">Home</a>
+
+        <div class="dropdown">
+            <a>Operation Request</a>
+            <div class="dropdown-content">
+                <a routerLink="/create-operation-request">Create Operation Request</a>
+                <a routerLink="/list-operation-request">Search Operation Request</a>
+                <a routerLink="/remove-operation-request-patient">Remove Operation Request to Patient Medical History</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <a>Patient</a>
+            <div class="dropdown-content">
+                <a routerLink="/list-patient-profiles-with-medical-records">Patient Medical Records</a>
+                <a routerLink="/list-allergies">List Allergies</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <a>Other Features</a>
+            <a routerLink="/hospital-simulation">Hospital Floor Simulation</a>
+            <a routerLink="/add-time-slots">Add Time Slot</a>
+        </div>
+
+        <div class="dropdown">
+            <a>Surgery Appointment</a>
+            <div class="dropdown-content">
+                <a routerLink="/create-surgery-appointment">Create Surgery Appointment</a>
+                <a routerLink="/edit-surgery-appointment">Edit Surgery Appointment</a>
+                <a routerLink="/list-appointment">Search Surgery Appointment</a>
+            </div>
+        </div>
+    </div>
+</body>

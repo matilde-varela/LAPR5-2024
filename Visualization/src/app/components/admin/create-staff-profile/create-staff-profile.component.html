@@ -1,0 +1,79 @@
+<body>
+  <div>
+    <app-side-bar-admin></app-side-bar-admin>
+  </div>
+  <header>
+    <h1 class="main-title">Create Staff Profile</h1>
+  </header>
+
+  <div class="information-input">
+    <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before
+      submitting:</p>
+
+    <form #staffForm="ngForm" (ngSubmit)="onSubmit(staffForm)" novalidate>
+      <!-- Existing input fields -->
+      <div class="input-field">
+        <input name="firstName" #firstName="ngModel" [(ngModel)]="staff.firstName" placeholder="First Name"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="firstName.invalid && firstName.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="lastName" #lastName="ngModel" [(ngModel)]="staff.lastName" placeholder="Last Name"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="lastName.invalid && lastName.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="phone" #phone="ngModel" [(ngModel)]="staff.phone" placeholder="Phone Number"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="phone.invalid && phone.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="email" #email="ngModel" [(ngModel)]="staff.email" placeholder="Email" [disabled]="isSubmitted"
+          required [class.invalid-placeholder]="email.invalid && email.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="address" #address="ngModel" [(ngModel)]="staff.address" placeholder="Address"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="address.invalid && address.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="licenseNumber" #licenseNumber="ngModel" [(ngModel)]="staff.licenseNumber"
+          placeholder="License Number" [disabled]="isSubmitted" required
+          [class.invalid-placeholder]="licenseNumber.invalid && licenseNumber.touched" />
+        <span></span>
+      </div>
+      <br>
+      <div class="input-field">
+        <label for="specialization">Select Specialization:</label>
+        <select name="specialization" #specialization="ngModel" [(ngModel)]="staff.specialization" [disabled]="isSubmitted" required>
+          <option *ngFor="let specialization of specializations" [value]="specialization">
+            {{ specialization }}
+          </option>
+        </select>
+      </div>
+
+      <div class="input-field">
+        <label for="function">Select Function:</label>
+        <select name="function" #function="ngModel" [(ngModel)]="staff.function" [disabled]="isSubmitted" required>
+          <option *ngFor="let function of functions" [value]="function">
+            {{ function }}
+          </option>
+        </select>
+      </div>
+
+      <div class="button">
+        <button type="submit" class="add-button-submit" [disabled]="staffForm.invalid || isSubmitted">Submit</button>
+        <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+      </div>
+    </form>
+
+  </div>
+  <br>
+  <app-message></app-message>
+</body>

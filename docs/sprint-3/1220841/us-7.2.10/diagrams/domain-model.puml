@@ -1,0 +1,20 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+skinparam classBackgroundColor beige
+skinparam ArrowColor #222222
+
+package "<<aggregate RoomType>>" {
+    entity RoomType <<entity>> <<root>> {}
+    class RoomTypeCode <<(V,#FF8B40)value object>> <<identifier>> {}
+    class RoomTypeDesignation <<(V,#FF8B40)value object>>  {}
+    class RoomTypeDescription <<(V,#FF8B40)value object>>  {}
+}
+
+
+RoomType --> "1" RoomTypeCode
+RoomType --> "1" RoomTypeDesignation
+RoomType --> "0..1" RoomTypeDescription
+
+
+@enduml

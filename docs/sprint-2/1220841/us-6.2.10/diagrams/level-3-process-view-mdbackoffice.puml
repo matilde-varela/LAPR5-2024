@@ -1,0 +1,75 @@
+@startuml
+
+title "US 6.2.10 - Process View [Level 3]"
+
+autonumber
+participant "StaffRoute" as ROUTE <<route>>
+participant "StaffDto" as pat_dto <<dto>>
+participant "StaffController" as CTRL <<controller>>
+participant "StaffService" as SVC <<service>>
+participant "StaffRepository" as REPO <<repository>>
+participant "SpecializationRepository" as REPO_SPEC <<repository>>
+participant "Staff" as pat <<domain>>
+
+
+[o-> ROUTE: POST(json) api/Staff/Create-StaffProfile
+activate ROUTE
+
+ROUTE -> pat_dto **: create(json)
+
+ROUTE -> CTRL: createStaffProfile(staffDto)
+activate CTRL
+
+CTRL -> SVC: createStaffProfile(staffDto)
+activate SVC
+
+SVC -> REPO : existsStaffWithEmailOrPhone(email,phone)
+activate REPO
+REPO --> SVC : boolean
+deactivate REPO
+
+alt false
+
+SVC -> REPO_SPEC : findByName(specializationDenomination)
+activate REPO_SPEC
+REPO_SPEC --> SVC : specialization
+deactivate REPO_SPEC
+
+alt specialization exits
+
+SVC -> SVC: generateStaffId(function)
+activate SVC
+
+SVC -> REPO: lastStaffIdSequentialNumber()
+activate REPO
+deactivate REPO
+
+SVC --> SVC: staffId
+deactivate SVC
+
+SVC -> pat **: create(staffId,firstName,lastName,email,phone,\nspecialization,licenseNumber,function)
+
+SVC -> REPO : save(staff)
+activate REPO
+deactivate REPO
+
+end alt
+end alt
+
+SVC --> CTRL: success
+deactivate SVC
+CTRL --> ROUTE: success
+deactivate CTRL
+
+alt 
+
+[o<-- ROUTE: 201 Created
+
+else 
+
+[o<-- ROUTE: 400 Bad Request
+
+end alt
+
+deactivate ROUTE
+@enduml

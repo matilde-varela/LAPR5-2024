@@ -1,0 +1,35 @@
+@startuml
+
+title "US 6.2.17 - Process View [Level 2]"
+
+autonumber
+
+actor Doctor as ADM
+participant "Visualization" as VIS <<Container C4>>
+participant "MDBackoffice" as SYS <<Container C4>>
+
+activate ADM
+ADM -> VIS : list operation requests
+activate VIS
+
+VIS --> ADM: select filters
+deactivate VIS
+
+alt doctors wants to filter operation requests
+
+ADM -> VIS: selects filters
+activate VIS
+
+end alt 
+
+VIS -> SYS : GetOperationRequestByFilters(filters)
+activate SYS
+note right of SYS: **filters** represent the various variables\npassed as parameters.
+
+SYS --> VIS: operationRequests
+deactivate SYS
+
+VIS --> ADM: show operation requests
+deactivate VIS
+
+@enduml

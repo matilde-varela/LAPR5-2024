@@ -1,0 +1,31 @@
+@startuml
+
+title "US 7.2.15 - Process View [Level 2]"
+
+autonumber
+
+actor Admin as ADM
+participant "Visualization" as VIS <<Container C4>>
+participant "MDBackoffice" as SYS <<Container C4>>
+
+activate ADM
+ADM -> VIS : list specializations
+activate VIS
+
+VIS --> ADM: select filters
+deactivate VIS
+
+ADM -> VIS: selects filters
+activate VIS
+
+VIS -> SYS : GetSpecializationsByFilters(filters)
+activate SYS
+note right of SYS: **filters** represent the various variables\nprovided as arguments.
+
+SYS --> VIS: specializations
+deactivate SYS
+
+VIS --> ADM: show specializations
+deactivate VIS
+
+@enduml

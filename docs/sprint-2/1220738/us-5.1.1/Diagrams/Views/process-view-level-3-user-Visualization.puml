@@ -1,0 +1,20 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) | Visualization - Create Staff User and Associating"
+
+actor Admin
+participant "<<Component>>\n User" as USER
+participant "<<Service>>\n UserService" as SERV
+
+activate Admin
+    Admin -> USER : create staff user
+    activate USER 
+        USER -> SERV : RegisterStaffUser(email, password, role, phone)
+        activate SERV
+            SERV ->o] : POST: api/create-staff
+            SERV <--o] : Ok("The user has been successfully created.\nPlease verify your email to complete the registration.")
+            SERV --> USER : success
+        deactivate SERV
+        USER --> Admin : success
+    deactivate USER 
+deactivate Admin
+@enduml

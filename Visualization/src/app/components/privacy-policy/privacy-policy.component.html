@@ -1,0 +1,15 @@
+<button (click)="showPopup = true">Show Privacy Policy</button>
+
+<div class="overlay" *ngIf="showPopup">
+<div class="popup">
+<div *ngIf="showPopup" class="popup">
+    <div class="content">
+      <div [innerHTML]="policyContent"></div>
+    </div>
+  </div>
+  <br>
+  <button class="close-btn" (click)="showPopup = false" style="margin-left: 0%;">Close</button>
+</div>
+</div>
+
+   

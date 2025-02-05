@@ -1,0 +1,103 @@
+/* Main Title Styling */
+.main-title {
+  font-family: 'Poppins', monospace;
+  font-size: 45px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #0066cc, #45a0a0);
+  color: #ffffff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192);
+  margin-left: 0px;
+  max-width: 50%;
+}
+
+/* Layout for the content section */
+.conteudo {
+  margin-left: 220px;
+  margin-right: 1rem;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 5px;
+}
+
+/* Styling for the operation request table */
+p-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  font-weight: bold;
+  background-color: #0066cc;
+  color: #fff;
+}
+
+td {
+  background-color: #fff;
+}
+
+/* Button styling inside action buttons */
+.action-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+button {
+  background-color: #0074d9; /* Blue background */
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Disabled button styling */
+button:disabled {
+  background-color: #58a6ea; /* Blue background */
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, opacity 0.3s; /* Smooth transitions */
+}
+
+/* Optionally, add hover effects for the enabled button */
+button:not(:disabled):hover {
+  background-color: #0056b3; /* Darker blue when hovering */
+}
+
+/* Specific styling for the header */
+header {
+  margin-top: 2%;
+  margin-left: 220px;
+  text-align: center;
+}
+
+/* Adjusted layout for left-aligned text */
+.titulo {
+  text-align: left;
+}
+
+/* Styling for the content paragraphs */
+.conteudo p {
+  font-size: 18px;
+}
+
+/* Remove extra tick rendering from PrimeNG theme */
+.p-checkbox-box::before,
+.p-checkbox-icon {
+  display: none !important; /* Hide unnecessary ticks */
+}

@@ -1,0 +1,138 @@
+@startuml
+title "US 6.2.8 Process View (Level 3) - MDBackoffice"
+
+participant "<<Route>>\n PatientRoute" as ROUTE
+participant "<<Controller>>\n PatientController" as CONTROL
+participant "<<Service>>\n PatientService" as AUTHServ
+participant "<<Repository>>\n PatientRepository" as PATIENTRepo
+participant "<<DTO>>\n List<PatientDto>" as PatientListDTO
+participant "<<Domain>>\n Patient" as PATIENT
+participant "<<DTO>>\n IdPassDto" as PatientDTO
+participant "<<Service>>\n LogService" as LOGServ
+participant "<<Domain>>\n Log" as LOG
+participant "<<Repository>>\n LogRepository" as LOGRepo
+participant "<<Service>>\n UserService" as USERServ
+participant "<<Utility>>\n UserManager" as USERMan
+
+[o-> ROUTE : GET()
+note right : getting the \nlist of profiles
+
+Activate ROUTE
+
+ROUTE -> CONTROL : GetPatientProfiles()
+
+Activate CONTROL
+
+CONTROL -> AUTHServ : GetAllSync()
+Activate AUTHServ
+
+AUTHServ -> PATIENTRepo : GetAllSync() 
+Activate PATIENTRepo
+
+PATIENTRepo --> AUTHServ : var list = List<Patient>
+Deactivate PATIENTRepo
+
+AUTHServ -> PatientListDTO**
+
+loop for every profile in listOfProfiles
+AUTHServ -> PATIENT : toDTO()
+activate PATIENT
+PATIENT --> AUTHServ : profileDTO
+deactivate PATIENT
+AUTHServ -> PatientListDTO : listAdd(profileDTO)
+activate PatientListDTO
+PatientListDTO --> AUTHServ : return
+deactivate PatientListDTO
+end
+
+AUTHServ --> CONTROL : patientListDTO
+Deactivate AUTHServ
+
+CONTROL -> CONTROL : ok(patientListDTO)
+
+CONTROL --> ROUTE : json
+Deactivate CONTROL
+<-- ROUTE : json
+
+Deactivate ROUTE
+
+note right : after choosing\n a profile
+
+[o-> ROUTE : POST(JSON)
+note right : after getting\n the confirmation
+
+Activate ROUTE
+
+ROUTE -> CONTROL : DeletePatientProfile(id)
+
+Activate CONTROL
+
+CONTROL -> PatientDTO** : toDTO(id)
+
+CONTROL -> AUTHServ : DeletePatientProfile(idPassDto.Id)
+Activate AUTHServ
+
+AUTHServ -> PATIENTRepo : ExistsPatientWithId(id)
+activate PATIENTRepo
+PATIENTRepo --> AUTHServ : true
+deactivate PATIENTRepo
+
+AUTHServ -> PATIENTRepo : GetByIdAsync(new MedicalRecordNumber(id))
+activate PATIENTRepo
+PATIENTRepo --> AUTHServ : patient
+deactivate PATIENTRepo
+
+AUTHServ -> AUTHServ : userRef = patient.UserReference
+
+AUTHServ -> PATIENT : Anonymize()
+activate PATIENT
+PATIENT --> AUTHServ : true
+deactivate PATIENT
+
+alt If Anonymize returns true
+
+AUTHServ -> LOGServ : CreateDeletionLog(patient.Id.Value,\npatient.GetType().ToString(),\n"Anonymization of patient's profile.")
+activate LOGServ 
+LOGServ -> LOG**
+LOGServ -> LOGRepo : AddAsync(log)
+activate LOGRepo
+LOGRepo --> LOGServ : true
+deactivate LOGRepo
+LOGServ --> AUTHServ : true
+deactivate LOGServ
+
+AUTHServ -> USERServ : DeleteByIdAsync(patient.UserReference)
+activate USERServ
+USERServ -> USERMan : DeleteAsync(FindByIdAsync(userReference))
+activate USERMan
+USERMan --> USERServ : true 
+deactivate USERMan
+USERServ --> AUTHServ : true
+deactivate USERServ
+
+alt If it returns true
+
+AUTHServ -> LOGServ : CreateDeletionLog(userRef,\n"MDBackoffice.Domain.Users",\n"Deletion of patient's account.")
+activate LOGServ 
+LOGServ -> LOG**
+LOGServ -> LOGRepo : AddAsync(log)
+activate LOGRepo
+LOGRepo --> LOGServ : true
+deactivate LOGRepo
+LOGServ --> AUTHServ : true
+deactivate LOGServ
+
+end
+end
+
+AUTHServ --> CONTROL : return
+deactivate AUTHServ
+
+CONTROL --> CONTROL : Ok(Patient profile and account succefully deleted)
+CONTROL --> ROUTE : json
+deactivate CONTROL
+
+<-- ROUTE : json
+deactivate ROUTE
+
+@enduml

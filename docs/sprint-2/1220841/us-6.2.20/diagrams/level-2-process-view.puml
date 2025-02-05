@@ -1,0 +1,38 @@
+@startuml
+
+title "US 6.2.20 - Process View [Level 2]"
+
+autonumber
+
+actor Admin as ADM
+participant "Visualization" as VIS <<Container C4>>
+participant "MDBackoffice" as SYS <<Container C4>>
+
+activate ADM
+activate ADM
+ADM -> VIS : remove operation type
+activate VIS
+
+VIS -> SYS: GetAllActive()
+activate SYS
+
+SYS --> VIS: operationTypes
+deactivate SYS
+
+VIS --> ADM : select operation type
+deactivate VIS
+
+ADM -> VIS: selects operation type
+activate VIS
+
+VIS -> SYS : RemoveOperationType(id)
+activate SYS
+
+SYS --> VIS: success/insucess
+deactivate SYS
+
+VIS --> ADM : success/insucess
+deactivate VIS
+deactivate ADM
+
+@enduml

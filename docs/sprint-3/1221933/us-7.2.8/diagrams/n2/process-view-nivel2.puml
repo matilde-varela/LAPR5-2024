@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.8. Process View (Level 2)"
+
+autonumber
+actor Admin as ADM
+participant "<<component>>\n Visualization (UI)" as UI
+participant "<<component>>\n Backoffice" as BACK
+
+activate ADM
+ADM -> UI : create surgery appointment
+activate UI
+
+UI -> BACK : CreateSurgeryAppointment(json)
+activate BACK
+
+BACK --> UI: success/insucess
+deactivate BACK
+
+UI --> ADM : success/insucess
+deactivate UI
+deactivate ADM
+
+@enduml

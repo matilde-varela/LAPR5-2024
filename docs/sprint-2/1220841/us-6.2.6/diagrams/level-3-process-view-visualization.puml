@@ -1,0 +1,30 @@
+@startuml
+
+title "US 6.2.6 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor Admin as USER 
+participant "CreatePatient" as UPP <<component>> 
+participant "PatientService" as PS <<service>>
+
+activate USER
+USER -> UPP : create patient profile
+activate UPP
+
+UPP -> PS : createPatient(PatientInformation)
+activate PS
+
+PS ->o] : POST: api/Patient/Create-PatientProfile
+
+PS <--o] : Created(PatientDto)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+deactivate USER
+
+
+
+@enduml

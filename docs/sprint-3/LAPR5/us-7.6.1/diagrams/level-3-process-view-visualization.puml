@@ -1,0 +1,41 @@
+@startuml
+
+title "US 7.6.1 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Admin" as USER 
+participant "ExportMedicalRecord" as UPP <<component>> 
+participant "MedicalRecordService" as PS <<service>>
+
+activate USER
+USER -> UPP : request to export medical record
+activate UPP
+
+UPP --> USER : ask for file path
+deactivate UPP
+
+USER -> UPP : provide file path
+activate UPP
+
+UPP --> USER : ask for password
+deactivate UPP
+
+USER -> UPP : provide password
+activate UPP
+
+UPP -> PS : ExportPatientData(filePath,password)
+activate PS
+
+PS ->o] : GET: /api/Patient/Export
+
+PS <--o] : Ok()
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+deactivate USER
+
+
+@enduml

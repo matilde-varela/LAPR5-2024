@@ -1,0 +1,37 @@
+@startuml
+
+title "US 7.2.15 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor Admin as USER 
+participant "ListSpecializations" as UPP <<component>> 
+participant "SpecializationService" as SS <<service>>
+
+activate USER
+USER -> UPP : list specializations
+activate UPP
+
+UPP --> USER: select filters
+deactivate UPP
+
+USER -> UPP: selects filters
+activate UPP
+
+UPP -> SS: GetSpecializationsByFilters(filters)
+activate SS
+note right of SS: **filters** represent the various variables\nprovided as parameters.
+
+SS ->o] : GET: api/Specializations/filtered?filters
+
+SS <--o] : Ok(specializations)
+
+SS --> UPP: specializations
+deactivate SS
+
+UPP --> USER: specializations
+deactivate UPP
+deactivate USER
+
+
+
+@enduml

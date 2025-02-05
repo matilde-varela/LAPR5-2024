@@ -1,0 +1,57 @@
+@startuml
+
+title "US 7.2.10 - Process View [Level 3 | MDBackoffice]"
+
+autonumber
+participant "RoomTypeRoute" as ROUTE <<route>>
+participant "RoomTypeDto" as rt_dto <<dto>>
+participant "RoomTypeController" as CTRL <<controller>>
+participant "RoomTypeService" as SVC <<service>>
+participant "RoomTypeRepository" as REPO <<repository>>
+participant "RoomType" as rt <<domain>>
+
+
+[o-> ROUTE: POST(json) /api/room-type
+activate ROUTE
+
+ROUTE -> rt_dto **: create(json)
+
+ROUTE -> CTRL: CreateRoomType(roomTypeDto)
+activate CTRL
+
+CTRL -> SVC: CreateRoomType(roomTypeDto)
+activate SVC
+
+SVC -> REPO : existsRoomTypeWithCode(code)
+activate REPO
+
+REPO --> SVC : boolean
+deactivate REPO
+
+alt false
+
+SVC -> rt **: create(code,designation,description)
+
+SVC -> REPO : save(roomType)
+activate REPO
+deactivate REPO
+
+end alt
+
+SVC --> CTRL: success
+deactivate SVC
+CTRL --> ROUTE: success
+deactivate CTRL
+
+alt 
+
+[o<-- ROUTE: 201 Created
+
+else 
+
+[o<-- ROUTE: 400 Bad Request
+
+end alt
+
+deactivate ROUTE
+@enduml

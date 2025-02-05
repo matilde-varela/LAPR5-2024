@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.3 Process View (Level 2)"
+
+autonumber
+
+actor Doctor
+participant "<<Container C4>>\n Visualization" as VISU
+participant "<<Container C4>>\n Backoffice" as BACK
+
+activate Doctor
+Doctor -> VISU : Asks to show list of allergies.
+activate VISU
+VISU -> BACK : getAllAllergies(name)
+activate BACK
+BACK --> VISU : allergies
+deactivate BACK
+VISU --> Doctor : allergies
+deactivate VISU
+@enduml

@@ -1,0 +1,79 @@
+# Glossary
+
+## Appointment
+Represents a scheduled operation for a patient by a set of staff occurring in a room during a time slot.  
+
+## Availability Slots
+Times when medical staff are available for surgeries, used for scheduling appointments.
+
+## BackOffice
+The administrative interface for managing users (medical professionals, patients), operations, and hospital resources. Includes functionalities like registering staff, managing rooms, and ensuring compliance with hospital policies.
+
+## Business Continuity Plan (BCP)
+A set of procedures ensuring that critical functions of the hospital (like scheduling surgeries) continue during disruptions. This includes failover and system recovery plans.
+
+## Chirurgic Request
+The request made by a doctor for an operation to be scheduled for a patient.
+
+## Clinics
+Healthcare facilities that may schedule and manage surgery appointments and maintain patient records.
+
+## Data Protection
+Measures ensuring patient data, including sensitive information, is protected, in compliance with GDPR regulations.
+
+## Emergency Contact
+An individual's contact information used in case of emergencies, stored within the patient's profile.
+
+## Equipment
+Medical instruments and machines assigned to rooms, which are required for operations.  
+
+## GDPR Compliance
+Ensuring the system adheres to the General Data Protection Regulation (EU 2016/679), focusing on data protection, user consent, and allowing individuals to manage their personal data.
+
+## IAM (Identity and Access Management)
+System for managing user identities and access controls. Handles user authentication for both patients and staff. Patients self-register, while staff registration is managed by admins through an out-of-band process.
+
+## License Number
+A unique identifier assigned to medical professionals, ensuring proper credentials are linked to users.
+
+## Medical Condition
+Information regarding a patient’s health, including diagnoses and treatment plans, stored in their medical profile.
+
+## Medical Professional
+Includes doctors, nurses, and technicians involved in patient care.  
+
+## Medical Record Number
+A unique identifier assigned to each patient, ensuring medical records are accurately tracked.
+
+## Patient
+A person receiving medical care.  
+
+## Priority
+Determines the urgency of a chirurgic request, influencing how soon an operation needs to be scheduled. Included in operation requests.
+
+## Regulation
+Refers to the legal requirements, such as GDPR, that govern how the system handles patient data and appointments.
+
+## REST APIs
+Interfaces allowing different modules of the system to communicate, such as between the backoffice and scheduling systems.
+
+## Room
+Surgery rooms in the healthcare facility used for operations.  
+
+## Schedule
+The timetable for surgeries and operations, which considers the availability of staff, rooms, and equipment.
+
+## Sensitive Data
+Personal patient information (e.g., medical history, allergies) requiring strict GDPR-compliant protection.
+
+## Surgery
+A medical procedure scheduled through the system.  
+
+## System Log
+A record of all actions and changes within the system, especially related to user authentication, profile updates, and appointments, crucial for audits and ensuring GDPR compliance.
+
+## Username
+A unique identifier used for user authentication in the system.
+
+## Verification Email
+An email sent to users (patients or staff) to verify their identity during registration or profile updates, ensuring secure access.

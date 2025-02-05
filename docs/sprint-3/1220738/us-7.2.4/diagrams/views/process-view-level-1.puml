@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.4 Process View (Level 1)"
+
+autonumber
+
+actor Doctor
+participant "<<System (C4)>>\n Healthcare System" as SYS
+
+activate Doctor
+Doctor -> SYS : Wants to add\na Medical Condition.
+activate SYS
+
+SYS --> Doctor : Asks for the right variables.
+deactivate SYS
+
+Doctor -> SYS : Gives the right input.
+activate SYS
+
+SYS --> Doctor : Success message.
+deactivate SYS
+
+deactivate Doctor
+deactivate SYS
+@enduml

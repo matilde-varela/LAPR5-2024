@@ -1,0 +1,48 @@
+<body>
+    <div>
+        <app-side-bar-doctor></app-side-bar-doctor>
+    </div>
+    <header>
+        <h1 style="margin-left: 14%;" class="main-title">Hospital Floor Simulation</h1>
+    </header>
+    <div id="parent">
+        <div *ngIf="overlayInfoVisible" id="roomInfoOverlay" class="overlay">
+            <p><strong>ROOM DETAILS:</strong></p>
+            <ul>
+                <li><strong>Room Number:</strong> {{ roomDetails?.roomNumber }}</li>
+                <li><strong>Room Type:</strong> {{ roomDetails?.type }}</li>
+                <li><strong>Capacity:</strong> {{ roomDetails?.capacity }}</li>
+                <li><strong>Available Equipment:</strong> {{ roomDetails?.availableEquipment }}</li>
+                <li><strong>Status:</strong> {{ roomDetails?.currentStatus }}</li>
+
+                <li><strong>Slots:</strong></li>
+            <ul>
+                <li *ngFor="let slot of roomDetails?.maintenanceSlots">
+                    Start: {{ slot.startDate }} {{ slot.startTime }},
+                    End: {{ slot.endDate }} {{ slot.endTime }}
+                </li>
+            </ul>
+        </ul>
+            <div *ngIf="appointment && operationRequest && patient">
+                <p><strong>APPOINTMENT DETAILS:</strong></p>
+                <ul>
+                    <li><strong>Appointment Status:</strong> {{ appointment.status }}</li>
+                    <li><strong>Appointment Type:</strong> {{ operationRequest.operationTypeId }}</li>
+                    <li><strong>Appointment Day:</strong> {{ appointment.startDate | date:'dd/MM/yyyy'  }}</li>
+                    <li><strong>Start Time:</strong> {{ appointment.startTime }}</li>
+                    <li><strong>End Time:</strong> {{ appointment.endTime }}</li>
+                </ul>
+                <p><strong>PATIENT DETAILS:</strong></p>
+                <ul>
+                    <li><strong>Patient Name:</strong> {{ patient.name }}</li>
+                    <li><strong>Patient Medical Record Number:</strong> {{ patient.patientId }}</li>
+                    <li><strong>Patient Email:</strong> {{ patient.email }}</li>
+                    <li><strong>Patient Phone Number:</strong> {{ patient.phone }}</li>
+                    <li><strong>Patient Address:</strong> {{ patient.address }}</li>
+                </ul>
+            </div>
+        </div>
+        <canvas class="canvas" #myCanvas id="myCanvas"></canvas>
+
+    </div>
+</body>

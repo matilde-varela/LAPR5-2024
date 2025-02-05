@@ -1,0 +1,45 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) - Creating a Staff Profile"
+
+participant "<<Route>>\n StaffRoute" as ROUTE
+participant "<<Controller>>\n StaffController" as CONTROL
+participant "<<DTO>>\n StaffDTO" as StaffDTO
+participant "<<Service>>\n StaffService" as STAFFServ
+participant "<<Repository>>\n StaffRepository" as STAFFRepo
+participant "<<Domain>>\n Staff" as STAFF
+
+[o-> ROUTE : POST(staffProfileData)
+Activate ROUTE
+
+ROUTE -> CONTROL : createStaffProfile(staffProfileData)
+Activate CONTROL
+
+CONTROL -> StaffDTO** : toDTO(staffProfileData)
+CONTROL -> STAFFServ : createStaffProfile(staffDTO)
+Activate STAFFServ
+
+STAFFServ -> STAFFRepo : existsById(staffDTO.email)
+Activate STAFFRepo
+
+STAFFRepo --> STAFFServ : boolean
+note right : Checks if a staff\ndoesn't exist with\nthat email.
+Deactivate STAFFRepo
+
+STAFFServ -> STAFF**
+STAFFServ -> STAFFRepo : save(staff)
+Activate STAFFRepo
+
+STAFFRepo --> STAFFServ : staff
+Deactivate STAFFRepo
+
+STAFFServ --> CONTROL : return
+deactivate STAFFServ
+
+CONTROL --> ROUTE : return
+deactivate CONTROL
+
+Deactivate CONTROL
+<-- ROUTE : success/error
+
+Deactivate ROUTE
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+
+title "US 7.3.1 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Admin" as USER
+participant "OperationRequest" as UPP <<component>>
+participant "OperationRequestService" as PS <<service>>
+
+USER -> UPP : wants to distribute operation requests by rooms
+activate UPP
+
+UPP -> PS : distributeOperationRequestsByRooms()
+activate PS
+
+PS ->o] : PUT: api/OperationRequest/put-DistributeOperations
+
+PS <--o] : Ok(distribution)
+
+PS --> UPP: distribution
+deactivate PS
+
+UPP --> USER: shows distribution of operations by room
+deactivate UPP
+
+@enduml

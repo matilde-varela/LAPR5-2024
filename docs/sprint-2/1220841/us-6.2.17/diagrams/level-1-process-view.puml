@@ -1,0 +1,27 @@
+@startuml
+
+title "US 6.2.17 - Process View [Level 1]"
+
+autonumber
+
+actor Doctor as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate ADM
+ADM -> SYS : list operation requisitions
+activate SYS
+
+SYS --> ADM: select filters
+deactivate SYS
+
+alt doctors wants to filter operation requests
+
+ADM -> SYS: selects filters
+activate SYS
+
+end alt 
+
+SYS --> ADM : shows operation requisitions
+deactivate SYS
+deactivate ADM
+@enduml

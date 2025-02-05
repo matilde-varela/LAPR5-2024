@@ -1,0 +1,20 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) | Visualization - Creating a Staff Profile"
+
+actor Admin
+participant "<<Component>>\n Profiles" as PROF
+participant "<<Service>>\n StaffService" as SERV
+
+activate Admin
+    Admin -> PROF : create staff profile
+    activate PROF 
+        PROF -> SERV : CreateStaffProfile(\nlicenseNumber, address,\nfirstName, lastName,\nphone, email,\nfunction, specializationId)
+        activate SERV
+            SERV ->o] : POST: api/Create-StaffProfile
+            SERV <--o] : Ok(staffInfo)
+            SERV --> PROF : success
+        deactivate SERV
+        PROF --> Admin : success
+    deactivate PROF 
+deactivate Admin
+@enduml

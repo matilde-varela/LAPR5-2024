@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.3.1 Process View (Level 1)"
+
+autonumber
+
+actor Admin
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+Admin -> SYS : wants to obtain the better scheduling
+activate SYS
+
+SYS --> Admin : shows and updates
+deactivate SYS
+
+@enduml

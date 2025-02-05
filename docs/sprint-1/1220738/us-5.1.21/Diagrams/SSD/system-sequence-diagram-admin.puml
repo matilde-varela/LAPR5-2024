@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+actor "Admin" as ADMIN
+participant "System" as SYS
+
+activate ADMIN
+
+ADMIN -> SYS : Asks to edit an operation\n type's editable information.
+
+activate SYS
+
+SYS --> ADMIN : Shows a list of all currently\n available operation types.
+
+ADMIN -> SYS : Chooses an operation \ntype to edit. 
+
+SYS --> ADMIN : Asks what parameter \nit wants to change.
+
+ADMIN -> SYS : Chooses a parameter (name, required \nstaff or duration). 
+
+SYS --> ADMIN : Asks for the \nupdated parameter.
+
+ADMIN -> SYS : Inputs the updated parameter
+
+SYS --> ADMIN : Sends success message.
+
+
+@enduml

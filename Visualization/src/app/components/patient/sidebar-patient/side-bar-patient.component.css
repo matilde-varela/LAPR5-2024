@@ -1,0 +1,83 @@
+/* Sidebar Styles */
+.sidebar {
+    overflow: auto;
+    height: 100%;
+    width: 180px;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    background-color: #333;
+    padding-top: 20px;
+    z-index: 1; /* Ensure the sidebar is above other content */
+    display: flex;
+    flex-direction: column;
+}
+
+
+.sidebar a {
+    word-wrap: break-word;
+    padding: 15px 25px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    display: block;
+}
+
+.sidebar a:hover {
+    background-color: #4a4a4a;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    background-color: #7a7a7a;
+    position: relative;
+    top: 0;
+    left: 0%;
+    z-index: 2;
+}
+
+.dropdown-content a,
+      .dropdown-content .dropdown-button {
+        word-wrap: break-word;
+        font-size: 16px;
+        color: #fff;
+        padding: 10px 25px;
+        text-decoration: none;
+        display: block;
+        background-color: #7a7a7a;
+        border: none;
+        text-align: left;
+        cursor: pointer;
+        font-family: 'Merriweather', serif; 
+      }
+
+      .dropdown-content a:hover,
+      .dropdown-content .dropdown-button:hover {
+        background-color: #666;
+      }
+
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+
+.logout {
+    position: fixed; 
+    bottom: 0;
+    margin-bottom: 25px;
+    width: 15%; 
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    background-color: #333;
+    word-wrap: break-word;
+}
+
+.logout:hover {
+    background-color: #555;
+}

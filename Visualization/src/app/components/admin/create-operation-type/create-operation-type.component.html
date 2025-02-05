@@ -1,0 +1,111 @@
+<body>
+  <div>
+    <app-side-bar-admin></app-side-bar-admin>
+  </div>
+  <header>
+    <h1 class="main-title">Create Operation Type</h1>
+  </header>
+
+  <div class="information-input">
+    <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before
+      submitting:</p>
+
+    <form #operationTypeForm="ngForm" (ngSubmit)="onSubmit(operationTypeForm)" novalidate>
+      <!-- Operation Name -->
+      <label><strong>Operation Name</strong></label>
+      <div class="input-field">
+        <input name="name" #name="ngModel" [(ngModel)]="operationType.name" placeholder="Operation Type Name"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="name.invalid && name.touched" />
+        <span></span>
+      </div>
+
+      <br>
+
+      <!-- Status -->
+      <div class="input-field">
+        <label><strong>Status:</strong></label>
+        <div>
+          <label>
+            <input type="radio" name="status" [(ngModel)]="operationType.status" [value]="true" required />
+            Active
+          </label>
+          <label>
+            <input type="radio" name="status" [(ngModel)]="operationType.status" [value]="false" required />
+            Inactive
+          </label>
+        </div>
+      </div>
+
+      <br>
+
+      <!-- Phases -->
+      <div class="input-field">
+        <label><strong>Phases:</strong></label>
+        <div *ngFor="let phase of operationType.phases; let i = index">
+          <br>
+          <label><strong>{{ phase.description }}</strong></label>
+          <input type="number" [(ngModel)]="phase.duration" name="phaseDuration-{{ i }}"
+            placeholder="Duration in minutes" required min="1" [disabled]="isSubmitted" />
+          <br><br>
+        </div>
+      </div>
+
+      <br>
+
+      <!-- Estimated Duration -->
+      <div class="input-field">
+        <label><strong>Total Estimated Duration:</strong></label>
+        <input type="number" [(ngModel)]="operationType.estimatedDuration" name="estimatedDuration"
+          placeholder="Total duration (auto-calculated)" [value]="calculateTotalDuration()" disabled />
+      </div>
+
+      <br>
+
+      <!-- Required Staff -->
+      <div class="input-field">
+        <label><strong>Required Staff:</strong></label>
+        <div *ngFor="let staff of operationType.requiredStaff; let i = index" class="staff-entry">
+          <br>
+          <div class="input-field">
+            <label for="function">Select Function:</label>
+            <select name="function-{{ i }}" [(ngModel)]="staff.function" [disabled]="isSubmitted" required>
+              <option *ngFor="let function of functions" [value]="function">
+                {{ function }}
+              </option>
+            </select>
+          </div>
+          <br>
+          <div class="input-field">
+            <label for="specialization">Select Specialization:</label>
+            <select name="specialization-{{ i }}" [(ngModel)]="staff.specialization" [disabled]="isSubmitted" required>
+              <option *ngFor="let specialization of specializations" [value]="specialization">
+                {{ specialization }}
+              </option>
+            </select>
+          </div>
+          <br>
+          <input type="number" name="staffQuantity-{{ i }}" placeholder="Staff Quantity"
+            [(ngModel)]="staff.staffQuantity" required min="1" />
+          <br>
+          <br>
+          <!-- Remove button for each staff -->
+          <button type="button" (click)="removeStaff(i)">Remove</button>
+        </div>
+
+        <br>
+        <!-- Add Staff button OUTSIDE the loop -->
+        <button type="button" (click)="addStaff()">+ Add Staff</button>
+      </div>
+      <br>
+      <div class="button">
+        <button type="submit" class="add-button-submit"
+          [disabled]="operationTypeForm.invalid || isSubmitted">Submit</button>
+        <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+      </div>
+
+    </form>
+  </div>
+
+  <br>
+  <app-message></app-message>
+</body>

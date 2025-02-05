@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.16 Process View (Level 1)"
+
+autonumber
+
+actor "Admin" as BACK
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+BACK -> SYS : wants to edit an allergy
+activate SYS
+
+SYS --> BACK : lists all allergies
+deactivate SYS
+activate BACK
+
+BACK -> SYS : selects an allergy
+deactivate BACK
+activate SYS
+
+SYS --> BACK : presents the allergy info
+deactivate SYS
+
+BACK -> SYS : inserts allergy data to edit
+activate SYS
+
+SYS --> BACK : confirms edition success
+deactivate SYS
+
+@enduml

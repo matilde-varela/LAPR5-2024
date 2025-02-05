@@ -1,0 +1,137 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) | MDBackoffice - Create Patient User and Associating"
+
+participant "<<Route>>\n UserRoute" as ROUTE
+participant "<<Controller>>\n UserController" as CONTROL
+participant "<<DTO>>\n RegisterUserDto" as UserDTO
+participant "<<Service>>\n UserService" as AUTHServ
+participant "<<Utility>>\n RoleManager" as ROLEMan
+participant "<<Domain>>\n User" as USER
+participant "<<Utility>>\n UserManager" as USERMan
+participant "<<Service>>\n PatientService" as PATServ
+participant "<<Repository>>\n PatientRepository" as PATRepo
+participant "<<Domain>>\n Patient" as PAT
+participant "<<Service>>\n EmailService" as EMAILServ
+participant "<<Domain>>\n Email" as EMAIL
+participant "<<Object>>\n MimeMessage" as Mime
+participant "<<Interface>>\n IEmailAdapter" as IEmailAdapter
+
+[o-> ROUTE : POST(userData)
+Activate ROUTE
+
+ROUTE -> CONTROL : RegisterPatientUser(userData)
+Activate CONTROL
+
+CONTROL -> UserDTO** : toDTO(userData)
+CONTROL -> AUTHServ : createPatientUserAsync(registerUserDto)
+Activate AUTHServ
+AUTHServ -> AUTHServ : createAsync(registerUserDto.Email,\nregisterUserDto.Password,\nregisterUserDto.Role,\nfalse)
+activate AUTHServ
+AUTHServ -> ROLEMan : roleExistsAsync(role) 
+activate ROLEMan
+ROLEMan -> AUTHServ : true
+deactivate ROLEMan
+AUTHServ -> USER**
+
+AUTHServ -> USERMan : createAsync(user, password)
+activate USERMan
+USERMan --> AUTHServ : bool
+deactivate USERMan
+
+AUTHServ -> USERMan : addToRoleAsync(user, role)
+activate USERMan
+USERMan --> AUTHServ : bool
+deactivate USERMan
+AUTHServ -> AUTHServ : user
+deactivate AUTHServ
+AUTHServ --> CONTROL : user
+deactivate AUTHServ
+
+CONTROL -> PATServ : addUser(user, registerUserDto.Email, registerUserDto.Phone)
+activate PATServ
+PATServ -> PATRepo : ExistsPatientWithEmailOrPhone(email,\nphone.Split(' ')[0],\nphone.Split(' ')[1])
+activate PATRepo
+PATRepo --> PATServ : true
+deactivate PATRepo
+
+PATServ -> PATRepo : getPatientWithEmail(email)
+activate PATRepo
+PATRepo --> PATServ : patient
+deactivate PATRepo
+
+PATServ -> PAT : addUser(user)
+activate PAT
+deactivate PAT
+
+PATServ -> PATServ : commitAsync()
+activate PATServ
+deactivate PATServ
+
+PATServ --> CONTROL : return
+deactivate PATServ
+
+CONTROL -> PATServ : getProfileEmail(user.Email.ToString(), registerUserDto.Phone)
+activate PATServ
+PATServ -> PATRepo : findPatientWithEmailOrPhone(email, phone.Split(' ')[0], phone.Split(' ')[1])
+activate PATRepo
+PATRepo --> PATServ : email
+deactivate PATRepo
+PATServ --> CONTROL : email
+deactivate PATServ
+
+CONTROL -> AUTHServ : sendConfirmationEmail(user, email)
+
+activate AUTHServ
+AUTHServ -> USERMan : generateEmailConfirmationTokenAsync(user)
+activate USERMan
+USERMan --> AUTHServ : token
+deactivate USERMan
+
+AUTHServ -> AUTHServ : configureUrlConfirmation(token, user)
+activate AUTHServ
+AUTHServ --> AUTHServ : confirmationLink
+deactivate AUTHServ
+
+AUTHServ -> AUTHServ : sendEmail(email, "Account Activation", body)
+activate AUTHServ
+AUTHServ -> EMAILServ : sendConfirmationEmail(emailDto)
+activate EMAILServ
+
+EMAILServ -> EMAIL**: new Email(emailDto.SenderEmail)
+EMAILServ -> EMAIL**: new Email(emailDto.RecipientEmail)
+
+EMAILServ -> Mime**: new MimeMessage()
+EMAILServ -> Mime: From.Add("HealthCare Clinic")
+activate Mime
+deactivate Mime
+EMAILServ -> Mime: To.Add(recipientEmail)
+activate Mime
+deactivate Mime
+EMAILServ -> Mime: Subject = emailDto.EmailSubject
+activate Mime
+deactivate Mime
+EMAILServ -> Mime: Body = emailDto.EmailBody (Html format)
+activate Mime
+deactivate Mime
+
+EMAILServ -> IEmailAdapter: SendEmail(Mime)
+activate IEmailAdapter
+
+IEmailAdapter -> IEmailAdapter: Send email via SMTP
+IEmailAdapter --> EMAILServ : return
+deactivate IEmailAdapter
+EMAILServ -> AUTHServ : return
+deactivate EMAILServ
+AUTHServ --> AUTHServ : return
+deactivate AUTHServ
+AUTHServ --> CONTROL : return
+deactivate AUTHServ
+
+CONTROL --> ROUTE : return Ok("The user has been successfully\ncreated. Please\nverify your email to complete\nthe registration.")
+deactivate CONTROL
+
+Deactivate CONTROL
+<-- ROUTE : message
+
+Deactivate ROUTE
+@enduml

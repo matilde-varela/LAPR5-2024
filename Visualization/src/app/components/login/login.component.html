@@ -1,0 +1,36 @@
+<body>
+  <header>
+    <h1 class="main-title">Login User</h1>
+  </header>
+
+  <div class="information-input">
+
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" novalidate>
+      <div class="input-field">
+        <input name="email" #email="ngModel" [(ngModel)]="login.email" placeholder="Email" [disabled]="isSubmitted"
+          required [class.invalid-placeholder]="email.invalid && email.touched" />
+        <span></span>
+      </div>
+
+      <div class="input-field">
+        <input name="password" #address="ngModel" [(ngModel)]="login.password" placeholder="Password"
+          [disabled]="isSubmitted" required [class.invalid-placeholder]="address.invalid && address.touched" />
+        <span></span>
+      </div>
+
+      <div class="button">
+        <button type="submit" class="add-button-submit" [disabled]="loginForm.invalid || isSubmitted">Submit</button>
+        <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="google-login">
+    <button type="button" class="google-login-button" (click)="loginWithGoogle()">Login with Google</button>
+  </div>
+
+    <div class="reset-password">
+      <button type="button" class="reset-password-button" routerLink="/reset-password">Reset Password</button>
+    </div>
+  <app-message></app-message>
+</body>

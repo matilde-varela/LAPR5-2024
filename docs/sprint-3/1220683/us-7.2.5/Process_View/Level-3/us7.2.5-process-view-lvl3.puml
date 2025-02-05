@@ -1,0 +1,46 @@
+@startuml
+
+title "US 7.2.5 - Process View [Level 3] MDPatientManagement"
+
+autonumber
+participant "Routing" as ROUTE <<route>>
+participant "MedicalConditionController" as CTRL <<controller>>
+participant "MedicalConditionService" as SVC <<service>>
+participant "MedicalConditionDto" as DTO <<dto>>
+participant "MedicalConditionRepository" as REPO <<repository>>
+
+[o-> ROUTE: GET /api/get-AllMedicalConditions
+activate ROUTE
+
+ROUTE -> CTRL: getAllMedicalConditions()
+activate CTRL
+
+CTRL ->  SVC: getAllMedicalConditions()
+activate SVC
+
+SVC -> REPO : findAll()
+activate REPO
+
+REPO --> SVC : medicalConditionList
+deactivate REPO
+
+loop for all medical conditions
+SVC -> DTO **
+end loop
+
+SVC --> CTRL: medicalConditionDtoList
+deactivate SVC
+
+CTRL --> ROUTE: medicalConditionDtoList
+deactivate CTRL
+
+alt 
+[o<-- ROUTE : 200 OK(medicalConditionDtoList)
+
+else
+
+[o<-- ROUTE : 400 BAD REQUEST
+deactivate ROUTE
+end alt
+
+@enduml

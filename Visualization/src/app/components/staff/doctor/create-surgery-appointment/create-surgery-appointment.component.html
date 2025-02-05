@@ -1,0 +1,156 @@
+<body>
+    <div>
+        <app-side-bar-doctor></app-side-bar-doctor>
+    </div>
+    <header>
+        <h1 class="main-title">Create Surgery Appoitment</h1>
+    </header>
+
+    <div class="information-input">
+        <p style="margin-left: 200px; font-size: 24px;" font-family="'Poppins', monospace">Insert the following information before
+            submitting:</p>
+
+        <form #surgeryAppointmentForm="ngForm" (ngSubmit)="onSubmit(surgeryAppointmentForm)" novalidate>
+
+            <!-- Select Operation Request -->
+            <div class="input-field">
+                <label style="font-size: 16px;"><strong>Select Operation Request:</strong></label>
+                <div *ngIf="operationRequestList && operationRequestList.length > 0">
+                    <p-table [value]="operationRequestList" [(selection)]="surgeryAppointment.operationRequestId"
+                        selectionMode="single"
+                        [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 10%;">Select</th>
+                                <th style="width: 20%;">Operation Type</th>
+                                <th style="width: 15%;">Priority</th>
+                                <th style="width: 15%;">Deadline</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-operationRequest>
+                            <tr [pSelectableRow]="operationRequest">
+                                <td>
+                                    <p-tableRadioButton [value]="operationRequest.id" name="operationRadio"></p-tableRadioButton>
+                                </td>
+                                <td>{{ operationRequest.operationTypeId || '-' }}</td>
+                                <td>{{ operationRequest.priority || '-' }}</td>
+                                <td>{{ operationRequest.deadLineDate.split('/')[0] || '-' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <div *ngIf="surgeryAppointmentForm.submitted && !surgeryAppointment.operationRequestId" class="error-message">
+                    <p>Operation Request is required.</p>
+                </div>                
+            </div>
+
+            <!-- Select Room -->
+            <div class="input-field">
+                <label style="font-size: 16px;"><strong>Select the Room:</strong></label>
+                <div *ngIf="rooms && rooms.length > 0">
+                    <p-table [value]="rooms" [(selection)]="surgeryAppointment.roomNumber" selectionMode="single"
+                        [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 10%;">Select</th>
+                                <th style="width: 15%;">Room Number</th>
+                                <th style="width: 15%;">Type</th>
+                                <th style="width: 10%;">Capacity</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-room>
+                            <tr [pSelectableRow]="room">
+                                <td>
+                                    <p-tableRadioButton [value]="room.roomNumber" name="roomRadio"></p-tableRadioButton>
+                                </td>
+                                <td>{{ room.roomNumber || '-' }}</td>
+                                <td>{{ room.type || '-' }}</td>
+                                <td>{{ room.capacity || '-' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <div *ngIf="surgeryAppointmentForm.submitted && !surgeryAppointment.roomNumber" class="error-message">
+                    <p>Room selection is required.</p>
+                </div>
+            </div>
+
+            <!-- Select Staff -->
+            <div class="input-field">
+                <label for="staffId" style="font-size: 16px;"><strong>Select the Staff:</strong></label>
+                <div *ngIf="staffs && staffs.length > 0">
+                    <p-table [value]="staffs" [(selection)]="surgeryAppointment.staffList" selectionMode="multiple"
+                        [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 10%;">Select</th>
+                                <th style="width: 15%;">Staff Name</th>
+                                <th style="width: 15%;">Licence Number</th>
+                                <th style="width: 15%;">Function</th>
+                                <th style="width: 10%;">Specialization</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-staff>
+                            <tr [pSelectableRow]="staff">
+                                <td>
+                                    <p-tableCheckbox [value]="staff.id" name="staffCheck"></p-tableCheckbox>
+                                </td>
+                                <td>{{ staff.name || '-' }}</td>
+                                <td>{{ staff.id || '-' }}</td>
+                                <td>{{ staff.function || '-' }}</td>
+                                <td>{{ staff.specializationId || '-' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <div *ngIf="surgeryAppointmentForm.submitted && !surgeryAppointment.staffList?.length" class="error-message">
+                    <p>Staff selection is required.</p>
+                </div>
+            </div>
+
+
+            <br>
+
+            <div class="input-field">
+                <input name="startTime" #startTime="ngModel" [(ngModel)]="surgeryAppointment.startTime"
+                    placeholder="Start Time" [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="startTime.invalid && startTime.touched" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <input name="endTime" #endTime="ngModel" [(ngModel)]="surgeryAppointment.endTime" placeholder="End Time"
+                    [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="endTime.invalid && endTime.touched" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <input name="startDate" #startDate="ngModel" [(ngModel)]="surgeryAppointment.startDate"
+                    placeholder="Start Date" [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="startDate.invalid && startDate.touched" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <input name="endDate" #endDate="ngModel" [(ngModel)]="surgeryAppointment.endDate" placeholder="End Date"
+                    [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="endDate.invalid && endDate.touched" />
+                <span></span>
+            </div>
+
+                        
+            <div class="button">
+                <button type="submit" class="add-button-submit"
+                [disabled]="surgeryAppointmentForm.invalid || !surgeryAppointment.operationRequestId || !surgeryAppointment.roomNumber || !surgeryAppointment.staffList || !surgeryAppointment.startTime || !surgeryAppointment.endTime || !surgeryAppointment.startDate || !surgeryAppointment.endDate || isSubmitted">Submit</button>
+
+                <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <br>
+    <app-message></app-message>
+</body>

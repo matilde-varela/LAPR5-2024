@@ -1,0 +1,84 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide empty attributes
+skinparam classBackgroundColor beige
+skinparam ArrowColor #222222
+
+class Name <<(V,#FF8B40)value object>> {}
+
+class FirstName <<(V,#FF8B40)value object>> {}
+class LastName <<(V,#FF8B40)value object>> {}
+class FullName <<(V,#FF8B40)value object>> {}
+class Phone <<(V,#FF8B40)value object>> {}
+class Email <<(V,#FF8B40)value object>> {}
+class Address <<(V,#FF8B40)value object>> {}
+class Slot <<(V,#FF8B40)value object>> {}
+class Date <<(V,#FF8B40)value object>> {}
+class Function <<(V,#FF8B40)value object>>  {}
+class Status <<(V,#FF8B40)value object>> {}
+
+package "<<aggregate>> Patient" {
+    entity Patient <<entity>> <<root>> {}
+    class DateBirth <<(V,#FF8B40)value object>> {}
+    class Gender <<(V,#FF8B40)value object>> {}
+    class EmergencyContact <<(V,#FF8B40)value object>> {}
+    class MRN <<(V,#FF8B40)value object>> <<identifier>> {}
+    class MedicalCondition <<(V,#FF8B40)value object>> {}
+    class AppoitmentHistory <<(V,#FF8B40)value object>> {}
+}
+
+package "<<aggregate Staff>>" {
+    entity Staff <<entity>><<root>>{}
+    class LicenseNumber <<(V,#FF8B40)value object>> <<identifier>> {}
+}
+
+package "<<aggregate>> User" {
+    entity User <<entity>> <<root>>
+    class Username <<(V,#FF8B40) value object>> <<identifier>>
+    class Role <<(V,#FF8B40) value object>>
+}
+
+package "<<aggregate>> Log" {
+    entity Log <<entity>> <<root>>
+    class Change <<(V,#FF8B40) value object>>
+}
+
+Log ---> "1" Date
+Log ---> "1" Change
+Log ---> "1" User
+
+User -> "1" Status
+User --> Username
+User ----> Email
+User --> Role
+
+Name --> FirstName
+Name -> LastName
+Name --> FullName
+
+Patient -> "1" Status
+Patient -> "1" Name
+Patient --> "1" DateBirth
+Patient --> "1" Gender
+Patient ---> "1" EmergencyContact
+Patient --> "1" MRN
+Patient --> "0..1" MedicalCondition
+Patient --> "1" AppoitmentHistory
+Patient --> "1" Email
+Patient --> "1" Phone
+Patient --> "1" Address
+Patient---> "0..1" User
+EmergencyContact --> "1" Phone
+
+Staff --> "1" Status
+Staff --> "1" Name
+Staff --> "1" Function
+Staff ---> "1" Email
+Staff ---> "1" Phone
+Staff --> "1" Address
+Staff --> "1" LicenseNumber
+Staff ---> "0..*" Slot
+Staff --> "1" Specialization
+Staff -> "1" User
+
+@enduml

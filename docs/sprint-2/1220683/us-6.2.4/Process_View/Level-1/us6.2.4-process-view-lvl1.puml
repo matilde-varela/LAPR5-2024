@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.4 Process View (Level 1)"
+
+autonumber
+
+actor "Backoffice User" as BACK
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+BACK -> SYS : wants to login into account
+activate SYS
+
+SYS --> BACK : asks for the credentials
+deactivate SYS
+activate BACK
+
+BACK -> SYS : provides the credentials
+deactivate BACK
+activate SYS
+
+SYS -> SYS : validates user
+activate SYS
+deactivate SYS
+
+SYS --> BACK : provides access to the system
+deactivate SYS
+
+@enduml

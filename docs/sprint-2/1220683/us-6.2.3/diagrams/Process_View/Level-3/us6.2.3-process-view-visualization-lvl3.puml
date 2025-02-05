@@ -1,0 +1,52 @@
+@startuml
+
+title "US 6.2.3 - Process View [Level 3 | Visualization]"
+
+'As a Patient, I want to delete my account and all associated data, so that I can exercise my right to be forgotten as per GDPR.
+
+
+
+autonumber
+actor "Patient" as USER
+participant "Patient PatientPreferences" as PA <<component>>
+participant "PatientAccountDeletionConfirm" as UAD <<component>>
+participant "UserService" as US <<service>>
+
+
+USER -> PA : clicks "Delete Profile" button
+activate PA
+
+PA -> US : sendAccountDeleteRequest()
+activate US
+
+US ->o] : DELETE: /api/Delete-PatientAccountDeletionRequest
+
+US <--o] : Ok()
+note right
+An email is sent to
+ the patient inbox
+end note
+
+US --> PA: success
+deactivate US
+
+PA --> USER: "An email to confirm the account's deletion was sent"
+deactivate PA
+
+USER -> UAD : gets redirected from confirmation link
+activate UAD
+
+UAD ->o] : PUT(userId, token) : /api/Update-PatientAccountDeletionConfirmation?userId=VALUEtoken=VALUE
+note left
+Token and userID values
+are passed through the
+confirmation link that
+was sent
+end note
+
+UAD <--o] : Ok()
+
+UAD --> USER: success
+deactivate UAD
+
+@enduml

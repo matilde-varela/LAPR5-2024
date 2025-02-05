@@ -1,0 +1,66 @@
+@startuml
+
+title "US 6.2.6 - Process View [Level 3 | MDBackoffice]"
+
+autonumber
+participant "PatientRoute" as ROUTE <<route>>
+participant "PatientDto" as pat_dto <<dto>>
+participant "PatientController" as CTRL <<controller>>
+participant "PatientService" as SVC <<service>>
+participant "PatientRepository" as REPO <<repository>>
+participant "Patient" as pat <<domain>>
+
+
+[o-> ROUTE: POST(json) /api/Patient/Create-PatientProfile
+activate ROUTE
+
+ROUTE -> pat_dto **: create(json)
+
+ROUTE -> CTRL: createPatientProfile(patientDto)
+activate CTRL
+
+CTRL -> SVC: createPatientProfile(patientDto)
+activate SVC
+
+SVC -> REPO : existsPatientWithEmailOrPhone(email,phone)
+activate REPO
+REPO --> SVC : boolean
+deactivate REPO
+
+alt false
+
+SVC -> SVC: generateMRN()
+activate SVC
+
+SVC -> REPO: lastMRNSequentialNumber()
+activate REPO
+deactivate REPO
+
+SVC --> SVC: medicalRecordNumber
+deactivate SVC
+
+SVC -> pat **: create(medicalRecordNumber,firstName,lastName,\nemail,phone,emergencyContact,gender,dateBirth)
+
+SVC -> REPO : save(patient)
+activate REPO
+deactivate REPO
+
+end alt
+
+SVC --> CTRL: success
+deactivate SVC
+CTRL --> ROUTE: success
+deactivate CTRL
+
+alt 
+
+[o<-- ROUTE: 201 Created
+
+else 
+
+[o<-- ROUTE: 400 Bad Request
+
+end alt
+
+deactivate ROUTE
+@enduml

@@ -1,0 +1,74 @@
+@startuml
+
+title "US 7.2.11- Process View [Level 3]"
+
+autonumber
+participant "Routing" as ROUTE <<route>>
+participant "CreateSpecializationDto" as DTO <<dto>>
+participant "SpecializationController" as CTRL <<controller>>
+participant "SpecializationService" as SVC <<service>>
+participant "Specialization" as ALL <<domain>>
+participant "SpecializationRepository" as REPO <<repository>>
+
+participant "<<service>>\n LogService" as LogServ
+participant "<<domain>>\n Log" as Log
+participant "<<repository>>\n LogRepository" as LogRepo
+
+
+[o-> ROUTE: POST(json) /api/create-Specialization
+activate ROUTE
+
+ROUTE -> DTO **: create(json)
+
+ROUTE -> CTRL: create(specializationDto)
+activate CTRL
+
+CTRL ->  SVC: AddAsync(specializationDto)
+activate SVC
+
+SVC -> ALL ** : Specialization(code, designation, description)
+
+SVC -> REPO : AddAsync(specialization)
+activate REPO
+
+REPO --> SVC : specialization
+deactivate REPO
+
+|||
+
+SVC -> LogServ : CreateCreateLog(specializationCode, specializationClass, logDescription)
+activate LogServ
+
+LogServ -> Log ** : Log(getSequentialNumber(), objectClass, objectReference, 1, description)
+note right
+1 represents the
+Log type - Creation
+end note
+
+LogServ -> LogRepo : AddAsync(log)
+activate LogRepo
+
+LogRepo --> LogServ : log
+deactivate LogRepo
+
+LogServ --> SVC : log
+deactivate LogServ
+
+
+SVC --> CTRL: specialization
+deactivate SVC
+
+CTRL --> ROUTE: specialization
+deactivate CTRL
+
+alt 
+[o<-- ROUTE : 200 OK
+
+else
+
+[o<-- ROUTE : 400 BAD REQUEST
+deactivate ROUTE
+end alt
+
+
+@enduml

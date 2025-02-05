@@ -1,0 +1,54 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.23. Process View (Level 1)"
+
+
+actor Admin as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+ADM -> SYS : requests the list of the operation types
+activate SYS
+
+SYS --> ADM : lists the operation types
+deactivate SYS
+activate ADM
+
+deactivate ADM
+
+    opt search filters appliance
+
+        ADM -> SYS : applies search filters
+        deactivate ADM
+        activate SYS
+
+        SYS --> ADM : shows the search results
+        deactivate SYS
+        activate ADM
+    end opt
+
+ADM -> SYS : selects an operation type
+deactivate ADM
+activate SYS
+
+SYS --> ADM : shows operation type
+deactivate SYS
+activate ADM
+
+    alt  edit operation type
+        ADM --> SYS : US 5.1.21
+        activate SYS
+        deactivate SYS
+
+    else deactivate operation type
+
+        ADM --> SYS : US 5.1.22
+        deactivate ADM
+        activate SYS
+
+    end alt
+
+SYS --> ADM : answer and shows the list
+deactivate SYS
+
+@enduml

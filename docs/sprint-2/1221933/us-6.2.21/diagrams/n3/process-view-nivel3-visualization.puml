@@ -1,0 +1,82 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.21. Process View (Level 3 | Visualization)"
+
+autonumber
+actor "Admin" as USER
+participant "ListOperationTypes" as UPP <<component>>
+participant "OperationTypeService" as PS <<service>>
+
+USER -> UPP : requests the list of operation types
+activate UPP
+
+UPP -> PS : getAllOperationTypes()
+activate PS
+
+PS ->o] : GET: /api/OperationType/OperationTypeList
+
+PS <--o] : Ok(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+USER -> UPP : applies search filters
+activate UPP
+
+UPP -> PS : GetFilteredOperationTypes()
+activate PS
+
+PS ->o] : POST: /api/OperationType/filter-operationTypeList
+
+PS <--o] : Ok(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+
+alt  edit operation type
+
+USER -> UPP : edit operation type
+activate UPP
+
+UPP -> PS : editOperationType(updatedProfileData)
+activate PS
+
+PS ->o] : PUT: /api/OperationType/edit-operationtype
+
+PS <--o] : Ok(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+else deactivate operation type
+
+USER -> UPP : delete operation type
+activate UPP
+
+UPP -> PS : deleteOperationType(operationType)
+activate PS
+
+PS ->o] : DELETE: /api/OperationType/delete-operationtype
+
+PS <--o] : Ok(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+end alt
+
+@enduml

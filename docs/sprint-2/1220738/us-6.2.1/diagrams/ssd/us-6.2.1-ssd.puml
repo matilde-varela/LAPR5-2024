@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.1 - System Sequence Diagram"
+
+autonumber
+
+actor Patient as PAT
+participant System as SYS
+
+activate PAT
+
+PAT -> SYS : requests to register for the healthcare application
+activate SYS
+
+SYS --> PAT : asks to provide personal details
+
+PAT -> SYS : provides personal details (name, email, phone) and\n creates profile
+
+SYS --> PAT : send verification email with confirmation link
+
+PAT -> SYS : confirms the email is correct
+
+SYS --> PAT : validates the user profile and shows the patient\n appointments list
+deactivate SYS
+
+
+@enduml

@@ -1,0 +1,151 @@
+@startuml
+
+title "US 5.1.4. - Process View [Level 3]"
+
+autonumber
+participant "PatientRoute" as ROUTE <<route>>
+participant "EditPatientProfileDto" as pat_dto <<dto>>
+participant "PatientController" as CTRL <<controller>>
+participant "PrincipalExtensions" as CLAIMS <<utility>>
+participant "PatientService" as SVC <<service>>
+participant "LogService" as LOG <<service>>
+participant "UserService" as US_SVC <<service>>
+participant "UserManager" as UM <<service>>
+participant "User" as USER <<domain>>
+participant "PatientRepository" as REPO <<repository>>
+participant "Patient" as PATIENT <<domain>>
+participant "PatientDto" as PATIENT_DTO <<dto>>
+
+
+
+[o-> ROUTE: PUT(json) /api/patient
+activate ROUTE
+
+ROUTE -> pat_dto **: create(json)
+
+ROUTE -> CTRL: EditPatientProfile(editPatientProfileDto)
+activate CTRL
+
+CTRL -> CLAIMS : FindFirstValue(ClaimTypes.Email)
+activate CLAIMS
+
+CLAIMS --> CTRL : emailLoggedInUser
+deactivate CLAIMS
+
+alt email != null
+
+    CTRL -> SVC : EditProfile(emailLoggedInUser,editPatientProfileDto)
+    activate SVC
+
+    SVC -> REPO: FindPatientWithUserEmail(email)
+    activate REPO
+
+    REPO -> SVC: patient
+    deactivate REPO
+
+    alt newPhoneNumber != null
+        SVC -> PATIENT : ChangePhone(newPhoneNumber)
+        activate PATIENT
+        deactivate PATIENT
+        end alt
+
+        alt newAddress != null
+            SVC -> PATIENT : ChangeAddress(newAddress)
+            activate PATIENT
+            deactivate PATIENT
+            end alt
+
+            alt newName != null
+                SVC -> PATIENT : ChangeName(newName)
+                activate PATIENT
+                deactivate PATIENT
+                end alt
+
+                alt newEmergencyContact != null
+                    SVC -> PATIENT : ChangeEmergencyContact(newEmergencyContact)
+                    activate PATIENT
+                    deactivate PATIENT
+                    end alt
+
+                    alt newEmail != null
+
+                        SVC -> US_SVC: EditUserProfile(oldEmail,newEmail)
+                        activate US_SVC
+
+                        US_SVC -> UM: FindByEmailAsync(oldEmail)
+                        activate UM
+                        UM --> US_SVC: user
+                        deactivate UM
+
+                        US_SVC -> UM: GenerateChangeEmailTokenAsync(user,newEmail)
+                        activate UM
+
+                        UM --> US_SVC: token
+                        deactivate UM
+
+                        US_SVC -> UM: ChangeEmailAsync(user, newEmail, token)
+                        activate UM
+                        UM --> US_SVC: result
+                        deactivate UM
+
+                        alt result == true
+
+                            US_SVC -> USER: changeStatus(false)
+                            activate USER
+                            deactivate USER
+
+                            US_SVC -> UM: UpdateAsync(user)
+                            activate UM
+                            deactivate UM
+
+                            US_SVC -> UM: GenerateEmailConfirmationTokenAsync(user)
+                            activate UM
+
+                            UM --> US_SVC: token
+                            deactivate UM
+
+                            US_SVC -> US_SVC: SendConfirmationEmail(user,oldEmail,token)
+                            activate US_SVC
+                            deactivate US_SVC
+                        end
+
+                        US_SVC --> SVC:
+                        deactivate US_SVC
+
+                        SVC -> PATIENT : ChangeEmail(newEmail)
+                        activate PATIENT
+                        deactivate PATIENT
+                        end alt
+
+                        SVC -> LOG: CreateEditLog(patientId,patientClass,log)
+                        activate LOG
+                        deactivate LOG
+
+                        SVC -> REPO : save()
+                        activate REPO
+                        deactivate REPO
+
+                        SVC-> PATIENT_DTO**: create(name,phoneNumber,email,address)
+
+
+                        SVC --> CTRL: patientDto
+                        deactivate SVC
+
+
+                        end alt
+
+                        CTRL --> ROUTE: success
+                        deactivate CTRL
+
+                        alt
+
+                            [o<-- ROUTE: Accepted()
+
+                        else
+
+                            [o<-- ROUTE: BadRequest()
+
+                            end alt
+
+                            deactivate ROUTE
+                            @enduml

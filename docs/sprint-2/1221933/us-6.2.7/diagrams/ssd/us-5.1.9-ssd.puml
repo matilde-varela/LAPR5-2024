@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.9 - System Sequence Diagram"
+
+autonumber
+
+actor Admin as ADM
+participant System as SYS
+
+activate ADM
+
+ADM -> SYS : asks to edit a patient profile, to update their information
+
+activate SYS
+
+SYS --> ADM : gives patient list
+
+ADM -> SYS : selects the patient profile
+
+SYS --> ADM : shows patient information
+
+loop until the admin wants
+
+ADM -> SYS : changes the editable fields (name, contact\n information, medical history and allergies)
+
+end loop
+
+SYS --> ADM : confirms the alteration of the chosen fields
+
+deactivate SYS
+
+
+@enduml

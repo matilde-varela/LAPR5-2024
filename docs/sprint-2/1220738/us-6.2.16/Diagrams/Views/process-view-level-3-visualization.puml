@@ -1,0 +1,31 @@
+@startuml
+title "US 6.2.16. Process View - Visualization (Level 3)"
+
+actor Doctor
+participant "<<Component>>\n OperationRequest" as USER
+participant "<<Service>>\n OperationRequestService" as SERV
+
+activate Doctor
+    Doctor -> USER : get all active profiles
+    activate USER
+        USER -> SERV : GetAllFromDoctor()
+        activate SERV
+            SERV ->o] : GET: api/Get-AllFromDoctor()
+            SERV <--o] : Ok(operationRequests)
+            SERV --> USER : operationRequests
+        deactivate SERV
+        USER --> Doctor : operationRequests
+    deactivate USER
+
+    Doctor -> USER : delete an operation request
+        activate USER
+            USER -> SERV : DeleteOperationRequestFromPatient(\nidPatient,\nidRequest,\nemail)
+            activate SERV
+                SERV ->o] : DELETE: api/Delete-OperationRequestFromPatient(\nidPatient,\nidRequest,\nemail)
+                SERV <--o] : Ok("Operation request succefully removed.")
+                SERV --> USER : success
+            deactivate SERV
+            USER --> Doctor : success
+        deactivate USER
+deactivate Doctor
+@enduml

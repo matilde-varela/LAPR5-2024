@@ -1,0 +1,146 @@
+@startuml
+title "US 6.2.19 Process View - MDBackoffice (Level 3)"
+
+participant "<<Route>>\n OperationTypeRoute" as ROUTE
+participant "<<Controller>>\n OperationTypeController" as CONTROL
+participant "<<Service>>\n OperationTypeService" as SERV
+participant "<<Repository>>\n OperationTypeRepository" as REPO
+participant "<<DTO>>\n OperationTypeListDTO" as LISTDTO
+participant "<<Domain>>\n OperationType" as OPTYP
+participant "<<DTO>>\n EditOpTypeDto" as OPRESDTO
+participant "<<Service>>\n OperationTypeRecordService" as RECORDServ
+participant "<<Repository>>\n OperationTypeRecordRepository" as RECORDRepo
+participant "<<Service>>\n LogService" as LOGServ
+participant "<<Domain>>\n Log" as LOG
+participant "<<Repository>>\n LogRepository" as LOGRepo
+
+[o-> ROUTE : GET(json)
+note right : getting the \nlist of \nall types
+
+Activate ROUTE
+
+ROUTE -> CONTROL : getListOfOpTypes(json)
+
+Activate CONTROL
+
+CONTROL -> SERV : getListOfOpTypes()
+Activate SERV
+
+SERV -> REPO : findAll() 
+Activate REPO
+
+REPO --> SERV : listOfOpTypes
+Deactivate REPO
+
+SERV -> LISTDTO**
+loop for every profile in listOfOpTypes
+SERV -> OPTYP : toDTO()
+activate OPTYP
+OPTYP --> SERV : opTypesDTO
+deactivate OPTYP
+SERV -> LISTDTO : listAdd(opTypesDTO)
+activate LISTDTO
+LISTDTO --> SERV : return
+deactivate LISTDTO
+end
+
+SERV --> CONTROL : opTypesListDTO
+Deactivate SERV
+
+CONTROL -> CONTROL : ok(opTypesListDTO)
+
+CONTROL --> ROUTE : json
+Deactivate CONTROL
+<-- ROUTE : json
+
+Deactivate ROUTE
+
+note right : after choosing\n a request
+
+[o-> ROUTE : POST(json)
+note right : after getting\n the confirmation
+
+Activate ROUTE
+
+ROUTE -> CONTROL : EditOperationType(json)
+
+Activate CONTROL
+
+CONTROL -> OPRESDTO** : toDTO(json)
+
+CONTROL -> SERV : EditOperationType(editOpTypeDto)
+Activate SERV
+
+SERV -> REPO : findByID(opTypeID)
+activate REPO
+REPO --> SERV : operationType
+deactivate REPO
+
+loop for every attribute in operationTypeDTO
+SERV -> SERV : operationType.attribute = operationTypeDTO.attribute
+end
+
+SERV -> SERV : CommitAsync()
+
+SERV -> LOGServ : CreateEditLog(operationType.Id.Value,\noperationType.GetType().Name,\n"Operation type edited: "\n+ operationType.Name.OperationName)
+activate LOGServ 
+LOGServ -> LOG**
+LOGServ -> LOGRepo : AddAsync(log)
+activate LOGRepo
+LOGRepo --> LOGServ : true
+deactivate LOGRepo
+LOGServ --> SERV : true
+deactivate LOGServ
+
+SERV -> RECORDServ : AddAsync(operationType)
+activate RECORDServ
+
+RECORDServ -> RECORDRepo : GetLastFromOpType(operationType.Id)
+activate RECORDRepo
+RECORDRepo --> RECORDServ : lastOperationRecord
+deactivate RECORDRepo
+
+RECORDServ -> RECORDServ : var todayDate = new Date(\nDateTime.Now.ToString("yyyy-MM-dd"));
+
+alt If there's no record
+
+RECORDServ -> RECORDServ : operationRecord = new OperationTypeRecord(new Date(todayDate.Start.ToString(),\ntodayDate.End.ToString()), 0,\noperationType.Id,\noperationType.Name, \noperationType.EstimatedDuration,\noperationType.Status,\noperationType.RequiredStaff,\noperationType.Phases)
+
+else If there is
+
+RECORDServ -> RECORDServ : operationRecord = new OperationTypeRecord(new Date(todayDate.Start.ToString(),\ntodayDate.End.ToString()),\n operationRecord1.Version.Version+1,\noperationType.Id,\noperationType.Name, \noperationType.EstimatedDuration,\noperationType.Status,\noperationType.RequiredStaff,\noperationType.Phases)
+
+end
+
+RECORDServ -> RECORDRepo : AddAsync(operationRecord)
+activate RECORDRepo
+RECORDRepo --> RECORDServ : true
+deactivate RECORDRepo
+
+RECORDServ -> RECORDServ : CommitAsync()
+
+RECORDServ -> LOGServ : CreateCreationLog(operationRecord.Id.Value,\noperationRecord.GetType().Name,\n"New operation type version record created.")
+activate LOGServ 
+LOGServ -> LOG**
+LOGServ -> LOGRepo : AddAsync(log)
+activate LOGRepo
+LOGRepo --> LOGServ : true
+deactivate LOGRepo
+LOGServ --> RECORDServ : true
+deactivate LOGServ
+
+RECORDServ --> SERV : true
+deactivate RECORDServ
+
+SERV --> CONTROL : return
+deactivate SERV
+
+CONTROL --> CONTROL : ok(sucess)
+CONTROL --> ROUTE : json
+deactivate CONTROL
+
+<-- ROUTE : json
+deactivate ROUTE
+
+
+@enduml

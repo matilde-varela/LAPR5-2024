@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+actor "Admin" as ADMIN
+participant "System" as SYS
+
+activate ADMIN
+
+ADMIN --> SYS : Asks to create a new backoffice account.
+
+activate SYS
+
+SYS --> ADMIN : Asks for the email.
+
+ADMIN --> SYS : Inputs the valid staff email.
+
+SYS --> ADMIN : Asks for the role.
+
+ADMIN --> SYS : Inputs the role \n(Technician, Admin, Doctor, Nurse).
+
+SYS --> ADMIN : Sends success message.
+
+@enduml

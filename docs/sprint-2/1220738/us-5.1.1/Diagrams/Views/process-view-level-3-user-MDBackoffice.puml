@@ -1,0 +1,136 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) | MDBackoffice - Create Staff User and Associating"
+
+participant "<<Route>>\n StaffRoute" as ROUTE
+participant "<<Controller>>\n StaffController" as CONTROL
+participant "<<DTO>>\n RegisterUserDto" as UserDTO
+participant "<<Service>>\n UserService" as AUTHServ
+participant "<<Utility>>\n RoleManager" as ROLEMan
+participant "<<Domain>>\n User" as USER
+participant "<<Utility>>\n UserManager" as USERMan
+participant "<<Service>>\n StaffService" as STAFFServ
+participant "<<Repository>>\n StaffRepository" as STAFFRepo
+participant "<<Domain>>\n Staff" as STAFF
+participant "<<Service>>\n EmailService" as EMAILServ
+participant "<<Domain>>\n Email" as EMAIL
+participant "<<Object>>\n MimeMessage" as Mime
+participant "<<Interface>>\n IEmailAdapter" as IEmailAdapter
+
+[o-> ROUTE : POST(userData)
+Activate ROUTE
+
+ROUTE -> CONTROL : RegisterStaffUser(userData)
+Activate CONTROL
+
+CONTROL -> UserDTO** : toDTO(userData)
+CONTROL -> AUTHServ : createStaffUserAsync(registerUserDto)
+Activate AUTHServ
+AUTHServ -> AUTHServ : createAsync(registerUserDto.Email,\nregisterUserDto.Password,\nregisterUserDto.Role,\nfalse)
+activate AUTHServ
+AUTHServ -> ROLEMan : roleExistsAsync(role) 
+activate ROLEMan
+ROLEMan -> AUTHServ : true
+deactivate ROLEMan
+AUTHServ -> USER**
+
+AUTHServ -> USERMan : createAsync(user, password)
+activate USERMan
+USERMan --> AUTHServ : bool
+deactivate USERMan
+
+AUTHServ -> USERMan : addToRoleAsync(user, role)
+activate USERMan
+USERMan --> AUTHServ : bool
+deactivate USERMan
+AUTHServ -> AUTHServ : user
+deactivate AUTHServ
+AUTHServ --> CONTROL : user
+deactivate AUTHServ
+
+CONTROL -> STAFFServ : addUser(user, registerUserDto.Email, registerUserDto.Phone)
+activate STAFFServ
+STAFFServ -> STAFFRepo : ExistsStaffWithEmailOrPhone(email,\nphone.Split(' ')[0],\nphone.Split(' ')[1])
+activate STAFFRepo
+STAFFRepo --> STAFFServ : true
+deactivate STAFFRepo
+
+STAFFServ -> STAFFRepo : getStaffWithEmail(email)
+activate STAFFRepo
+STAFFRepo --> STAFFServ : staff
+deactivate STAFFRepo
+
+STAFFServ -> STAFF : addUser(user)
+activate STAFF
+deactivate STAFF
+
+STAFFServ -> STAFFServ : commitAsync()
+activate STAFFServ
+deactivate STAFFServ
+
+STAFFServ --> CONTROL : return
+deactivate STAFFServ
+
+CONTROL -> STAFFServ : getProfileEmail(user.Email.ToString(), registerUserDto.Phone)
+activate STAFFServ
+STAFFServ -> STAFFRepo : findStaffWithEmailOrPhone(email, phone.Split(' ')[0], phone.Split(' ')[1])
+activate STAFFRepo 
+STAFFRepo --> STAFFServ : email
+deactivate STAFFRepo
+STAFFServ --> CONTROL : email
+deactivate STAFFServ
+
+CONTROL -> AUTHServ : sendConfirmationEmail(user, email)
+
+activate AUTHServ
+AUTHServ -> USERMan : generateEmailConfirmationTokenAsync(user)
+activate USERMan
+USERMan --> AUTHServ : token
+deactivate USERMan
+
+AUTHServ -> AUTHServ : configureUrlConfirmation(token, user)
+activate AUTHServ
+AUTHServ --> AUTHServ : confirmationLink
+deactivate AUTHServ
+
+AUTHServ -> AUTHServ : sendEmail(email, "Account Activation", body)
+activate AUTHServ
+AUTHServ -> EMAILServ : sendConfirmationEmail(emailDto)
+activate EMAILServ
+
+EMAILServ -> EMAIL**: new Email(emailDto.SenderEmail)
+EMAILServ -> EMAIL**: new Email(emailDto.RecipientEmail)
+
+EMAILServ -> Mime**: new MimeMessage()
+EMAILServ -> Mime: From.Add("HealthCare Clinic")
+activate Mime
+deactivate Mime
+EMAILServ -> Mime: To.Add(recipientEmail)
+activate Mime
+deactivate Mime
+EMAILServ -> Mime: Subject = emailDto.EmailSubject
+activate Mime
+deactivate Mime
+EMAILServ -> Mime: Body = emailDto.EmailBody (Html format)
+activate Mime
+deactivate Mime
+
+EMAILServ -> IEmailAdapter: SendEmail(Mime)
+activate IEmailAdapter
+
+IEmailAdapter -> IEmailAdapter: Send email via SMTP
+IEmailAdapter --> EMAILServ : return
+deactivate IEmailAdapter
+EMAILServ -> AUTHServ : return
+deactivate EMAILServ
+AUTHServ --> AUTHServ : return
+AUTHServ --> CONTROL : return
+deactivate AUTHServ
+
+CONTROL --> ROUTE : return Ok("The user has been successfully\ncreated. Please\nverify your email to complete\nthe registration.")
+deactivate CONTROL
+
+Deactivate CONTROL
+<-- ROUTE : message
+
+Deactivate ROUTE
+@enduml

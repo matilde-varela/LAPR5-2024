@@ -1,0 +1,113 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.14. Process View (Level 3 | MDBackoffice)"
+
+autonumber
+
+participant "route:\nOperationRequestRoute" as ROUTE
+participant "dto:\nOperationRequestDTO" as DTO
+participant "dto:\nAddOrRemoveFromPatientDto" as AddDTO
+participant "controller:\nOperationRequestController" as CTRL
+
+participant "service:\nOperationRequestService" as SER
+participant "repository:\nOperationRequestRepository" as REPO
+participant "repository:\nStaffRepository" as StaffREPO
+participant "repository:\nPatientRepository" as PatientREPO
+participant "repository:\nOperationTypeRepository" as OpTyREPO
+participant "repository:\nUserRepository" as UserREPO
+participant "domain:\nOperationRequest" as OPREQ
+participant "domain:\nAppointmentHistory" as APPHI
+participant "domain:\n Patient" as PAT
+
+[o-> ROUTE : POST(json)
+activate ROUTE
+
+ROUTE -> DTO** : create(json)
+
+ROUTE -> CTRL : Create(operationRequestDto)
+activate CTRL
+
+CTRL -> SER : AddAsync(operationRequestDto)
+activate SER
+
+SER -> StaffREPO : GetByIdAsync(staffId)
+activate StaffREPO
+deactivate StaffREPO
+
+SER -> PatientREPO : GetByIdAsync(patientId)
+activate PatientREPO
+deactivate PatientREPO
+
+SER -> OpTyREPO : GetByIdAsync(operationTypeId)
+activate OpTyREPO
+deactivate OpTyREPO
+
+
+SER -> OPREQ** : create(deadLineDate, priority, dateOfRequest, staffId, patientId,operationTypeId)
+
+SER -> REPO : save(operationRequest)
+activate REPO
+deactivate REPO
+
+SER --> CTRL : success
+deactivate SER
+
+CTRL --> ROUTE : success
+deactivate CTRL
+
+alt
+[o<-- ROUTE: 201 Created
+else
+[o<-- ROUTE: 400 Bad Request
+end alt
+
+deactivate ROUTE
+
+
+[o-> ROUTE : POST(json)
+activate ROUTE
+
+ROUTE -> AddDTO** : create(json)
+
+ROUTE -> CTRL : AddOperationRequestToPatient(addOrRemoveFromPatientDto)
+activate CTRL
+
+CTRL -> SER : AddOperationRequestToPatient(patientId, operationRequestId, userEmail)
+activate SER
+
+SER -> UserREPO : FindByEmailAsync(email)
+activate UserREPO
+deactivate UserREPO
+
+SER -> StaffREPO : FindStaffWithUserId(userId)
+activate StaffREPO
+deactivate StaffREPO
+
+SER -> PatientREPO : GetByIdAsync(patientId)
+activate PatientREPO
+deactivate PatientREPO
+
+
+SER -> APPHI** : create(operationRequestId, status, type, patientId)
+
+SER -> PAT : AddRequestToHistory(appointmentHistory)
+activate PAT
+deactivate PAT
+
+SER -> SER : CommitAsync()
+SER --> CTRL : true
+deactivate SER
+
+CTRL --> CTRL : Ok("Operation request successfully add.")
+activate CTRL
+deactivate CTRL
+
+CTRL --> ROUTE : json
+deactivate CTRL
+
+<-- ROUTE : json
+deactivate ROUTE
+
+
+@enduml

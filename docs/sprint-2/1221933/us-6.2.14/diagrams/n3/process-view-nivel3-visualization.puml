@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.14. Process View (Level 3 | Visualization)"
+
+autonumber
+actor "Doctor" as USER
+participant "CreateOperationRequest" as UPP <<component>>
+participant "OperationRequestService" as PS <<service>>
+
+USER -> UPP : creates operation request
+activate UPP
+
+UPP -> PS : Create(json)
+activate PS
+
+PS ->o] : POST: api/OperationRequest/create
+
+PS <--o] : Ok(OperationRequestDto)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+USER -> UPP : adds operation request to patient
+activate UPP
+
+UPP -> PS : AddOperationRequestToPatient(addOrRemoveFromPatientDto)
+activate PS
+
+PS ->o] : POST: api/OperationRequest/add-operation-patient
+
+PS <--o] : Ok(OperationRequestDto)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+
+@enduml

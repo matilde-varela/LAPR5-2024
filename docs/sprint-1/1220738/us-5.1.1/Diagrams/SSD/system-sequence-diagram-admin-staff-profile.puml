@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+actor "Admin" as ADMIN
+participant "System" as SYS
+
+activate ADMIN
+
+ADMIN --> SYS : Asks to create a new staff profile.
+
+activate SYS
+
+SYS --> ADMIN : Asks for the neccessary info.
+
+ADMIN --> SYS : gives the neccessary info.
+
+SYS --> ADMIN : Sends success message.
+
+@enduml

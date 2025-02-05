@@ -1,0 +1,92 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) - Confirming Email and Activating Staff Account"
+
+participant "<<Route>>\n StaffRoute" as ROUTE
+participant "<<Controller>>\n StaffController" as CONTROL
+
+participant "<<DTO>>\n ConfirmEmailUserDto" as UserDTO
+
+participant "<<Service>>\n UserService" as AUTHServ
+
+participant "<<Service>>\n TokenManagementService" as TOKENServ
+participant "<<Utility>>\n UserManager" as USERMan
+
+participant "<<Domain>>\n User" as USER
+
+participant "<<Service>>\n EmailService" as EMAILServ
+
+
+[o-> ROUTE : PUT(userId, token, newPassword)
+note left
+After clicking on the
+one time link
+end note
+activate ROUTE
+
+ROUTE -> CONTROL : confirmEmailStaff(userId, token, newPassword)
+activate CONTROL
+
+CONTROL -> UserDTO** 
+
+CONTROL -> AUTHServ : confirmEmailStaff(userId, token, newPassword)
+activate AUTHServ
+
+AUTHServ -> AUTHServ : confirmEmailVerifications(userId, token)
+activate AUTHServ
+AUTHServ -> USERMan : FindByIdAsync(userId)
+activate USERMan
+USERMan --> AUTHServ : user
+deactivate USERMan
+AUTHServ -> TOKENServ : confirmEmailToken(userId, token)
+activate TOKENServ
+TOKENServ -> USERMan : FindByIdAsync(userId)
+activate USERMan
+USERMan --> TOKENServ : user
+deactivate USERMan
+TOKENServ -> USERMan : confirmEmailToken(userId, token)
+activate USERMan
+USERMan --> TOKENServ : true
+deactivate USERMan
+TOKENServ --> AUTHServ : true
+deactivate TOKENServ
+deactivate AUTHServ
+
+AUTHServ -> USERMan : FindByIdAsync(userId)
+activate USERMan
+USERMan --> AUTHServ : user
+deactivate USERMan
+
+AUTHServ -> TOKENServ : generatePasswordResetTokenAsync(user)
+activate TOKENServ
+TOKENServ -> USERMan : generatePasswordResetTokenAsync(user)
+activate USERMan
+USERMan --> TOKENServ : resetToken
+deactivate USERMan
+TOKENServ --> AUTHServ : resetToken
+deactivate TOKENServ
+
+AUTHServ -> USERMan : ResetPasswordAsync(resetToken, user, newPassword)
+activate USERMan
+USERMan --> AUTHServ : true
+deactivate USERMan
+
+AUTHServ -> USER : ChangeStatus(true)
+activate USER
+deactivate USER
+
+AUTHServ -> AUTHServ : UpdateAsync(user)
+activate AUTHServ
+AUTHServ -> USERMan : UpdateAsync(user)
+activate USERMan
+USERMan --> AUTHServ : true
+deactivate USERMan
+deactivate AUTHServ
+
+AUTHServ --> CONTROL : true
+deactivate AUTHServ
+
+CONTROL --> ROUTE : return
+deactivate CONTROL
+
+<-- ROUTE : success/error
+@enduml

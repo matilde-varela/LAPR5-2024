@@ -1,0 +1,130 @@
+<body>
+    <div>
+        <app-side-bar-doctor></app-side-bar-doctor>
+    </div>
+    <header>
+        <h1 class="main-title">Manage Appointments</h1>
+    </header>
+
+    <div class="conteudo">
+        
+            <p-table [value]="appointments" [(selection)]="selectedAppointment" selectionMode="single"
+                [tableStyle]="{'border-collapse': 'collapse', 'table-layout': 'fixed', 'width': '100%'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 10%;">Select</th>
+                        <th style="width: 15%;">Id</th>
+                        <th style="width: 15%;">Room</th>
+                        <th style="width: 15%;">Status</th>
+                        <th style="width: 15%;">Start Date</th>
+                        <th style="width: 15%;">Start Time</th>
+                        <th style="width: 15%;">End Time</th>
+                        <th style="width: 15%;">Staff</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-appointment>
+                    <tr [pSelectableRow]="appointment">
+                        <td>
+                            <p-tableRadioButton [value]="appointment"
+                                [name]="'appointmentRadio'"></p-tableRadioButton>
+                        </td>
+                        <td>{{ appointment.id || "-" }}</td>
+                        <td>{{ appointment.roomNumber || "-" }}</td>
+                        <td>{{ appointment.status || "-" }}</td>
+                        <td>{{ appointment.startDate | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ appointment.startTime || "-" }}</td>
+                        <td>{{ appointment.endTime || "-" }}</td>
+                        <td>{{ appointment.staffs?.join(', ') }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+
+            <div *ngIf="selectedAppointment" class="action-buttons">
+                <button (click)="editAppointment(selectedAppointment)">Edit Appointment</button>
+            </div>
+            <br>
+            <div *ngIf="updateVisible" class="appointment-edition">
+                <div class="edit-panel">
+                <h1 class="main-title-edit">Edit Appointment</h1>
+                <p>Please fill in the fields to edit.</p>
+                <form #appointmentForm="ngForm" (ngSubmit)="saveUpdateDetails()" novalidate>
+                    <div class="input-field">
+                        <label for="roomNumber">Select Room:</label>
+                        <select 
+                            id="roomNumber" 
+                            name="roomNumber" 
+                            #roomNumber="ngModel" 
+                            [(ngModel)]="updateAppointment.newRoomNumber" 
+                            [disabled]="isSubmitted"
+                        >
+                            <option *ngFor="let room of roomNumbers" [value]="room">
+                                {{ room }}
+                            </option>
+                        </select>
+                    </div>
+                
+                    <div class="input-field">
+                        <label for="StartDate" class="bold-label">Start Date Slot</label>
+                        <textarea id="startDate" [(ngModel)]="updateAppointment.newStartDate" name="startDate" placeholder="YYYY-MM-DD"></textarea>
+                    </div>
+                
+                    <div class="input-field">
+                        <label for="EndDate" class="bold-label">End Date Slot</label>
+                        <textarea id="endDate" [(ngModel)]="updateAppointment.newEndDate" name="endDate" placeholder="YYYY-MM-DD"></textarea>
+                    </div>
+                
+                    <div class="input-field">
+                        <label for="StartTime" class="bold-label">Start Time Slot</label>
+                        <textarea id="startTime" [(ngModel)]="updateAppointment.newStartTime" name="startTime" placeholder="[HH:MM]"></textarea>
+                    </div>
+                
+                    <div class="input-field">
+                        <label for="EndTime" class="bold-label">End Time Slot</label>
+                        <textarea id="endTime" [(ngModel)]="updateAppointment.newEndTime" name="endTime" placeholder="[HH:MM]"></textarea>
+                    </div>
+                
+                    <label style="font-size: 20px;"><strong>Select Staff for this Appointment</strong></label>
+                    <div *ngIf="staffListToShow && staffListToShow.length > 0">
+                        <p-table
+                            [value]="staffListToShow"
+                            [(selection)]="selectedStaff"
+                            selectionMode="multiple"
+                            [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }"
+                        >
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 10%;">Select</th>
+                                    <th style="width: 15%;">Staff Name</th>
+                                    <th style="width: 15%;">Licence Number</th>
+                                    <th style="width: 15%;">Function</th>
+                                    <th style="width: 10%;">Specialization</th>
+                                </tr>
+                            </ng-template>
+                
+                            <ng-template pTemplate="body" let-staff>
+                                <tr [pSelectableRow]="staff">
+                                    <td>
+                                        <p-tableCheckbox [value]="staff"></p-tableCheckbox>
+                                    </td>
+                                    <td>{{ staff.name || '-' }}</td>
+                                    <td>{{ staff.id || '-' }}</td>
+                                    <td>{{ staff.function || '-' }}</td>
+                                    <td>{{ staff.specializationId || '-' }}</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                
+                    <div class="button-container">
+                        <button type="submit" class="add-button-submit" [disabled]="isSubmitted">Submit</button>
+                        <button type="button" class="close-button" (click)="closeUpdate()">Close</button>
+                    </div>
+                </form>                
+                </div>
+            </div>
+        
+    </div>
+    <app-message></app-message>
+</body>

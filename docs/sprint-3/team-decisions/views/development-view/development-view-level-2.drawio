@@ -1,0 +1,58 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/25.0.2 Chrome/128.0.6613.186 Electron/32.2.5 Safari/537.36" version="25.0.2">
+  <diagram name="Página-1" id="RwL_v3xmSVvoEW0B1FeW">
+    <mxGraphModel dx="1312" dy="716" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="0vD85CPpexM7nKXdHdo8-1" value="Healthcare System" style="shape=folder;fontStyle=1;spacingTop=3;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;labelBackgroundColor=none;labelBorderColor=none;spacing=-32;fillColor=#1BA1E2;strokeColor=#030303;" parent="1" vertex="1">
+          <mxGeometry x="70" y="160" width="540" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="0vD85CPpexM7nKXdHdo8-2" value="MDBackoffice" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#1BA1E2;strokeColor=#030303;" parent="1" vertex="1">
+          <mxGeometry x="110" y="210" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="0vD85CPpexM7nKXdHdo8-3" value="Planning" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#1BA1E2;strokeColor=#030303;" parent="1" vertex="1">
+          <mxGeometry x="410" y="210" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="0vD85CPpexM7nKXdHdo8-5" value="Visualization" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#1BA1E2;strokeColor=#030303;" parent="1" vertex="1">
+          <mxGeometry x="110" y="360" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="0vD85CPpexM7nKXdHdo8-7" value="" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;entryX=-0.001;entryY=0.545;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.994;exitY=0.55;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=#030303;" parent="1" source="0vD85CPpexM7nKXdHdo8-2" target="0vD85CPpexM7nKXdHdo8-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="320" as="sourcePoint" />
+            <mxPoint x="370" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0vD85CPpexM7nKXdHdo8-15" value="" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.505;exitY=0.172;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=#030303;" parent="1" source="0vD85CPpexM7nKXdHdo8-5" target="0vD85CPpexM7nKXdHdo8-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="267" as="sourcePoint" />
+            <mxPoint x="260" y="267" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="56yQtxT_Rmas7lgYht69-1" value="BCP" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#1BA1E2;strokeColor=#030303;" parent="1" vertex="1">
+          <mxGeometry x="270" y="450" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="JrVChtVC_zbbN-vGML_5-1" value="MDPatientManagement" style="shape=folder;fontStyle=1;spacingTop=10;tabWidth=40;tabHeight=14;tabPosition=left;html=1;whiteSpace=wrap;fillColor=#1BA1E2;strokeColor=#030303;" vertex="1" parent="1">
+          <mxGeometry x="414" y="320" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="JrVChtVC_zbbN-vGML_5-2" value="" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1.008;exitY=0.682;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=#030303;" edge="1" parent="1" target="JrVChtVC_zbbN-vGML_5-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250" y="429.99999999999994" as="sourcePoint" />
+            <mxPoint x="413.1600000000001" y="389.99999999999994" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="484" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="JrVChtVC_zbbN-vGML_5-3" value="" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;entryX=0.004;entryY=0.486;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;strokeColor=#030303;" edge="1" parent="1" source="0vD85CPpexM7nKXdHdo8-2" target="JrVChtVC_zbbN-vGML_5-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="261" y="425" as="sourcePoint" />
+            <mxPoint x="424" y="425" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="215" y="358" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

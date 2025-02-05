@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.12 Process View (Level 1)"
+
+autonumber
+
+actor Admin
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+Admin -> SYS : wants to deactivate a staff profile
+activate SYS
+
+SYS --> Admin : shows list
+deactivate SYS
+activate Admin
+
+Admin -> SYS : chooses a profile
+deactivate Admin
+activate SYS
+
+SYS --> Admin : deactivates and updates planning
+deactivate SYS
+
+@enduml

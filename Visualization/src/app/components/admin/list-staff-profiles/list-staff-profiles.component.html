@@ -1,0 +1,146 @@
+<body>
+  <!-- Sidebar -->
+  <div>
+    <app-side-bar-admin></app-side-bar-admin>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1 class="main-title">Manage Staff Profiles</h1>
+  </header>
+
+  <!-- Filters Section -->
+  <div class="filters">
+    <!-- Filters Loop -->
+    <div class="filter-row" *ngFor="let filter of queryFiltersList; let i = index">
+      <input type="text" placeholder="Staff First Name" [(ngModel)]="filter.firstName" class="filter-input" />
+      <input type="text" placeholder="Staff Last Name" [(ngModel)]="filter.lastName" class="filter-input" />
+      <input type="email" placeholder="Email" [(ngModel)]="filter.email" class="filter-input" />
+      <select [(ngModel)]="filter.specialization" class="filter-select">
+        <option value="" disabled>Select Specialization</option>
+        <option *ngFor="let specialization of specializations" [value]="specialization">
+          {{ specialization }}
+        </option>
+      </select>
+      <!-- Remove Button: Disabled for the First (Default) Filter -->
+      <button *ngIf="i > 0" (click)="removeFilter(i)" class="remove-filter">
+        Remove
+      </button>
+    </div>
+
+    <!-- Add Filter Button -->
+    <button (click)="addFilter()" class="add-filter-button">Add Filter</button>
+
+    <!-- Apply Filters -->
+    <button (click)="applyFilters()" class="search-button">Search</button>
+  </div>
+
+  <!-- Results Section -->
+  <div class="conteudo">
+    <!-- Table for Staff List -->
+    <div *ngIf="staffList && staffList.length > 0">
+      <p-table [value]="staffList" [(selection)]="selectedStaff" selectionMode="single"
+        [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 10%;">Select</th>
+            <th style="width: 15%;">Staff Name</th>
+            <th style="width: 20%;">Email</th>
+            <th style="width: 10%;">Specialization</th>
+            <th style="width: 10%;">Status</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-staff>
+          <tr [pSelectableRow]="staff">
+            <td>
+              <p-tableRadioButton [value]="staff" [name]="'staffRadio'"></p-tableRadioButton>
+            </td>
+            <td>{{ staff.name || '-' }}</td>
+            <td>{{ staff.email || '-' }}</td>
+            <td>{{ staff.specializationId || '-' }}</td>
+            <td>{{ staff.status || '-' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Action Buttons -->
+      <div *ngIf="selectedStaff" class="action-buttons">
+        <button (click)="toggleEdition(selectedStaff)">
+          Edit Staff Profile
+        </button>
+        <button (click)="deactivateStaffProfile(selectedStaff)">
+          Deactivate Staff Profile
+        </button>
+        <button (click)="toggleDetails(selectedStaff)">Show Details</button>
+      </div>
+    </div>
+
+    <!-- Staff Details -->
+    <div *ngIf="detailsVisible" class="staff-details">
+      <h3>Staff Profile Details</h3>
+      <p><strong>Name:</strong> {{ fullStaff.name || '-' }}</p>
+      <p><strong>Phone Number:</strong> {{ fullStaff.phone || '-' }}</p>
+      <p><strong>Email:</strong> {{ fullStaff.email || '-' }}</p>
+      <p><strong>Address:</strong> {{ fullStaff.address || '-' }}</p>
+      <p><strong>Specialization:</strong> {{ fullStaff.specializationId || '-' }}</p>
+      <p><strong>Status:</strong> {{ fullStaff.status || '-' }}</p>
+
+      <div class="action-buttons">
+        <button (click)="closeDetails()">Close</button>
+      </div>
+    </div>
+
+    <div *ngIf="editDetails" class="staff-edition">
+      <h1 class="main-title-edit">Edit Staff Profile</h1>
+      <div class="information-input">
+        <p style="margin-left: 1px;" font-family="'Poppins', monospace">Please fill in only the fields of the
+          information you wish to edit.</p>
+
+        <form #staffForm="ngForm" (ngSubmit)="onSubmit(staffForm)" novalidate>
+          <div class="input-field">
+            <input id="id" #id="ngModel" [(ngModel)]="staff.id" [ngModelOptions]="{standalone: true}"
+              placeholder="StaffId" [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <input name="phone" #phone="ngModel" [(ngModel)]="staff.phone" placeholder="Phone Number"
+              [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <input name="email" #email="ngModel" [(ngModel)]="staff.email" placeholder="Email"
+              [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <input name="address" #address="ngModel" [(ngModel)]="staff.address" placeholder="Address"
+              [disabled]="isSubmitted" />
+            <span></span>
+          </div>
+
+          <div class="input-field">
+            <label for="specialization">Select Specialization:</label>
+            <select name="specialization" #specialization="ngModel" [(ngModel)]="staff.specializationId"
+              [disabled]="isSubmitted">
+              <option *ngFor="let specialization of specializations" [value]="specialization">
+                {{ specialization }}
+              </option>
+            </select>
+          </div>
+
+          <div class="button">
+            <button type="submit" class="add-button-submit"
+              [disabled]="staffForm.invalid || isSubmitted">Submit</button>
+            <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <app-message></app-message>
+</body>

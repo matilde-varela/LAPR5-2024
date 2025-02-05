@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.1.2 Process View (Level 1)"
+
+autonumber
+
+actor User
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+User -> SYS : Wants to login
+activate SYS
+
+SYS --> User : Shows login menu
+deactivate SYS
+activate User
+
+User -> SYS : Logs in
+deactivate User
+activate SYS
+
+SYS --> User : Sees role and shows\nthe specific role's menu
+deactivate SYS
+
+@enduml

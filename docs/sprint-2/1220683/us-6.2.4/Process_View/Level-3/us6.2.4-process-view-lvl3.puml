@@ -1,0 +1,71 @@
+@startuml
+
+title "US 6.2.4 - Process View [Level 3]"
+
+autonumber
+participant "Routing" as ROUTE <<route>>
+participant "LoginUserDto" as DTO <<dto>>
+participant "UserController" as CTRL <<controller>>
+participant "UserService" as SVC <<service>>
+participant "UserManager" as IEL <<service>>
+participant "SigninManager" as SIM <<service>>
+participant "HttpContext" as HC
+
+[o-> ROUTE: POST(json) /api/Login
+activate ROUTE
+
+ROUTE -> DTO **: create(json)
+
+ROUTE -> CTRL: Login(loginUserDto)
+activate CTRL
+
+CTRL ->  SVC: Login(loginUserDto)
+activate SVC
+
+SVC -> IEL : FindByEmailAsync(email)
+activate IEL
+
+IEL --> SVC : user
+deactivate IEL
+
+alt userStatus == true
+    SVC -> IEL: IsLockedOutAsync()
+    activate IEL
+    deactivate IEL
+
+    alt lockedOut == false
+
+    SVC -> SIM : PasswordSignInAsync(user,password,isPersistent,lockoutOnFailure)
+    activate SIM
+
+    SIM --> SVC: result
+    deactivate SIM
+    
+    SVC -> SVC: GenerateJwtToken(user)
+    activate SVC
+
+    SVC --> SVC: token
+    deactivate SVC
+    |||
+    end alt
+    |||
+end alt
+
+
+SVC --> CTRL: token
+deactivate SVC
+
+CTRL --> ROUTE: token
+deactivate CTRL
+
+alt 
+[o<-- ROUTE : 202 Accepted
+
+else
+
+[o<-- ROUTE : 401 Unauthorized
+deactivate ROUTE
+end alt
+
+
+@enduml

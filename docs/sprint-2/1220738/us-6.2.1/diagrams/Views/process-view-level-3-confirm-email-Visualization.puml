@@ -1,0 +1,20 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) | Visualization - Confirming Email and Activating Patient Account"
+
+actor Patient
+participant "<<Component>>\n ConfirmAccount" as CONACC
+participant "<<Service>>\n UserService" as SERV
+
+activate Patient
+    Patient -> CONACC : confirm and activate account
+    activate CONACC 
+        CONACC -> SERV : ConfirmEmailPatient(userId, token)
+        activate SERV
+            SERV ->o] : PUT: api/confirm-patient
+            SERV <--o] : success
+            SERV --> CONACC : success
+        deactivate SERV
+        CONACC --> Patient : success
+    deactivate CONACC 
+deactivate Patient
+@enduml

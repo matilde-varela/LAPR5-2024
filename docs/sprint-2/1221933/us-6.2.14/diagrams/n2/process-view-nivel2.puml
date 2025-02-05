@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.14. Process View (Level 2)"
+
+autonumber
+actor Doctor as DOC
+participant "«component»:\nVisualization(UI)" as UI
+participant "«component»:\nBackoffice" as BACK
+
+activate DOC
+DOC -> UI: creates operation request
+activate UI
+
+UI -> BACK : Create(json)
+activate BACK
+
+BACK --> UI : answer
+deactivate BACK
+
+DOC <-- UI : answer
+deactivate UI
+
+DOC -> UI: adds operation request to patient
+activate UI
+
+UI -> BACK : AddOperationRequestToPatient(json)
+activate BACK
+
+BACK --> UI : answer
+deactivate BACK
+
+DOC <-- UI : answer
+deactivate UI
+deactivate DOC
+
+@enduml

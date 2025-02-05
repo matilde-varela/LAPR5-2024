@@ -1,0 +1,44 @@
+@startuml
+
+title "US 7.2.5 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Doctor" as USER
+participant "ListPatientProfiles" as UPP <<component>>
+participant "PatientService" as PS <<service>>
+
+USER -> UPP : wants to edit a patient medical\n record (add medical condition)
+activate UPP
+
+UPP -> PS : getAllMedicalConditions()
+activate PS
+
+PS ->o] : GET: api/get-AllMedicalConditions
+
+PS <--o] : 200 Ok(medicalConditionsDtoList)
+
+PS --> UPP: medicalConditionsDtoList
+deactivate PS
+
+UPP --> USER: medicalConditionsDtoList
+deactivate UPP
+
+USER -> UPP : selects a medical condition
+activate UPP
+
+UPP --> USER: selected medical condition\n is added to the patient medical record
+deactivate UPP
+
+USER -> UPP : confirms patient medical record edition conclusion
+activate UPP
+
+UPP -> PS : US 7.2.6.
+activate PS
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+@enduml

@@ -1,0 +1,80 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.N. Process View (Level 2)"
+
+autonumber
+
+actor Admin as ADM
+participant "<<component>>\n Visualization (UI)" as UI
+participant "<<component>>\n Backoffice" as BACK
+
+
+ADM -> UI : requests the list of the X profiles
+activate UI
+
+UI -> BACK : getAllXProfiles()
+activate BACK
+
+BACK --> UI : X profile list
+deactivate BACK
+
+UI --> ADM : lists the X profiles
+deactivate UI
+activate ADM
+
+deactivate ADM
+
+    opt search filters appliance
+
+        ADM -> UI : applies search filters (filter set F)
+        deactivate ADM
+        activate UI
+
+            UI -> BACK : filterXProfileList(queryParameters)
+            activate BACK
+
+            BACK --> UI : filtered list
+            deactivate BACK
+
+        UI --> ADM : presents the search results
+        deactivate UI
+        activate ADM
+    end opt
+
+ADM -> UI : selects a profile
+deactivate ADM
+activate UI
+
+UI --> ADM : shows profile
+deactivate UI
+activate ADM
+
+    alt edit profile
+        ADM --> UI : edit selected profile
+        activate UI
+'updateProfile(updatedStaffProfileData)
+        UI -> BACK : US 5.1.Y
+        activate BACK
+
+        BACK --> UI : confirmation
+        deactivate BACK
+
+
+    else deactivate profile
+
+        ADM --> UI : delete selected profile
+        deactivate ADM
+'deactivateAccount(staffProfile)
+        UI -> BACK : US 5.1.Z
+        activate BACK
+
+        BACK --> UI : confirmation
+        deactivate BACK
+
+    end alt
+
+UI --> ADM : confirmation of action
+deactivate UI
+
+@enduml

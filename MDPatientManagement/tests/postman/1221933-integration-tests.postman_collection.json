@@ -1,0 +1,809 @@
+{
+	"info": {
+		"_postman_id": "20eb9c79-1100-4bc2-8c13-875a8bf11ccb",
+		"name": "sprint3-1221933-integration-tests",
+		"description": "Here are the integration tests with external isolation.  \nSince we are using pair programming, the tests were developed by Ana Guterres (1221933), while the features were implemented by Matilde Varela (1220683). The corresponding user stories for the developed tests are:\n\n> us-7.2.2  \nus-7.2.5  \nus-7.2.14  \nus-7.2.16",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39204478"
+	},
+	"item": [
+		{
+			"name": "us-7.2.2",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Login Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract token and set in variable\", function () {\r",
+											"    // Parse the response JSON\r",
+											"    const jsonResponse = pm.response.json();\r",
+											"\r",
+											"    // Extract the token (adjust the key based on your API response)\r",
+											"    const token = jsonResponse.token; // Replace 'token' with the actual key if different\r",
+											"\r",
+											"    // Set the token in a Postman variable\r",
+											"    pm.collectionVariables.set(\"auth-token\", token); // Use 'pm.collectionVariables.set' for a collection variable\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"email\":\"admin@email.com\",\r\n   \"password\":\"Abcde12345!\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/login-internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"login-internal"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tests",
+					"item": [
+						{
+							"name": "Create Allergy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Custom Test: Response is 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.eql(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Verify response body\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(jsonData).to.be.an('object');\r",
+											"    pm.expect(jsonData).to.have.property('code').that.equals('BZ70.5');\r",
+											"    pm.expect(jsonData).to.have.property('designation').that.equals('Fish Allergy');\r",
+											"    pm.expect(jsonData).to.have.property('description').that.equals('Manifests itself by severe allergy reaction.');\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"BZ70.5\",\r\n    \"designation\": \"Fish Allergy\",\r\n    \"description\" : \"Manifests itself by severe allergy reaction.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/Allergy/create-allergy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"Allergy",
+										"create-allergy"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "us-7.2.5",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Login Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract token and set in variable\", function () {\r",
+											"    // Parse the response JSON\r",
+											"    const jsonResponse = pm.response.json();\r",
+											"\r",
+											"    // Extract the token (adjust the key based on your API response)\r",
+											"    const token = jsonResponse.token; // Replace 'token' with the actual key if different\r",
+											"\r",
+											"    // Set the token in a Postman variable\r",
+											"    pm.collectionVariables.set(\"auth-token\", token); // Use 'pm.collectionVariables.set' for a collection variable\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"email\":\"admin@email.com\",\r\n   \"password\":\"Abcde12345!\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/login-internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"login-internal"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Medical Condition",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Verify if status code is the expected one\", function () {\r",
+											"    var statusCode = pm.response.code;\r",
+											"    pm.expect(statusCode).to.be.oneOf([200]);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Verify response body\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(jsonData).to.be.an('object');\r",
+											"    pm.expect(jsonData).to.have.property('id').that.equals('SS01.0');\r",
+											"    pm.expect(jsonData).to.have.property('designation').that.equals('Spinal Stenosis');\r",
+											"    pm.expect(jsonData).to.have.property('description').that.equals('A condition characterized by the narrowing of spaces within the spine, leading to pressure on the spinal cord or nerves. It commonly affects the lower back or neck and is often caused by aging or degenerative changes in the spine.');\r",
+											"    pm.expect(jsonData).to.have.property('symptoms').that.is.an('array').that.includes.members(['Leg pain when walking', 'Numbness in limbs', 'Weakness in arms', 'Lower back pain']);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"SS01.0\",\r\n    \"designation\": \"Spinal Stenosis\",\r\n    \"description\": \"A condition characterized by the narrowing of spaces within the spine, leading to pressure on the spinal cord or nerves. It commonly affects the lower back or neck and is often caused by aging or degenerative changes in the spine.\",\r\n    \"symptoms\": [\r\n        \"Leg pain when walking\",\r\n        \"Numbness in limbs\",\r\n        \"Weakness in arms\",\r\n        \"Lower back pain\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/medicalCondition/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"medicalCondition",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login-Doctor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"var jsonResponse = pm.response.json();\r",
+											"var token = jsonResponse.token; \r",
+											"\r",
+											"pm.collectionVariables.set(\"auth-token-doctor\", token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " {\r\n    \"email\": \"anaogute@gmail.com\",\r\n    \"password\": \"Abcde12345!\"\r\n }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Login-Internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Login-Internal"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tests",
+					"item": [
+						{
+							"name": "Search Medical Condition",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Verify if status code is the expected one\", function () {\r",
+											"    var statusCode = pm.response.code;\r",
+											"    pm.expect(statusCode).to.be.oneOf([200, 404]);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Verify response body\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(jsonData).to.be.an('object');\r",
+											"    pm.expect(jsonData).to.have.property('id').that.equals('SS01.0');\r",
+											"    pm.expect(jsonData).to.have.property('designation').that.equals('Spinal Stenosis');\r",
+											"    pm.expect(jsonData).to.have.property('description').that.equals('A condition characterized by the narrowing of spaces within the spine, leading to pressure on the spinal cord or nerves. It commonly affects the lower back or neck and is often caused by aging or degenerative changes in the spine.');\r",
+											"    pm.expect(jsonData).to.have.property('symptoms').that.is.an('array').that.includes.members(['Leg pain when walking', 'Numbness in limbs', 'Weakness in arms', 'Lower back pain']);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token-doctor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"SS01.0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/medicalCondition/get-medical-condition-by-id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"medicalCondition",
+										"get-medical-condition-by-id"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "us-7.2.14",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Login-Doctor",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"var jsonResponse = pm.response.json();\r",
+											"var token = jsonResponse.token; \r",
+											"\r",
+											"pm.collectionVariables.set(\"auth-token-doctor\", token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": " {\r\n    \"email\": \"anaogute@gmail.com\",\r\n    \"password\": \"Abcde12345!\"\r\n }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Login-Internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Login-Internal"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tests",
+					"item": [
+						{
+							"name": "Get All Medical Records",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Custom Test: Response is 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.eql(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Custom Test: Response is a list\", function () {\r",
+											"    pm.expect(pm.response.json()).to.be.an('array');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token-doctor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/medicalRecord/get-all-medical-records",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"medicalRecord",
+										"get-all-medical-records"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Patients",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Custom Test: Response is 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.eql(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Custom Test: Response is a list\", function () {\r",
+											"    pm.expect(pm.response.json()).to.be.an('array');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token-doctor}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"queryFilters\": [\r\n    {\r\n      \"firstName\": \"\",\r\n      \"lastName\": \"\",\r\n      \"email\": \"\",\r\n      \"gender\": \"\",\r\n      \"dateBirth\": \"\",\r\n      \"medicalRecordNumber\": \"\"\r\n    }\r\n  ]\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Patient/Filtered-List",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Patient",
+										"Filtered-List"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "us-7.2.16",
+			"item": [
+				{
+					"name": "Setup",
+					"item": [
+						{
+							"name": "Login Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Extract token and set in variable\", function () {\r",
+											"    // Parse the response JSON\r",
+											"    const jsonResponse = pm.response.json();\r",
+											"\r",
+											"    // Extract the token (adjust the key based on your API response)\r",
+											"    const token = jsonResponse.token; // Replace 'token' with the actual key if different\r",
+											"\r",
+											"    // Set the token in a Postman variable\r",
+											"    pm.collectionVariables.set(\"auth-token\", token); // Use 'pm.collectionVariables.set' for a collection variable\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"email\":\"admin@email.com\",\r\n   \"password\":\"Abcde12345!\" \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/login-internal",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"login-internal"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Allergy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Custom Test: Response is 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.eql(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"BZ99\",\r\n    \"designation\": \"Milk Allergy\",\r\n    \"description\" : \"Manifests itself in intense bloating.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/Allergy/create-allergy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"Allergy",
+										"create-allergy"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tests",
+					"item": [
+						{
+							"name": "Update Allergy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Custom Test: Response is 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.eql(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Verify response body\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(jsonData).to.be.an('object');\r",
+											"    pm.expect(jsonData).to.have.property('code').that.equals('BZ99');\r",
+											"    pm.expect(jsonData).to.have.property('designation').that.equals('Tomato Allergy');\r",
+											"    pm.expect(jsonData).to.have.property('description').that.equals('Manifests itself in intense bleeding.');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"BZ99\",\r\n    \"designation\": \"Tomato Allergy\",\r\n    \"description\" : \"Manifests itself in intense bleeding.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/Allergy/update-allergy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"Allergy",
+										"update-allergy"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "auth-token",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "auth-token-doctor",
+			"value": ""
+		}
+	]
+}

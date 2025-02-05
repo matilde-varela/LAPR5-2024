@@ -1,0 +1,145 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.7. Process View (Level 3 | MDBackoffice)"
+
+autonumber
+
+participant "route:\nEditPatientRoute" as ROUTE
+participant "dto:\nEditPatientDTO" as UpdateDTO
+participant "controller:\nPatientController" as CTRL
+
+participant "service:\nPatientService" as SER
+participant "repository:\nPatientRepo" as REPO
+participant "dto:\nPatientDTO" as DTO
+participant "domain:\nPatient" as Patient
+
+participant "service:\nLogService" as logService
+
+participant "dto:\nEmailMessageDTO" as EmailMessDTO
+
+participant "service:\nEmailService" as EMAILServ
+participant "adapter:\nEmailAdapter" as EMAILAdapt
+
+
+[o-> ROUTE : GET()
+activate ROUTE
+
+ROUTE -> CTRL : getPatientProfiles()
+activate CTRL
+
+CTRL -> SER : getPatientProfiles()
+activate SER
+
+SER -> REPO : findAll()
+activate REPO
+
+REPO --> SER : PatientProfilesList
+deactivate REPO
+
+loop for all the profiles in the list
+SER -> DTO ** : toDTO(PatientProfile)
+
+
+end loop
+
+SER --> CTRL : patientProfileDTOList
+deactivate SER
+
+CTRL --> ROUTE : patientProfileDTOList
+deactivate CTRL
+
+<- ROUTE : ok(patientProfileDTOList)
+deactivate ROUTE
+
+|||
+
+[o-> ROUTE : PUT(json)
+activate ROUTE
+
+ROUTE -> UpdateDTO ** : toDTO(json)
+
+
+ROUTE -> CTRL : editPatientProfile(id, editPatientDto)
+activate CTRL
+
+CTRL -> SER : UpdateAsync(id, editPatientDto)
+activate SER
+
+SER -> REPO : GetByIdAsync(id)
+activate REPO
+
+REPO --> SER : patient
+deactivate REPO
+
+opt Check and update Patient fields
+SER -> Patient : ChangePhone(Phone)
+activate Patient
+deactivate Patient
+
+SER -> Patient : ChangeEmail(Email)
+activate Patient
+deactivate Patient
+
+SER -> Patient : ChangeAddress(Address)
+activate Patient
+deactivate Patient
+
+SER -> Patient : ChangeName(Name)
+activate Patient
+deactivate Patient
+
+SER -> Patient : ChangeDateBirth(DateBirth)
+activate Patient
+deactivate Patient
+end opt
+
+SER -> logService : CreateEditLog(Id, Type, log)
+activate logService
+deactivate logService
+
+SER -> SER : VerificationsToSendEmail(phoneChange, emailChange, addressChange, oldEmail, patient)
+activate SER
+
+SER -> EmailMessDTO** :
+
+opt when contact information is changed
+
+SER -> EMAILServ : sendProfileEditEmail(emailDto)
+activate EMAILServ
+
+EMAILServ -> EMAILAdapt : sendEmail(email)
+activate EMAILAdapt
+deactivate EMAILAdapt
+
+
+
+EMAILServ --> SER :
+deactivate EMAILServ
+|||
+end opt
+
+deactivate SER
+
+SER -> DTO : toDTO(patient)
+activate DTO
+deactivate DTO
+
+
+SER --> CTRL : patientDto
+deactivate SER
+
+
+CTRL --> ROUTE : patientDto
+deactivate CTRL
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+@enduml

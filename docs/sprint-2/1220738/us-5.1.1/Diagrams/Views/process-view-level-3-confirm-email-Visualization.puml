@@ -1,0 +1,20 @@
+@startuml
+title "US 5.1.1. Process View (Level 3) | Visualization - Confirming Email and Activating Staff Account"
+
+actor Staff
+participant "<<Component>>\n ConfirmAccount" as CONACC
+participant "<<Service>>\n UserService" as SERV
+
+activate Staff
+    Staff -> CONACC : confirm and activate account
+    activate CONACC 
+        CONACC -> SERV : ConfirmEmailStaff(userId, token, password)
+        activate SERV
+            SERV ->o] : PUT: api/confirm-staff
+            SERV <--o] : success
+            SERV --> CONACC : success
+        deactivate SERV
+        CONACC --> Staff : success
+    deactivate CONACC 
+deactivate Staff
+@enduml

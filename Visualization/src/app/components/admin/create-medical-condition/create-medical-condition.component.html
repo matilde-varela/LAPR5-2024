@@ -1,0 +1,90 @@
+<body>
+    <div>
+      <app-side-bar-admin></app-side-bar-admin>
+    </div>
+    <header>
+      <h1 class="main-title">Create a Medical Condition</h1>
+    </header>
+    
+    <br>
+  
+    <div class="information-input">
+      <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before
+        submitting:</p>
+  
+      <form #medicalConditionForm="ngForm" (ngSubmit)="onSubmit(medicalConditionForm)" novalidate>
+        <!-- Medical Condition Code -->
+        <div class="input-field">
+          <input 
+            name="code" 
+            #code="ngModel" 
+            [(ngModel)]="medicalCondition.id" 
+            placeholder="Medical Condition ICD-11 Code"
+            [disabled]="isSubmitted" 
+            required 
+            [class.invalid-placeholder]="code.invalid && code.touched" 
+          />
+          <span></span>
+        </div>
+  
+        <!-- Medical Condition Designation -->
+        <div class="input-field">
+          <input 
+            name="designation" 
+            #designation="ngModel" 
+            [(ngModel)]="medicalCondition.designation" 
+            placeholder="Medical Condition Designation"
+            [disabled]="isSubmitted" 
+            required 
+            [class.invalid-placeholder]="designation.invalid && designation.touched" 
+          />
+          <span></span>
+        </div>
+  
+        <!-- Medical Condition Description -->
+        <div class="input-field">
+          <input 
+            name="description" 
+            #description="ngModel" 
+            [(ngModel)]="medicalCondition.description" 
+            placeholder="Medical Condition Description"
+            [disabled]="isSubmitted" 
+          />
+          <span></span>
+        </div>
+
+        <!-- Medical Condition Symptoms -->
+        <div class="input-field">
+          <input 
+            name="symptoms" 
+            #symptoms="ngModel" 
+            [(ngModel)]="medicalCondition.symptoms" 
+            placeholder="Medical Condition Symptoms: Symptom, ..."
+            [disabled]="isSubmitted" 
+          />
+          <span></span>
+        </div>
+  
+        <div class="button">
+          <button 
+            type="submit" 
+            class="add-button-submit"
+            [disabled]="medicalConditionForm.invalid || isSubmitted"
+          >
+            Submit
+          </button>
+          <button 
+            type="button" 
+            class="add-button-clear" 
+            (click)="clearForm()"
+          >
+            Clear Input
+          </button>
+        </div>
+      </form>
+    </div>
+  
+    <br>
+    <app-message></app-message>
+  </body>
+  

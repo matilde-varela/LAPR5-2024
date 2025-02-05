@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+actor "Doctor" as DOCTOR
+participant "System" as SYS
+
+activate DOCTOR
+
+DOCTOR -> SYS : Asks to remove an operation\n requisition that they have made.
+
+activate SYS
+
+SYS --> DOCTOR : Shows a list of all requisitions\n that haven't been scheduled.
+
+DOCTOR -> SYS : Chooses an operation \nrequisition to remove.
+
+SYS --> DOCTOR : Asks for confirmation.
+
+DOCTOR -> SYS : Confirms action.
+
+SYS --> DOCTOR : Sends success message.
+
+
+@enduml

@@ -1,0 +1,1 @@
+### This folder contains the integration tests with external isolation developed.

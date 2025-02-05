@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+left to right direction
+
+actor "Admin" as Admin
+actor "BackOffice User" as Backoffice
+actor "Doctor" as Doctor
+actor "Patient" as Patient
+actor "System Administrator" as System
+
+Admin --> (register new backoffice users via an out-of-band process)
+Admin --> (create a new patient profile)
+Admin --> (edit an existing patient profile)
+Admin --> (delete a patient profile)
+Admin --> (list/search patient profiles to view the details, edit, and remove them)
+Admin --> (I want to create a new staff profile)
+Admin --> (edit a staff’s profile)
+Admin --> (deactivate a staff profile)
+Admin --> (list/search staff profiles to see the details, edit, and remove them)
+Admin --> (add new types of operations)
+Admin --> (edit existing operation types)
+Admin --> (remove obsolete or no longer performed operation types)
+Admin --> (list/search operation types to see the details, edit, and remove them)
+Admin --> (synchronization between the planning module and backoffice\n regarding staff, operation types, and operation requests)
+Admin --> (synchronization with planing module's plan of staff’s\n availability and operation schedule)
+Admin --> (obtain the better scheduling of a set of\n operations in a certain operation room in a specific day)
+Admin --> (obtain a good schedule, not necessarily\n the better, in useful time to be adopted)
+
+
+
+Patient --> (update my user profile)
+Patient --> (register for the healthcare application)
+Patient --> (delete my account and all associated data)
+Patient --> (log in to the healthcare system using my external IAM credentials)
+
+
+Backoffice --> (reset my password if I forget it)
+Backoffice --> (log in to the system using my credentials)
+Backoffice --> (log in to the system using my credentials)
+
+
+Doctor --> (request an operation)
+Doctor --> (update an operation requisition)
+Doctor --> (remove an operation requisition)
+Doctor --> (list/search operation requisitions to see the details, edit, and remove them)
+Doctor --> (consult a 3D hospital floor simulation with in sync operation scheduling)
+Doctor --> (synchronization between planing module and\n the 3D visualization module regarding room availability)
+
+
+System --> (deployment of a RFP modules in a\n DEI VM to be systematic, validating it on a scheduled\n basis with the test plan)
+System --> (restriction of access to the VM -  only DEI's internal network)
+System --> (define a public folder for all users registered on the system)
+System --> (log users with more than 3 incorrect access attempts)
+System --> (notify both users and the responsible\n authority in case of a data breach - GDPR compliance)
+
+
+@enduml

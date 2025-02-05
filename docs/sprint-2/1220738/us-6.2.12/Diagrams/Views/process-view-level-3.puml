@@ -1,0 +1,101 @@
+@startuml
+title "US 6.2.12 Process View (Level 3) | MDBackoffice"
+
+participant "<<Route>>\n StaffRoute" as ROUTE
+participant "<<Controller>>\n StaffController" as CONTROL
+participant "<<Service>>\n StaffService" as STAFFSERV
+participant "<<Repository>>\n StaffRepository" as STAFFREPO
+participant "<<DTO>>\n ActiveStaffListDto" as ACTIVESTAFFLISTDTO
+participant "<<Domain>>\n Staff" as STAFF
+participant "<<DTO>>\n IdPassDto" as STAFFDTO
+participant "<<Component>>\n Planning" as PLAN
+participant "<<Service>>\n LogService" as LOGServ
+participant "<<Domain>>\n Log" as LOG
+participant "<<Repository>>\n LogRepository" as LOGRepo
+
+[o-> ROUTE : GET()
+note right : getting the \nlist of profiles
+
+Activate ROUTE
+
+ROUTE -> CONTROL : GetActiveStaffProfiles()
+
+Activate CONTROL
+
+CONTROL -> STAFFSERV : GetAllSync()
+Activate STAFFSERV
+
+STAFFSERV -> STAFFREPO : GetAllSync() 
+Activate STAFFREPO
+
+STAFFREPO --> STAFFSERV : var list = List<Staff>
+Deactivate STAFFREPO
+
+STAFFSERV -> ACTIVESTAFFLISTDTO**
+
+loop for every profile in listOfProfiles
+STAFFSERV -> STAFF : toDTO()
+activate STAFF
+STAFF --> STAFFSERV : profileDTO
+deactivate STAFF
+STAFFSERV -> ACTIVESTAFFLISTDTO : listAdd(profileDTO)
+activate ACTIVESTAFFLISTDTO
+ACTIVESTAFFLISTDTO --> STAFFSERV : return
+deactivate ACTIVESTAFFLISTDTO
+end
+
+STAFFSERV --> CONTROL : activeStaffListDto
+Deactivate STAFFSERV
+
+CONTROL -> CONTROL : Ok(activeStaffListDto)
+
+CONTROL --> ROUTE : json
+Deactivate CONTROL
+<-- ROUTE : json
+deactivate ROUTE
+
+[o-> ROUTE : PUT(JSON)
+note right : after choosing\n a profile
+ACTIVATE ROUTE
+
+ROUTE -> CONTROL : DeactivateStaffProfile(JSON)
+ACTIVATE CONTROL
+
+CONTROL -> STAFFDTO** : toDTO(JSON)
+
+CONTROL -> STAFFSERV : DeactivateStaffProfile(idPassDto.Id)
+ACTIVATE STAFFSERV
+
+STAFFSERV -> STAFFREPO : GetByIdAsync(new StaffId(id))
+ACTIVATE STAFFREPO
+STAFFREPO --> STAFFSERV : staffProfile
+DEACTIVATE STAFFREPO
+
+STAFFSERV -> STAFF : DeactivateProfile()
+ACTIVATE STAFF
+DEACTIVATE STAFF
+
+STAFFSERV -> LOGServ : CreateEditLog(id, staff.GetType().ToString(), "Deactivation of staff's profile.")
+activate LOGServ 
+LOGServ -> LOG**
+LOGServ -> LOGRepo : AddAsync(log)
+activate LOGRepo
+LOGRepo --> LOGServ : true
+deactivate LOGRepo
+LOGServ --> STAFFSERV : true
+deactivate LOGServ
+
+STAFFSERV -> STAFFSERV : CommitAsync()
+
+STAFFSERV --> CONTROL : return
+DEACTIVATE STAFFSERV
+
+CONTROL -> CONTROL : Ok("Staff deactivated successfully.")
+CONTROL --> ROUTE : JSON
+DEACTIVATE CONTROL
+
+<-- ROUTE : JSON
+note right : The Planning module\n update will be handled\n in the next sprint
+
+
+@enduml

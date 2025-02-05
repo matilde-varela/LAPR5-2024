@@ -1,0 +1,47 @@
+<body>
+    <div>
+      <app-side-bar-patient></app-side-bar-patient>
+    </div>
+    <header>
+      <h1 class="main-title">Update Profile</h1>
+    </header>
+  
+    <div class="information-input">
+      <p style="margin-left: 200px;" font-family="'Poppins', monospace">Please fill in only the fields of the information you wish to edit.</p>
+  
+      <form #patientForm="ngForm" (ngSubmit)="onSubmit(patientForm)" novalidate>
+        <div class="input-field">
+          <input name="name" #name="ngModel" [(ngModel)]="patient.name" placeholder="Name (First and Last Name)" [disabled]="isSubmitted"/>
+          <span></span>
+        </div>
+  
+        <div class="input-field">
+          <input name="phone" #phone="ngModel" [(ngModel)]="patient.phone" placeholder="Phone Number" [disabled]="isSubmitted"/>
+          <span></span>
+        </div>
+  
+        <div class="input-field">
+          <input name="emergencyContact" #emergencyContact="ngModel" [(ngModel)]="patient.emergencyContact" placeholder="Emergency Contact" [disabled]="isSubmitted"/>
+          <span></span>
+        </div>
+  
+        <div class="input-field">
+          <input name="email" #email="ngModel" [(ngModel)]="patient.email" placeholder="Email" [disabled]="isSubmitted"/>
+          <span></span>
+        </div>
+  
+        <div class="input-field">
+          <input name="address" #address="ngModel" [(ngModel)]="patient.address" placeholder="Address" [disabled]="isSubmitted"/>
+          <span></span>
+        </div>
+  
+        <div class="button">
+          <button type="submit" class="add-button-submit" [disabled]="isSubmitted">Submit</button>
+          <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <app-message></app-message>
+  </body>
+  

@@ -1,0 +1,105 @@
+@startuml
+
+title "US 6.1.3 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Backoffice User" as USER
+participant "HospitalSimulationComponent" as UPP <<component>>
+participant "RoomService" as PS <<service>>
+
+USER -> UPP : wants to see hospital floor simulation
+activate UPP
+
+UPP -> PS : getRoomsSchedule()
+activate PS
+
+PS ->o] : GET: api/Room/Get-AllSchedules
+
+PS <--o] : Ok(schedule)
+
+PS --> UPP: scheduleData
+deactivate PS
+
+UPP -> UPP : backend data processing
+activate UPP
+deactivate UPP
+
+UPP -> UPP : createScene()
+activate UPP
+deactivate UPP
+
+UPP -> UPP : loadLayout(layoutData)
+note right
+layoutData is a json
+with the hospital floor
+elements and initial data
+end note
+activate UPP
+deactivate UPP
+
+UPP --> USER: shows 3D simulation canvas within webpage
+deactivate UPP
+
+USER -> UPP : changes the time and/or day in the simulation
+activate UPP
+
+
+UPP -> UPP : checkOccupancy()
+note right
+Checks which rooms
+are occupied or available
+end note
+activate UPP
+
+loop for each room
+
+alt room is occupied
+
+UPP -> UPP : loadPatient(roomID)
+UPP -> UPP : updateSprite(roomID, false)
+
+else room is available
+
+UPP -> UPP : removePatient(roomID)
+UPP -> UPP : updateSprite(roomID, false)
+end alt
+
+end loop
+
+UPP --> UPP
+deactivate UPP
+
+UPP --> USER : shows the room with patients\n according to the time
+deactivate UPP
+
+
+USER -> UPP : mouse is on a patient model
+activate UPP
+
+UPP -> UPP : raycaster.intersectObjects(objectsToIntersect)
+note left
+Raycaster is used to
+check which objects
+are being intersected
+by the mouse
+
+The only objects that
+can be identified by
+intersection are the
+patient models
+end note
+
+UPP -> UPP : raycasterIntersectedObjectTooltip(interceptedObject)
+activate UPP
+
+UPP -> UPP : message = getAppoitmentInfo(interceptedObject.name)
+
+UPP -> UPP : showTooltip(message, intersectedObject.position)
+
+UPP --> UPP
+deactivate UPP
+
+UPP --> USER: shows tooltip with appointment information
+deactivate UPP
+
+@enduml

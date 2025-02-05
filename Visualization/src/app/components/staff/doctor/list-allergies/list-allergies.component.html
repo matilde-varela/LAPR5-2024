@@ -1,0 +1,82 @@
+<body>
+    <!-- Sidebar -->
+    <div>
+      <app-side-bar-doctor></app-side-bar-doctor>
+    </div>
+  
+    <!-- Header -->
+    <header>
+      <h1 class="main-title">Search Allergies</h1>
+    </header>
+  
+    <!-- Filters Section -->
+    <div class="filters">
+      <!-- Filters Loop -->
+      <div class="filter-row" *ngFor="let filter of queryFiltersList; let i = index">
+        <input type="text" placeholder="Allergy Code" [(ngModel)]="filter.code" class="filter-input" />
+        <input type="text" placeholder="Allergy Designation" [(ngModel)]="filter.designation" class="filter-input" />
+        <!-- Remove Button: Disabled for the First (Default) Filter -->
+        <button *ngIf="i > 0" (click)="removeFilter(i)" class="remove-filter">
+          Remove
+        </button>
+      </div>
+  
+      <!-- Add Filter Button -->
+      <button (click)="addFilter()" class="add-filter-button">Add Filter</button>
+  
+      <!-- Apply Filters -->
+      <button (click)="applyFilters()" class="search-button">Search</button>
+    </div>
+  
+    <!-- Results Section -->
+    <div class="conteudo">
+      <!-- Table for Patient List -->
+      <div *ngIf="allergyList && allergyList.length > 0">
+        <p-table [value]="allergyList" [(selection)]="selectedAllergy" selectionMode="single"
+          [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 10%;">Select</th>
+              <th style="width: 15%;">Allergy Code</th>
+              <th style="width: 18%;">Allergy Designation</th>
+            </tr>
+          </ng-template>
+  
+          <ng-template pTemplate="body" let-allergy>
+            <tr [pSelectableRow]="allergy">
+              <td>
+                <p-tableRadioButton [value]="allergy" [name]="'allergyRadio'"></p-tableRadioButton>
+              </td>
+              <td>{{ allergy.code || '-' }}</td>
+              <td>{{ allergy.designation || '-' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+  
+        <!-- Action Buttons -->
+        <div *ngIf="selectedAllergy" class="action-buttons">
+          <button (click)="toggleEdition(selectedAllergy)">
+            Update Allergy
+          </button>
+          <button (click)="toggleDetails(selectedAllergy)">Show Details</button>
+        </div>
+      </div>
+  
+      <!-- Allergy Details -->
+      <div *ngIf="detailsVisible" class="allergy-details">
+        <h3>Allergy Details</h3>
+        <p><strong>Code:</strong> {{ fullAllergy.code || '-' }}</p>
+        <p><strong>Designation:</strong> {{ fullAllergy.designation || '-' }}</p>
+        <p><strong>Description:</strong> {{ fullAllergy.description || '-' }}</p>
+  
+        <div class="action-buttons">
+          <button (click)="closeDetails()">Close</button>
+        </div>
+      </div>
+  
+      
+      </div>
+  
+    <app-message></app-message>
+  </body>
+  

@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.15 Process View (Level 2)"
+
+autonumber
+
+actor Doctor
+participant "<<component>>\n Visualization (UI)" as UI
+participant "<<component>>\n Backoffice" as BACK
+
+
+Doctor -> UI : wants to edit an Operation Requisition
+activate UI
+
+UI -> BACK : getOperationRequisitionsByDoctor()
+activate BACK
+
+BACK --> UI : operation requisition list
+deactivate BACK
+
+
+UI --> Doctor : shows list of Operation Requisition created by the Doctor
+deactivate UI
+activate Doctor
+
+Doctor -> UI : selects an Operation Requisition
+deactivate Doctor
+activate UI
+
+UI --> Doctor : shows selected Operation Requisition
+deactivate UI
+activate Doctor
+
+Doctor -> UI : edits Operation Requisition (operating time, priority, description text)
+deactivate Doctor
+activate UI
+
+UI -> BACK : updateOperationRequisition(updatedData)
+activate BACK
+
+BACK --> UI : success/error
+deactivate BACK
+
+UI --> Doctor : shows success/error message
+deactivate UI
+
+@enduml

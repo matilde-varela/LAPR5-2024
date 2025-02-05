@@ -1,0 +1,52 @@
+Patient Medical Record
+Patient Information
+Name	John Doe
+Date of Birth	April 5, 1985 (Age: 39)
+Gender	Male
+Phone	+1-555-1234
+Address	123 Elm Street, Springfield, IL
+Email	johndoe@email.com
+ 
+Medical History
+Allergies: Penicillin
+Chronic Conditions: Hypertension (diagnosed 2015), Type 2 Diabetes (diagnosed 2020)
+Previous Surgeries:
+Appendectomy (2010)
+Knee Arthroscopy (2018)
+Family History:
+Father: Hypertension
+Mother: Type 2 Diabetes
+Smoking Status: Former smoker (quit 2015)
+ 
+Current Medications
+Metformin 500mg, twice daily (for Diabetes)
+Lisinopril 10mg, once daily (for Hypertension)
+Atorvastatin 20mg, once daily (for Cholesterol)
+Recent Visits & Diagnoses
+Date of Visit: October 1, 2024
+Reason for Visit: Routine check-up, monitoring of diabetes and hypertension
+Diagnosis: Blood pressure elevated, HbA1c levels improved
+Doctor's Notes: Adjust diet to reduce salt intake. Blood pressure medication dosage increased from 5mg to 10mg. Follow-up in 3 months.
+ 
+Date of Visit: July 1, 2024
+Reason for Visit: Annual physical
+Diagnosis: General good health, weight stable, cholesterol slightly elevated
+Doctor's Notes: Continue with statin therapy and monitor dietary cholesterol intake.
+ 
+Lab Results
+Test	Result
+HbA1c	6.7% (improved from 7.1% in June)
+Blood Pressure	140/90 mmHg (elevated)
+Cholesterol	Total 210 mg/dL, LDL 140 mg/dL, HDL 50 mg/dL (borderline high)
+ 
+Immunizations
+Influenza: Received October 2023
+Tetanus: Received February 2021
+COVID-19: Fully vaccinated (booster received March 2024)
+ 
+
+Plan/Recommendations
+Next Visit: January 2025
+Continue regular exercise (30 minutes per day, 5 times a week)
+Reduce sodium intake, target under 2000 mg/day
+Revisit in 3 months for blood pressure monitoring

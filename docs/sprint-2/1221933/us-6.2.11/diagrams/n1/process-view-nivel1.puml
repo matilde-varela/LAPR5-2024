@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.11. Process View (Level 1)"
+
+actor Admin as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+ADM -> SYS : asks to edit staff profile
+activate SYS
+
+SYS --> ADM : shows list of the staff profiles
+deactivate SYS
+activate ADM
+
+ADM -> SYS : selects a staff profile
+deactivate ADM
+activate SYS
+
+SYS --> ADM : shows selected staff profile
+deactivate SYS
+activate ADM
+
+ADM -> SYS : edits staff profile
+deactivate ADM
+activate SYS
+
+SYS --> ADM : sends confirmation Email
+deactivate SYS
+activate ADM
+
+ADM -> SYS : after contact information change is confirmed
+deactivate ADM
+activate SYS
+
+SYS --> ADM : confirms the update of the staff profile
+deactivate SYS
+
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+
+title "US 7.1.3 - Process View MDBackoffice [Level 3]"
+
+autonumber
+participant "Routing" as ROUTE <<route>>
+participant "RoomController" as CTRL <<controller>>
+participant "RoomService" as SVC <<service>>
+participant "RoomScheduleDto" as DTO <<dto>>
+participant "AppointmentRepository" as IEL <<repository>>
+
+[o-> ROUTE: GET() api/Room/Get-AllSchedules
+activate ROUTE
+
+ROUTE -> CTRL: GetAllSchedules()
+activate CTRL
+
+CTRL ->  SVC: GetAllSchedules()
+activate SVC
+
+SVC -> IEL : GetAllRoomsAsync()
+activate IEL
+
+IEL --> SVC : roomList
+deactivate IEL
+
+loop for all elements in the list
+
+SVC -> DTO : toDto(room)
+activate DTO
+deactivate DTO
+end loop
+
+SVC --> CTRL : roomListDto
+deactivate SVC
+
+CTRL --> ROUTE: roomListDto
+deactivate CTRL
+
+[o<-- ROUTE : ok(roomListDto)
+deactivate ROUTE
+
+@enduml

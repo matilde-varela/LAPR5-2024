@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.15 - System Sequence Diagram"
+
+autonumber
+
+participant Admin as ADM
+participant System as SYS
+
+ADM -> SYS : requests the list of the staff profiles
+activate ADM
+activate SYS
+
+SYS --> ADM : lists the staff profiles
+
+    loop until the Admin desires
+
+    ADM -> SYS : applies search filters (by name, email or specialization)
+
+    SYS --> ADM : presents the search results
+    end loop
+
+    opt Admin wants to select a profile
+
+    ADM -> SYS : selects a profile
+    SYS --> ADM : shows profile
+
+autonumber stop
+        alt edit profile
+
+        ADM --> SYS : US 5.1.13
+
+        else deactivate profile
+
+            ADM --> SYS : US 5.1.14
+
+        end alt
+
+    end opt
+
+autonumber stop
+
+deactivate ADM
+deactivate SYS
+
+@enduml

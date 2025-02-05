@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.14 Process View (Level 1)"
+
+autonumber
+
+actor "Doctor" as BACK
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+BACK -> SYS : wants to check a patient medical record
+activate SYS
+
+SYS --> BACK : lists all patients
+deactivate SYS
+activate BACK
+
+BACK -> SYS : selects a patient
+deactivate BACK
+activate SYS
+
+SYS --> BACK : presents the patient's medical record
+deactivate SYS
+
+BACK -> SYS : checks details/edits
+activate SYS
+
+SYS --> BACK : shows details/confirms edition success
+deactivate SYS
+
+@enduml

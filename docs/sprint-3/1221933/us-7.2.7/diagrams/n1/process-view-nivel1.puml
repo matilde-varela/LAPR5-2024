@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.7. Process View (Level 1)"
+
+actor Doctor as DOC
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate DOC
+DOC -> SYS : asks to search for patient medical records
+activate SYS
+
+SYS --> DOC : shows list of the patient medical record
+deactivate SYS
+
+
+opt search filters appliance
+    DOC -> SYS : applies search filters
+
+    activate SYS
+
+    SYS --> DOC : shows the patient medical records with\n the selected filters
+    deactivate SYS
+
+end opt
+
+
+@enduml

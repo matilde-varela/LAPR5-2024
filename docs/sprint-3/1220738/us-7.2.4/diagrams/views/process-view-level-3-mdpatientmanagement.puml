@@ -1,0 +1,38 @@
+@startuml
+title "US 7.2.3 Process View (Level 3) | MDPatientManagement"
+
+participant "<<Route>>\n MedicalConditionRoute" as ROUTE
+participant "<<Controller>>\n MedicalConditionController" as CONTROL
+participant "<<Dto>>\n MedicalConditionDto" as MCDTO
+participant "<<Service>>\n MedicalConditionService" as STAFFSERV
+participant "<<Repository>>\n MedicalConditionRepository" as ALLERGYREPO
+participant "<<DTO>>\n MedicalConditionListDto" as ALLERGYLISTDTO
+participant "<<Domain>>\n MedicalCondition" as ALLERGY
+
+[o-> ROUTE : POST(JSON)
+
+Activate ROUTE
+
+ROUTE -> CONTROL : AddMedicalCondition(JSON)
+Activate CONTROL
+
+CONTROL -> MCDTO**
+
+CONTROL -> STAFFSERV : AddMedicalConditionSync(medicalConditionDto)
+Activate STAFFSERV
+
+STAFFSERV -> ALLERGYREPO : AddMedicalConditionSync(id, designation, description, symptoms)
+Activate ALLERGYREPO
+ALLERGYREPO --> STAFFSERV : Success message
+Deactivate ALLERGYREPO
+
+STAFFSERV --> CONTROL : Success message
+Deactivate STAFFSERV
+
+CONTROL -> CONTROL : Ok(Success message)
+
+CONTROL --> ROUTE : json
+Deactivate CONTROL
+<-- ROUTE : json
+deactivate ROUTE
+@enduml

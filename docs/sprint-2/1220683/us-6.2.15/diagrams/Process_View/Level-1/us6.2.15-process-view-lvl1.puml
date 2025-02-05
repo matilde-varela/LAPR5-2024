@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.15 Process View (Level 1)"
+
+autonumber
+
+actor Doctor
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+Doctor -> SYS : wants to edit an Operation Requisition
+activate SYS
+
+SYS --> Doctor : shows list of Operation Requisition created by the Doctor
+deactivate SYS
+activate Doctor
+
+Doctor -> SYS : selects an Operation Requisition
+deactivate Doctor
+activate SYS
+
+SYS --> Doctor : shows selected Operation Requisition
+deactivate SYS
+activate Doctor
+
+Doctor -> SYS : edits Operation Requisition
+deactivate Doctor
+activate SYS
+
+SYS --> Doctor : confirms the update of the Operation Requisition
+deactivate SYS
+
+@enduml

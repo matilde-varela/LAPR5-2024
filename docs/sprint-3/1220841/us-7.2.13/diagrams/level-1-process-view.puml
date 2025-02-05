@@ -1,0 +1,18 @@
+@startuml
+
+title "US 7.2.13 - Process View [Level 1]"
+
+autonumber
+
+actor Admin as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate ADM
+ADM -> SYS : edit specialization
+activate SYS
+
+SYS --> ADM : success/insucess
+deactivate SYS
+deactivate ADM
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+left to right direction
+
+actor "Admin" as Admin
+actor "BackOffice User" as Backoffice
+actor "Doctor" as Doctor
+actor "Patient" as Patient
+
+
+Admin --> (register new backoffice users via an out-of-band process)
+Admin --> (create a new patient profile)
+Admin --> (edit an existing patient profile)
+Admin --> (delete a patient profile)
+Admin --> (list/search patient profiles to view the details, edit, and remove them)
+Admin --> (I want to create a new staff profile)
+Admin --> (edit a staff’s profile)
+Admin --> (deactivate a staff profile)
+Admin --> (list/search staff profiles to see the details, edit, and remove them)
+Admin --> (add new types of operations)
+Admin --> (edit existing operation types)
+Admin --> (remove obsolete or no longer performed operation types)
+Admin --> (list/search operation types to see the details, edit, and remove them)
+
+
+Patient --> (update my user profile)
+Patient --> (register for the healthcare application)
+Patient --> (delete my account and all associated data)
+Patient --> (log in to the healthcare system using my external IAM credentials)
+
+
+Backoffice --> (reset my password if I forget it)
+Backoffice --> (log in to the system using my credentials)
+
+
+Doctor --> (request an operation)
+Doctor --> (update an operation requisition)
+Doctor --> (remove an operation requisition)
+Doctor --> (list/search operation requisitions to see the details, edit, and remove them)
+
+@enduml

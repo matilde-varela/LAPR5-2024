@@ -1,0 +1,1300 @@
+{
+	"info": {
+		"_postman_id": "23af7344-1a71-4633-9f03-199a66662ef8",
+		"name": "sprint3-integration-tests",
+		"description": "Here are the integration tests with external isolation.\n\nSince we are using pair programming, the tests were developed by Matilde Varela (1220683), while the features were implemented by Ana Guterres (1221933). The corresponding user stories for the developed tests are:\n\n> us-7.2.6  \nus-7.2.7  \nus-7.2.8",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39029793"
+	},
+	"item": [
+		{
+			"name": "General Setup",
+			"item": [
+				{
+					"name": "User Accounts",
+					"item": [
+						{
+							"name": "Admin Account",
+							"item": [
+								{
+									"name": "Create Admin",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"admin@email.com\",\r\n  \"password\": \"Abcde12345!\",\r\n  \"role\": \"Admin\",\r\n  \"phone\": \"+351 919919919\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5001/api/create-admin",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5001",
+											"path": [
+												"api",
+												"create-admin"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Admin Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"var jsonResponse = pm.response.json();\r",
+													"var token = jsonResponse.token; \r",
+													"\r",
+													"pm.collectionVariables.set(\"Admin_Token\", token);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": " {\r\n  \"email\": \"admin@email.com\",\r\n  \"password\": \"Abcde12345!\"\r\n }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5001/api/Login-Internal",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5001",
+											"path": [
+												"api",
+												"Login-Internal"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Doctor [Staff/Backoffice]",
+							"item": [
+								{
+									"name": "Create Doctor Profile",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"let response = pm.response.json();\r",
+													"\r",
+													"let staffId = response.id;\r",
+													"\r",
+													"if (staffId) {\r",
+													"    pm.collectionVariables.set(\"Staff_ID\", staffId);\r",
+													"    console.log(\"Staff_ID updated to:\", staffId);\r",
+													"} else {\r",
+													"    console.error(\"Staff ID not found in the response!\");\r",
+													"}\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Admin_Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"licenseNumber\": \"12646\",\r\n  \"firstName\": \"Mariza\",\r\n  \"lastName\": \"Guterres\",\r\n  \"phone\": \"+351 900000003\",\r\n  \"email\": \"matildexv.04@gmail.com\",\r\n  \"address\" : \"Portugal, 4590-850, Rua da Sardinha\",\r\n  \"function\": \"doctor\",\r\n  \"specializationId\": \"10101000\"\r\n} ",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5001/api/Staff/Create-StaffProfile",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5001",
+											"path": [
+												"api",
+												"Staff",
+												"Create-StaffProfile"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Register Backoffice User",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Admin_Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"matildexv.04@gmail.com\",\r\n  \"password\": \"Abcde1245!\",\r\n  \"role\": \"Doctor\",\r\n  \"phone\": \"+351 900000003\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5001/api/create-staff",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5001",
+											"path": [
+												"api",
+												"create-staff"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Activate Backoffice User account",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"newpassword\" :  \"Abcde1245!\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Doctor Login",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"var jsonResponse = pm.response.json();\r",
+													"var token = jsonResponse.token; \r",
+													"\r",
+													"pm.collectionVariables.set(\"Doctor_Token\", token);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"matildexv.04@gmail.com\",\r\n  \"password\": \"Abcde1245!\"\r\n }",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5001/api/Login-Internal",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5001",
+											"path": [
+												"api",
+												"Login-Internal"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"description": "Once logged in, the user's token will be retrieved, and the collection variables will be updated."
+				},
+				{
+					"name": "Allergy Instances",
+					"item": [
+						{
+							"name": "Create Allergy #1",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"BZ85\",\r\n    \"designation\": \"Dairy Allergy\",\r\n    \"description\": \"Manifests itself in intense bloating.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/Allergy/create-allergy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"Allergy",
+										"create-allergy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Allergy #2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"BZ81\",\r\n    \"designation\": \"Egg Allergy\",\r\n    \"description\": \"Triggers symptoms such as hives, swelling, and anaphylaxis upon exposure to egg proteins.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/Allergy/create-allergy",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"Allergy",
+										"create-allergy"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "These instances will be used in US 7.2.6 and 7.2.7."
+				},
+				{
+					"name": "Medical Conditions Instances",
+					"item": [
+						{
+							"name": "Create Medical Conditions #1",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"BX35\",\r\n    \"designation\": \"Hypertension\",\r\n    \"description\": \"A chronic medical condition characterized by high blood pressure.\",\r\n    \"symptoms\": [\r\n        \"Headaches\",\r\n        \"Shortness of breath\",\r\n        \"Nosebleeds\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/medicalCondition/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"medicalCondition",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Medical Conditions #2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"CA40\",\r\n    \"designation\": \"Type 2 Diabetes Mellitus\",\r\n    \"description\": \"A metabolic disorder characterized by high blood sugar levels due to insulin resistance or insufficient insulin production.\",\r\n    \"symptoms\": [\r\n        \"Frequent urination\",\r\n        \"Increased thirst\",\r\n        \"Unexplained weight loss\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/medicalCondition/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"medicalCondition",
+										"create"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "These instances will be used in US 7.2.6 and 7.2.7."
+				}
+			],
+			"description": "Sets up user accounts and common instances utilized across most features tested in this collection."
+		},
+		{
+			"name": "us-7.2.6",
+			"item": [
+				{
+					"name": "setup",
+					"item": [
+						{
+							"name": "Create Medical Record #1",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"202412000011\",\r\n    \"medicalRecordNumber\": \"202412000011\",\r\n    \"medicalConditions\": [\"BX35\", \"CA40\"],\r\n    \"allergies\": [\"BZ81\", \"BZ85\"],\r\n    \"description\": \"Patient with hypertension, type 2 diabetes mellitus, and severe allergies to egg and dairy.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/medicalRecord/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"medicalRecord",
+										"create"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Update Medical Record",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Doctor_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"202412000011\",\r\n  \"medicalRecordNumber\": \"202412000011\",\r\n  \"medicalConditions\": [ \"6A80\", \"3A01.1\" ],\r\n  \"allergies\": [ \"BZ05.3\", \"BZ02.2\" ],\r\n  \"description\": \"Patient with chronic conditions and severe allergies.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/medicalRecord/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"medicalRecord",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "As a Doctor, I want to update the Patient Medical Record, namely respecting Medical Conditions and Allergies."
+		},
+		{
+			"name": "us-7.2.7",
+			"item": [
+				{
+					"name": "setup",
+					"item": [
+						{
+							"name": "Create Medical Record #2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"202412000012\",\r\n    \"medicalRecordNumber\": \"202412000012\",\r\n    \"medicalConditions\": [\"BX35\"],\r\n    \"allergies\": [\"BZ81\"],\r\n    \"description\": \"Patient with hypertension and a dairy allergy.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/medicalRecord/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"medicalRecord",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Medical Record #3",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"202412000013\",\r\n    \"medicalRecordNumber\": \"202412000013\",\r\n    \"medicalConditions\": [\"CA40\"],\r\n    \"allergies\": [],\r\n    \"description\": \"Patient with type 2 diabetes mellitus and no known allergies.\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:4000/api/medicalRecord/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "4000",
+									"path": [
+										"api",
+										"medicalRecord",
+										"create"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Search Medical Records by Allergy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Doctor_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filters\":\r\n    [\r\n        {\r\n            \"allergyDesignation\": \"Dairy Allergy\",\r\n            \"medicalConditionDesignation\": \"\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/medicalRecord/get-filtered-medical-records",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"medicalRecord",
+								"get-filtered-medical-records"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Medical Records by Medical Condition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Doctor_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filters\":\r\n    [\r\n        {\r\n            \"allergyDesignation\": \"\",\r\n            \"medicalConditionDesignation\": \"Type 2 Diabetes Mellitus\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/medicalRecord/get-filtered-medical-records",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"medicalRecord",
+								"get-filtered-medical-records"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Medical Records by both Entries",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Doctor_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filters\":\r\n    [\r\n        {\r\n            \"allergyDesignation\": \"Egg Allergy\",\r\n            \"medicalConditionDesignation\": \"Hypertension\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/medicalRecord/get-filtered-medical-records",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"medicalRecord",
+								"get-filtered-medical-records"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "As a Doctor, I want to search for entries in the Patient Medical Record, namely respecting Medical Conditions and Allergies."
+		},
+		{
+			"name": "us-7.2.8",
+			"item": [
+				{
+					"name": "setup",
+					"item": [
+						{
+							"name": "Specializations",
+							"item": [
+								{
+									"name": "Create-orthopaedics",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{Admin_Token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"code\" : \"10101000\",\r\n  \"denomination\": \"orthopaedics\",\r\n  \"description\": \"The treatment or study of bones that have not grown correctly or that have been damaged.\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5001/api/Specialization",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5001",
+											"path": [
+												"api",
+												"Specialization"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create-anesthesiology",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"code\" : \"10101010\",\r\n    \"denomination\": \"anesthesiology\",\r\n    \"description\": \"Medical doctor who specializes in administering anesthesia, the medical treatment that keeps you from feeling pain during procedures.\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5001/api/Specialization",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5001",
+											"path": [
+												"api",
+												"Specialization"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create-surgical-assistantance",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"code\" : \"10101040\",\r\n    \"denomination\": \"surgical assistant\",\r\n    \"description\": \"Provide aid in exposure, wound closure, bleeding control, and other intraoperative technical functions that help the surgeon carry out a safe operation.\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "https://localhost:5001/api/Specialization",
+											"protocol": "https",
+											"host": [
+												"localhost"
+											],
+											"port": "5001",
+											"path": [
+												"api",
+												"Specialization"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Create Operation Type",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Test Operation Type\",\r\n  \"estimatedDuration\": 135,\r\n  \"status\": true,\r\n  \"requiredStaff\": [\r\n    {\r\n      \"staffQuantity\": 1,\r\n      \"function\": \"Doctor\",\r\n      \"specialization\": \"10101000\"\r\n    }\r\n  ],\r\n  \"phases\": [\r\n    {\r\n      \"description\": \"Anesthesia\",\r\n      \"duration\": 45\r\n    },\r\n    {\r\n      \"description\": \"Surgery\",\r\n      \"duration\": 60\r\n    },\r\n    {\r\n      \"description\": \"Cleaning\",\r\n      \"duration\": 30\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/OperationTypes",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"OperationTypes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Room Type",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\": \"BLCOP-T2\",\r\n    \"designation\": \"Bloco Operatório Joelhos\",  \r\n    \"description\": \"Descrição válida.\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/RoomType",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"RoomType"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Room",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"RoomNumber\": \"R209\",\r\n  \"TypeDesignation\": \"Bloco Operatório Joelhos\",\r\n  \"Capacity\": 10,\r\n  \"AvailableEquipment\": [\r\n    \"Defibrillators\",\r\n    \"Oxygen Tanks\",\r\n    \"Ultrasound Machine\"\r\n  ],\r\n  \"MaintenanceSlots\": [\r\n    \"[16:00-17:30\",\r\n    \"[11:00-12:00]\"\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Room/create",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Room",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Patient Profile",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();\r",
+											"\r",
+											"let patientID = response.patientId;\r",
+											"\r",
+											"if (patientID) {\r",
+											"    pm.collectionVariables.set(\"Patient_ID\", patientID);\r",
+											"    console.log(\"Patient_ID updated to:\", patientID);\r",
+											"} else {\r",
+											"    console.error(\"Patient ID not found in the response!\");\r",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Admin_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstName\": \"Teste\",\r\n    \"lastName\": \"Testes\",\r\n    \"phone\": \"+351 910000880\",\r\n    \"email\": \"teste2@email.com\",\r\n    \"address\" : \"Portugal, 4590-850, Rua do Test\",\r\n    \"emergencyContact\": \"+351 9100087822\",\r\n    \"gender\": \"Female\",\r\n    \"dateBirth\": \"20/08/1999\",\r\n    \"medicalConditions\": [\"BX35\", \"CA40\"],\r\n    \"allergies\": [\"BZ81\", \"BZ85\"],\r\n    \"description\": \"Patient with chronic conditions and severe allergies.\"\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Patient/Create-PatientProfile",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Patient",
+										"Create-PatientProfile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Operation Request",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let response = pm.response.json();\r",
+											"\r",
+											"let opRequestid = response.id;\r",
+											"\r",
+											"if (opRequestid) {\r",
+											"    pm.collectionVariables.set(\"OperationRequest_ID\", opRequestid);\r",
+											"    console.log(\"OperationRequest_ID updated to:\", opRequestid);\r",
+											"} else {\r",
+											"    console.error(\"Operation Request ID not found in the response!\");\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Doctor_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"deadLineDate\": \"2025-09-29\",\r\n  \"priority\": \"Elective\",\r\n  \"dateOfRequest\": \"2025-09-23\",\r\n  \"status\": \"requested\",\r\n  \"staffId\": \"{{Staff_ID}}\",\r\n  \"description\": \"not yet done\",\r\n  \"patientId\": \"{{Patient_ID}}\",\r\n  \"operationTypeId\": \"Test Operation Type\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/OperationRequest",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"OperationRequest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add staff time slot",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{Doctor_Token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"slot\": \"[12:00-15:00]\",\r\n    \"date\": \"2025-09-26\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:5001/api/Staff/Add-TimeSlots",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Staff",
+										"Add-TimeSlots"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create Surgery Appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Doctor_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"operationRequestId\": \"{{OperationRequest_ID}}\",\r\n  \"roomNumber\": \"R209\",\r\n  \"startTime\": \"12:30\",\r\n  \"endTime\": \"14:30\",\r\n  \"startDate\": \"2025-09-26\",\r\n  \"endDate\": \"2025-09-26\",\r\n  \"staffList\": [\r\n        \"{{Staff_ID}}\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/api/Appointment",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"Appointment"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "As a Doctor, I want to create a Surgery Appointment, so that the Patient doesn’t need to wait for the automatically generated planning."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Admin_Token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "Doctor_Token",
+			"value": ""
+		},
+		{
+			"key": "OperationRequest_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "Staff_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "Patient_ID",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

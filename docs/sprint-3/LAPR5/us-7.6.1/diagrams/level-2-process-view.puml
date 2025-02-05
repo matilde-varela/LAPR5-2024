@@ -1,0 +1,44 @@
+@startuml
+
+title "US 7.2.13 - Process View [Level 2]"
+
+autonumber
+
+actor Patient as ADM
+participant "Visualization" as VIS <<Container C4>>
+participant "MDBackoffice" as B_SYS <<Container C4>>
+participant "MDPatientManagement" as P_SYS <<Container C4>>
+
+activate ADM
+ADM -> VIS : request to export medical record
+activate VIS
+
+VIS --> ADM : ask for file path
+deactivate VIS
+
+ADM -> VIS : provide file path
+activate VIS
+
+VIS --> ADM : ask for password
+deactivate VIS
+
+ADM -> VIS : provide password
+activate VIS
+
+VIS -> B_SYS: ExportPatientData(filePath,password)
+activate B_SYS
+ 
+B_SYS -> P_SYS : ExportMedicalRecordData(medicalRecordNumber,filePath,password)
+activate P_SYS
+
+P_SYS --> B_SYS : success/failure
+deactivate P_SYS
+
+B_SYS --> VIS : success/failure
+deactivate B_SYS
+
+VIS --> ADM : success/failure
+deactivate VIS
+deactivate ADM
+
+@enduml

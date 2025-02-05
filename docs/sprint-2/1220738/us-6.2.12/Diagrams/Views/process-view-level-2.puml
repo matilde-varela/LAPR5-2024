@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.12 Process View (Level 2)"
+
+autonumber
+
+actor Admin
+participant "<<Container C4>>\n Visualization" as VISU
+participant "<<Container C4>>\n Backoffice" as BACK
+participant "<<Container C4>>\n Planning" as PLAN
+
+activate Admin
+Admin -> VISU : get all active staff
+activate VISU
+VISU -> BACK : getActiveRoster()
+activate BACK
+BACK --> VISU : activeRoster
+deactivate BACK
+VISU --> Admin : activeRoster
+deactivate VISU
+
+Admin -> VISU : chooses a profile
+activate VISU
+VISU -> BACK : deactivateProfile(id)
+activate BACK
+BACK -> PLAN : updateWithNewRoster(roster)
+activate PLAN
+PLAN --> BACK : return
+deactivate PLAN
+BACK --> VISU : success
+deactivate BACK
+VISU --> Admin : success
+deactivate VISU
+
+@enduml

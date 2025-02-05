@@ -1,0 +1,18 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+skinparam classBackgroundColor beige
+skinparam ArrowColor #222222
+
+entity Staff {}
+entity Doctor {}
+entity Allergy {}
+
+Doctor ---> "1" Staff : is a
+MedicalRecord --> "0..*" Allergy : contains
+Doctor --> "0..*" MedicalRecord : manages
+
+
+@enduml
+

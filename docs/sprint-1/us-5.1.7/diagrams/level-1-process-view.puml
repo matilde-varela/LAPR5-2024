@@ -1,0 +1,18 @@
+@startuml
+
+title "US 5.1.7. - Process View [Level 1]"
+
+autonumber
+
+actor Patient as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate ADM
+ADM -> SYS : initiates log in
+activate SYS
+
+SYS --> ADM : grants access to features
+deactivate SYS
+deactivate ADM
+
+@enduml

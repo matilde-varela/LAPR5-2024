@@ -1,0 +1,31 @@
+@startuml
+title "US 6.2.8 Process View (Level 3) | Visualization"
+
+actor Admin
+participant "<<Component>>\n Profile" as USER
+participant "<<Service>>\n PatientService" as SERV
+
+activate Admin
+    Admin -> USER : get all profiles
+    activate USER 
+        USER -> SERV : GetPatientProfiles()
+        activate SERV
+            SERV ->o] : GET: api/Get-PatientProfiles()
+            SERV <--o] : Ok(patientProfiles)
+            SERV --> USER : patientProfiles
+        deactivate SERV
+        USER --> Admin : patientProfiles
+    deactivate USER
+
+    Admin -> USER : delete a profile
+        activate USER
+            USER -> SERV : DeletePatientProfile(id)
+            activate SERV
+                SERV ->o] : DELETE: api/Delete-PatientProfile(id)
+                SERV <--o] : Ok("Patient profile and account succefully deleted.")
+                SERV --> USER : success
+            deactivate SERV
+            USER --> Admin : success
+        deactivate USER
+deactivate Admin
+@enduml

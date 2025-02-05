@@ -1,0 +1,29 @@
+@startuml
+
+title "US 7.2.2 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Admin" as USER
+participant "CreateAllergy" as UPP <<component>>
+participant "AllergyService" as PS <<service>>
+
+USER -> UPP : inserts allergy's data (code,\n designation, description (optional))
+activate UPP
+
+UPP -> PS : createAllergy(code,\n designation, description (optional))
+activate PS
+
+PS ->o] : POST: api/Allergy/create-Allergy
+
+PS <--o] : 200 Ok
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+
+
+
+@enduml

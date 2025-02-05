@@ -1,0 +1,21 @@
+@startuml
+title "US 7.2.3 Process View (Level 3) | Visualization"
+
+actor Doctor
+participant "<<Component>>\n List-Medical-Conditions" as USER
+participant "<<Service>>\n MedicalConditionService" as SERV
+
+activate Doctor
+    Doctor -> USER : Asks to add a medical condition.
+    activate USER
+        USER --> Doctor: Asks for id, designation,\ndescription and symptoms.
+        USER -> SERV : AddMedicalCondition(id, designation,\ndescription, symptoms)
+        activate SERV
+            SERV ->o] : POST: api/medicalcondition/add-medical-condition(id, designation,\ndescription, symptoms)
+            SERV <--o] : Ok(Success message)
+            SERV --> USER : Success message
+        deactivate SERV
+        USER --> Doctor : Success message
+    deactivate USER
+deactivate Doctor
+@enduml

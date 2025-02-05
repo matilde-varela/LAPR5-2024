@@ -1,0 +1,54 @@
+/* Estilo do título principal */
+.main-title {
+    font-family: 'Poppins', monospace;
+    font-size: 45px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #0066cc, #45a0a0);    
+    color: #ffffff; /* Cor do texto do título */
+    padding: 1rem 2rem; /* Espaçamento ao redor do título */
+    border-radius: 8px; /* Bordas arredondadas */
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192); /* Sombra sutil no texto */
+    margin: 0 auto; /* Centraliza o título */
+    max-width: 30%; /* Limita a largura do título */
+  }
+
+  
+  .second-title {
+    font-family: 'Poppins', monospace;
+    font-size: 30px;
+    font-weight: bold;
+    color: linear-gradient(90deg, #0066cc, #45a0a0); /* Cor do texto do título */
+    padding: 1rem 2rem; /* Espaçamento ao redor do título */
+    border-radius: 8px; /* Bordas arredondadas */
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192); /* Sombra sutil no texto */
+    margin: 0 auto; /* Centraliza o título */
+    max-width: 60%; /* Limita a largura do título */
+    margin-top:30px;
+  }
+  
+  
+  /* Estilo do botão */
+  .menu-button {
+    margin: 20px auto; /* Espaço acima e abaixo do botão */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #0066cc;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.3s, color 0.3s;
+    display: block; /* Faz o botão se comportar como um bloco */
+    text-align: center;
+  }
+  
+  .menu-button:hover {
+    background-color: #45a0a0;
+  }
+  
+  /* Regras gerais de layout */
+  footer {
+    margin-top: 20px;
+  }

@@ -1,0 +1,130 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+title "US 5.1.16 - Domain Model"
+
+class Name <<(V,#FF8B40)value object>> {}
+class FirstName <<(V,#FF8B40)value object>> {}
+class LastName <<(V,#FF8B40)value object>> {}
+class FullName <<(V,#FF8B40)value object>> {}
+class Phone <<(V,#FF8B40)value object>> {}
+class Email <<(V,#FF8B40)value object>> {}
+class Date <<(V,#FF8B40)value object>> {}
+class Slot <<(V,#FF8B40)value object>> {}
+class Status <<(V,#FF8B40)value object>> {}
+class Address <<(V,#FF8B40)value object>> {}
+class Function <<(V,#FF8B40)value object>>  {}
+class TimeInterval <<(V,#FF8B40)value object>> {}
+
+package "<<aggregate>> Patient" {
+    entity Patient <<entity>> <<root>> {}
+    class DateBirth <<(V,#FF8B40)value object>> {}
+    class Gender <<(V,#FF8B40)value object>> {}
+    class EmergencyContact <<(V,#FF8B40)value object>> {}
+    class MRN <<(V,#FF8B40)value object>> <<identifier>> {}
+    class MedicalCondition <<(V,#FF8B40)value object>> {}
+    class AppoitmentHistory <<(V,#FF8B40)value object>> {}
+}
+package "<<aggregate>> User" {
+    entity User <<entity>> <<root>>
+    class Username <<(V,#FF8B40) value object>> <<identifier>>
+    class Role <<(V,#FF8B40) value object>>
+}
+
+package "<<aggregate Staff>>" {
+    entity Staff <<entity>><<root>>{}
+    class LicenseNumber <<(V,#FF8B40)value object>> <<identifier>> {}
+}
+
+package "<<aggregate Doctor>>" {
+    entity Doctor <<entity>><<root>>{}
+}
+
+package "<<aggregate OperationRequest>>"{
+    entity OperationRequest <<entity>> <<root>> {}
+    class OperationRequestId <<(V,#FF8B40)value object>> <<identifier>> {}
+    class Priority <<(V,#FF8B40)value object>> {}
+    class DateOfRequest <<(V,#FF8B40)value object>>  {}
+    class DeadlineDate <<(V,#FF8B40)value object>>  {}
+    class OperationRequestStatus <<(V,#FF8B40)value object>>
+    class OperationRequestDescription <<(V,#FF8B40)value object>>
+
+}
+
+package "<<aggregate OperationType>>"{
+    entity OperationType <<entity>> <<root>> {}
+    class OperationTypeId <<(V,#FF8B40)value object>> <<identifier>> {}
+    class RequiredStaff <<entity>>  {}
+}
+
+class EstimatedDuration <<(V,#FF8B40)value object>>  {}
+class Phase <<(V,#FF8B40)value object>>  {}
+class PhaseDuration <<(V,#FF8B40)value object>>  {}
+class PhaseDescription <<(V,#FF8B40)value object>> {}
+class OperationTypeStatus <<(V,#FF8B40)value object>> {}
+class OperationTypeName <<(V,#FF8B40)value object>>  {}
+class NumberStaff <<(V,#FF8B40)value object>>  {}
+
+package "<<aggregate Specialization>>"{
+    entity Specialization <<entity>> <<root>> {}
+    class SpecializationDenomination <<(V,#FF8B40)value object>> <<identifier>> {}
+}
+
+Name --> FirstName
+Name -> LastName
+Name --> FullName
+
+Doctor -> "1" Staff
+
+OperationType --> "1" OperationTypeId
+OperationType --> "1" OperationTypeStatus
+OperationType --> "1" OperationTypeName
+OperationType --> "1..*" RequiredStaff
+RequiredStaff --> "1" Specialization
+RequiredStaff --> "1" Function
+RequiredStaff --> "1" NumberStaff
+OperationType ---> "1" EstimatedDuration
+OperationType ---> "3" Phase
+Phase --> "1" PhaseDuration
+Phase --> "1" PhaseDescription
+
+OperationRequest -> "1" OperationRequestId
+OperationRequest --> "1" Priority
+OperationRequest --> "1" Patient
+OperationRequest --> "1" Doctor
+OperationRequest ---> "1" OperationType
+OperationRequest --> "1" DateOfRequest
+OperationRequest --> "1" DeadlineDate
+OperationRequest --> "1" OperationRequestStatus
+OperationRequest --> "1" OperationRequestDescription
+
+Patient -> "1" Status
+Patient -> "1" Name
+Patient --> "1" DateBirth
+Patient --> "1" Gender
+Patient ---> "1" EmergencyContact
+Patient --> "1" MRN
+Patient --> "0..1" MedicalCondition
+Patient --> "1" AppoitmentHistory
+Patient --> "1" Email
+Patient --> "1" Phone
+Patient --> "1" Address
+Patient---> "0..1" User
+EmergencyContact --> "1" Phone
+
+Staff --> "1" Status
+Staff --> "1" Name
+Staff --> "1" Function
+Staff ---> "1" Email
+Staff ---> "1" Phone
+Staff --> "1" Address
+Staff --> "1" LicenseNumber
+Staff ---> "0..*" Slot
+Staff --> "1" Specialization
+Staff -> "1" User
+
+Specialization --> "1" SpecializationDenomination
+Slot --> "1" Date
+Slot --> "1" TimeInterval
+
+@enduml

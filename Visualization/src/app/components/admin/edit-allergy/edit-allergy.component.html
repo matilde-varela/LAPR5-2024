@@ -1,0 +1,80 @@
+<body>
+  <!-- Sidebar -->
+  <div>
+    <app-side-bar-admin></app-side-bar-admin>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1 class="main-title">Manage Allergies</h1>
+  </header>
+
+  <div class="conteudo">
+    <div *ngIf="allergies && allergies.length > 0">
+      <p-table [value]="allergies" [(selection)]="selectedAllergy" selectionMode="single"
+        [tableStyle]="{ 'border-collapse': 'collapse', 'table-layout': 'fixed', width: '100%' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 10%;">Select</th>
+            <th style="width: 15%;">Code ICD-11</th>
+            <th style="width: 20%;">Designation</th>
+            <th style="width: 30%;">Description</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-allergy>
+          <tr [pSelectableRow]="allergy">
+            <td>
+              <p-tableRadioButton [value]="allergy" [name]="'allergyRadio'"></p-tableRadioButton>
+            </td>
+            <td>{{ allergy.code || '-' }}</td>
+            <td>{{ allergy.designation || '-' }}</td>
+            <td>{{ allergy.description || '-' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Action Buttons -->
+      <div *ngIf="selectedAllergy" class="action-buttons">
+        <button (click)="toggleEdition(selectedAllergy)">Edit Allergy</button>
+      </div>
+    </div>
+
+    <!-- Edit Allergy Form -->
+    <div *ngIf="editDetails" class="allergy-edition">
+      <div class="edit-panel">
+        <h1 class="main-title-edit">Edit Allergy</h1>
+        <p>Please fill in the fields to edit.</p>
+        <form #allergyForm="ngForm" (ngSubmit)="onSubmit(allergyForm)" novalidate>
+          <!-- Code Field (Read-Only) -->
+          <div class="input-field">
+            <label for="Code" class="bold-label">Code</label>
+            <input id="code" [(ngModel)]="fullAllergy.code" name="code" disabled />
+          </div>
+    
+          <!-- Designation Field -->
+          <div class="input-field">
+            <label for="Designation" class="bold-label">Designation</label>
+            <input id="designation" [(ngModel)]="fullAllergy.designation" name="designation" required />
+          </div>
+    
+          <!-- Description Field -->
+          <div class="input-field">
+            <label for="Description" class="bold-label">Description</label>
+            <textarea id="description" [(ngModel)]="fullAllergy.description" name="description" required></textarea>
+          </div>
+    
+          <!-- Action Buttons -->
+          <div class="button-container">
+            <button type="submit" class="add-button-submit" [disabled]="allergyForm.invalid || isSubmitted">Submit</button>
+            <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+            <button type="button" class="close-button" (click)="closeEdition()">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+  </div>
+
+  <app-message></app-message>
+</body>

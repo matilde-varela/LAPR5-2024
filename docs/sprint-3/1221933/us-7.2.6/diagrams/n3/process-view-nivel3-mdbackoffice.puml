@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.6. Process View (Level 3 | MDBackoffice)"
+
+autonumber
+
+participant "route:\nPatientRoute" as ROUTE
+participant "controller:\nPatientController" as CTRL
+
+participant "service:\nPatientService" as SER
+participant "repository:\nPatientRepo" as REPO
+participant "domain:\nPatient" as PAT
+participant "dto:\nPatientDTO" as DTO
+
+
+[o-> ROUTE : GET()
+activate ROUTE
+
+ROUTE -> CTRL : getPatientProfiles()
+activate CTRL
+
+CTRL -> SER : getPatientProfiles()
+activate SER
+
+SER -> REPO : findAll()
+activate REPO
+
+REPO --> SER : PatientProfilesList
+deactivate REPO
+
+loop for all the profiles in the list
+SER -> DTO ** : toDTO(PatientProfile)
+
+
+end loop
+
+SER --> CTRL : patientProfileDTOList
+deactivate SER
+
+CTRL --> ROUTE : patientProfileDTOList
+deactivate CTRL
+
+<- ROUTE : ok(patientProfileDTOList)
+deactivate ROUTE
+
+
+@enduml

@@ -1,0 +1,66 @@
+@startuml
+
+title "US 7.2.13 - Process View [Level 3 | MDBackoffice]"
+
+autonumber
+participant "SpecializationRoute" as ROUTE <<route>>
+participant "EditSpecializationDto" as pat_dto <<dto>>
+participant "SpecializationController" as CTRL <<controller>>
+participant "SpecializationService" as SVC <<service>>
+participant "SpecializationRepository" as REPO <<repository>>
+participant "Specialization" as spec <<domain>>
+
+
+
+[o-> ROUTE: PUT(json) /api/specialization
+activate ROUTE
+
+ROUTE -> pat_dto **: create(json)
+
+ROUTE -> CTRL: EditSpecialization(editSpecializationDto)
+activate CTRL
+
+CTRL -> SVC : EditSpecialization(editSpecializationDto)
+activate SVC
+
+SVC -> REPO : FindSpecializationByCode(code)
+activate REPO
+
+REPO --> SVC: specialization
+deactivate REPO
+
+alt specialization != null
+    alt newDesignation != null
+        SVC -> spec : ChangeDesignation(newDesignation)
+        activate spec
+        deactivate spec
+    end
+    alt newDescription != null
+        SVC -> spec : ChangeDescription(newDescription)
+        activate spec
+        deactivate spec
+    end
+
+    SVC -> REPO: save(specialization)
+    activate REPO
+    deactivate REPO
+end
+
+SVC --> CTRL : success
+deactivate SVC
+
+CTRL --> ROUTE: success
+deactivate CTRL
+
+alt
+
+    [o<-- ROUTE: 202 Accepted
+
+else
+
+    [o<-- ROUTE: 400 Bad Request
+
+    end alt
+
+    deactivate ROUTE
+    @enduml

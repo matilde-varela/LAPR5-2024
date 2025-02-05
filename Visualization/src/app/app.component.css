@@ -1,0 +1,151 @@
+/* Container do título e imagem */
+.main-title-container {
+  background-color: #a0bbd8;
+  padding: 1rem 2rem;
+  /* border-radius: 8px; */
+  display: flex; 
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+
+/* Estilo da imagem do logo */
+.title-logo {
+  width: 45px; /* Tamanho ajustável */
+  height: auto;
+  margin-right: 1.5rem; /* Espaço entre a imagem e o título */
+}
+
+/* Estilo do título principal */
+.main-title {
+  font-family: 'Merriweather', serif;
+  font-size: 45px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #0066cc, #45a0a0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent; 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.192);
+  margin: 0; /* Remove a margem para evitar desalinhamento */
+  text-align: center;
+}
+  
+  /* Regras para o conteúdo geral */
+  main {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: inherit;
+    position: relative;
+  }
+  
+  .app-container {
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* align-items: center; */
+  }
+  
+  /* Regras para o conteúdo do título e botão */
+  .content {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 3rem;
+  }
+  
+  .content h1 {
+    margin-top: 1.75rem;
+  }
+  
+  .content p {
+    margin-top: 1.5rem;
+  }
+  
+  .centered-content {
+    text-align: center;
+  }
+  
+  /* Estilo do botão */
+  /* button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #0066cc;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #45a0a0;
+  } */
+  
+  /* Regras para o router outlet */
+  .router-outlet-container {
+    margin-top: 7rem;
+    height: 100%;
+    z-index: 0;
+    position: relative;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center; 
+    gap: 10px;
+  }
+
+  /* Estilo dos botões */
+   .login-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-left: auto;
+    width: 200px;
+    transition: background-color 0.3s ease;
+    margin-right: 20px;
+  }
+
+  .register-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 200px;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+  }
+
+  .logout-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 200px; 
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+  }
+  
+  .login-button:hover,
+  .logout-button:hover,
+  .register-button:hover {
+    background-color: #45a0a0;
+  }

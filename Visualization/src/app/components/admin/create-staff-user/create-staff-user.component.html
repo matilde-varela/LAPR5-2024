@@ -1,0 +1,57 @@
+<body>
+    <div>
+      <app-side-bar-admin></app-side-bar-admin>
+    </div>
+    <header>
+      <h1 class="main-title">Create Staff User</h1>
+    </header>
+  
+    <div class="information-input">
+      <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before
+        submitting:</p>
+  
+      <form #userStaffForm="ngForm" (ngSubmit)="onSubmit(userStaffForm)" novalidate>
+        <!-- Existing input fields -->
+        <div class="input-field">
+          <input name="email" #email="ngModel" [(ngModel)]="userStaff.email" placeholder="Email"
+            [disabled]="isSubmitted" required [class.invalid-placeholder]="email.invalid && email.touched" />
+          <span></span>
+        </div>
+  
+        <div class="input-field">
+          <input name="password" #password="ngModel" [(ngModel)]="userStaff.password" placeholder="Password"
+            [disabled]="isSubmitted" required [class.invalid-placeholder]="password.invalid && password.touched" />
+          <span></span>
+        </div>
+  
+        <div class="input-field">
+          <input name="phone" #phone="ngModel" [(ngModel)]="userStaff.phone" placeholder="Phone Number"
+            [disabled]="isSubmitted" required [class.invalid-placeholder]="phone.invalid && phone.touched" />
+          <span></span>
+        </div>
+  
+        <div class="input-field">
+            <select 
+              name="role" 
+              #role="ngModel" 
+              [(ngModel)]="userStaff.role" 
+              [disabled]="isSubmitted" 
+              required 
+              [class.invalid-placeholder]="role.invalid && role.touched">
+              <option value="" disabled selected>Select a Role</option>
+              <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+            </select>
+            <span></span>
+          </div>          
+          
+  
+        <div class="button">
+          <button type="submit" class="add-button-submit" [disabled]="userStaffForm.invalid || isSubmitted">Submit</button>
+          <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+        </div>
+      </form>
+  
+    </div>
+    <br>
+    <app-message></app-message>
+  </body>

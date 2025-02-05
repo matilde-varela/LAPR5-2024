@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.2. Process View (Level 1)"
+
+autonumber
+actor BackofficeUser as USER
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate USER
+
+USER -> SYS : asks to change password
+activate SYS
+
+SYS --> USER : answer
+deactivate SYS
+@enduml

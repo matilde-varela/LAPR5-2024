@@ -1,0 +1,23 @@
+@startuml
+
+title "US 7.2.15 - Process View [Level 1]"
+
+autonumber
+
+actor Admin as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate ADM
+ADM -> SYS : list specializations
+activate SYS
+
+SYS --> ADM: select filters
+deactivate SYS
+
+ADM -> SYS: selects filters
+activate SYS
+
+SYS --> ADM : shows specializations
+deactivate SYS
+deactivate ADM
+@enduml

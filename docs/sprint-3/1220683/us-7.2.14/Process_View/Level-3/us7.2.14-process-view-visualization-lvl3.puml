@@ -1,0 +1,33 @@
+@startuml
+
+title "US 7.2.14 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Doctor" as USER
+participant "ListPatientProfiles" as UPP <<component>>
+participant "PatientService" as PS <<service>>
+
+USER -> UPP : wants to see a patient medical record
+activate UPP
+
+UPP -> PS : getActivePatientProfilesList()
+activate PS
+
+PS ->o] : GET: api/Get-PatientProfiles
+
+PS <--o] : patientsWithRecordsDTOList
+
+PS --> UPP: patientsWithRecordsDTOList
+deactivate PS
+
+UPP --> USER: shows the list of patient profiles
+deactivate UPP
+
+USER -> UPP : selects a patient from the list, and clicks on "Show Details"
+activate UPP
+
+UPP --> USER: displays the medical record
+deactivate UPP
+
+
+@enduml

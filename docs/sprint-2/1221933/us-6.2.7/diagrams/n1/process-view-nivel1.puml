@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.7. Process View (Level 1)"
+
+actor Admin as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+ADM -> SYS : asks to edit patient profile
+activate SYS
+
+SYS --> ADM : shows list of the patient profiles
+deactivate SYS
+activate ADM
+
+ADM -> SYS : selects a patient profile
+deactivate ADM
+activate SYS
+
+SYS --> ADM : shows selected patient profile
+deactivate SYS
+activate ADM
+
+ADM -> SYS : edits patient profile
+deactivate ADM
+activate SYS
+
+SYS --> ADM : confirms the update of the patient profile
+deactivate SYS
+
+
+@enduml

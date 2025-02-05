@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.3 Process View (Level 2)"
+
+autonumber
+
+actor Doctor
+participant "<<Container C4>>\n Visualization" as VISU
+participant "<<Container C4>>\n Backoffice" as BACK
+
+activate Doctor
+Doctor -> VISU : Wants to add a Medical Condition.
+activate VISU
+VISU --> Doctor : Asks for the input.
+Doctor -> VISU : Gives the right variables.
+VISU -> BACK : addMedicalCondition(id, designation,\ndescription, symptoms)
+activate BACK
+BACK --> VISU : Success message
+deactivate BACK
+VISU --> Doctor : Success message
+deactivate VISU
+@enduml

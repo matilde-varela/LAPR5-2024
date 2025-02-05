@@ -1,0 +1,37 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+hide empty attributes
+skinparam classBackgroundColor beige
+skinparam ArrowColor #222222
+
+
+entity User  <<entity>>{}
+entity Staff <<entity>>{}
+entity Patient  <<entity>>{}
+entity Doctor <<entity>>{}
+entity Appointment <<entity>>{}
+entity OperationRequest <<entity>>{}
+entity OperationType <<entity>> {}
+entity OperationTypeRecord <<entity>> {}
+entity Room <<entity>>{}
+entity Specialization <<entity>> {}
+
+
+
+User <-up-- "1" Staff
+User <-up-- "0..1" Patient
+Doctor ---> "1" Staff : is a
+Staff ---> "1" Specialization : specializes in
+OperationRequest --> "1" Doctor : request by
+OperationRequest --> "1" Patient : made for
+Appointment ---> "1" OperationRequest : scheduling of
+OperationRequest ---> "1" OperationType : defined by
+OperationType "1" <-- OperationTypeRecord : versions
+Appointment ---> "1" Room : associated with
+
+
+
+
+@enduml
+

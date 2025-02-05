@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.3 Process View (Level 1)"
+
+autonumber
+
+actor Patient
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+Patient -> SYS : wants to delete their account
+activate SYS
+
+SYS --> Patient : sends confirmation email
+deactivate SYS
+activate Patient
+
+Patient -> SYS : confirms account deletion decision
+deactivate Patient
+activate SYS
+
+SYS --> Patient : confirms user's account deletion
+deactivate SYS
+
+
+@enduml

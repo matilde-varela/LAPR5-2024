@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.2 - System Sequence Diagram"
+
+autonumber
+
+actor BackofficeUser as USER
+participant System as SYS
+
+activate USER
+
+USER -> SYS : requests the alteration of the password
+activate SYS
+
+SYS --> USER : sends password reset link via email
+
+USER -> SYS : access the link and provides a new password
+
+SYS --> USER : confirms the password follows the rules \n gives confirmation of the alteration of the password
+deactivate SYS
+
+
+@enduml

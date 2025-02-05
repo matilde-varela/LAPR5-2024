@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.8. Process View (Level 1)"
+
+actor Doctor as DOC
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate DOC
+DOC -> SYS : create surgery appointment
+activate SYS
+
+SYS --> DOC : success/insucess
+deactivate SYS
+deactivate DOC
+
+@enduml

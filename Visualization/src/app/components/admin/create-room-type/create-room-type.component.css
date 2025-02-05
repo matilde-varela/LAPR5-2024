@@ -1,0 +1,143 @@
+.main-title {
+    font-family: 'Poppins', monospace;
+    font-size: 45px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #0066cc, #45a0a0);    
+    color: #ffffff; /* Cor do texto do título */
+    padding: 1rem 2rem; /* Espaçamento ao redor do título */
+    border-radius: 8px; /* Bordas arredondadas */
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192); /* Sombra sutil no texto */
+    margin-left: 200px ;
+    max-width: 50%; /* Limita a largura do título */
+  }
+  
+  /* Estilo do botão */
+  .menu-button {
+    margin: 20px auto; /* Espaço acima e abaixo do botão */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #0066cc;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.3s, color 0.3s;
+    display: block; /* Faz o botão se comportar como um bloco */
+    text-align: center;
+  }
+  
+  .menu-button:hover {
+    background-color: #45a0a0;
+  }
+  
+  .page {
+    overflow-y: scroll;
+  }
+  
+  .conteudo {
+    margin-top: 2%;
+    margin-left: 17%; 
+    margin-right: 0.5%;
+    max-width: calc(100% - 17%); 
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .input-field {
+    margin-left: 200px ;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-right: 30px;
+    position: relative;
+  }
+  
+  .input-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .input-field input.invalid-placeholder {
+    border: 2px solid red;
+    border-color: red; /* Red border when invalid */
+  }
+  
+  .input-field input.invalid-placeholder::placeholder {
+    color: red; /* Red placeholder text */
+  }
+  
+  .input-field select {
+    width: calc(100% + 21px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .input-field select:required:invalid {
+    color: #666;
+  }
+  
+  /* Button container */
+  .button {
+  display: flex;
+  justify-content: center; /* Center the buttons horizontally */
+  gap: 20px; /* Space between buttons */
+  margin-top: 20px;
+  width: calc(100% - 12%); /* Take into account the sidebar width */
+  margin-left: 12%; /* Offset the container from the sidebar */
+  }
+  
+  /* Submit button styling */
+  .add-button-submit {
+  background-color: #0074d9;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  }
+  
+  .add-button-submit:hover {
+  background-color: #0056b3;
+  }
+  
+  /* Clear button styling */
+  .add-button-clear {
+  background-color: #0074d9; /* Red color for 'Clear Input' button */
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  }
+  
+  /* Make both buttons look consistent in terms of size */
+  .add-button-submit,
+  .add-button-clear {
+  width: 150px; /* Fixed width for uniformity */
+  text-align: center; /* Center text */
+  }
+  
+  .add-button-clear:hover {
+  background-color: #0056b3; /* Adjust the hover color as needed */
+  }
+  
+  .message {
+    margin-left: 17%; 
+    margin-right: 0.5%;
+    max-width: calc(100% - 17%); 
+    padding: 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }

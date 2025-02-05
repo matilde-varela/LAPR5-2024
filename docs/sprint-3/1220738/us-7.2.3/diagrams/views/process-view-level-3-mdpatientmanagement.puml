@@ -1,0 +1,51 @@
+@startuml
+title "US 7.2.3 Process View (Level 3) | MDPatientManagement"
+
+participant "<<Route>>\n StaffRoute" as ROUTE
+participant "<<Controller>>\n StaffController" as CONTROL
+participant "<<Service>>\n AllergyService" as STAFFSERV
+participant "<<Repository>>\n AllergyRepository" as ALLERGYREPO
+participant "<<DTO>>\n AllergyListDto" as ALLERGYLISTDTO
+participant "<<Domain>>\n Allergy" as ALLERGY
+
+[o-> ROUTE : GET()
+note right : getting the \nlist of profiles
+
+Activate ROUTE
+
+ROUTE -> CONTROL : GetAllAllergies()
+
+Activate CONTROL
+
+CONTROL -> STAFFSERV : GetAllSync()
+Activate STAFFSERV
+
+STAFFSERV -> ALLERGYREPO : GetAllSync()
+Activate ALLERGYREPO
+
+ALLERGYREPO --> STAFFSERV : var list = List<Staff>
+Deactivate ALLERGYREPO
+
+STAFFSERV -> ALLERGYLISTDTO**
+
+loop for every profile in listOfAllergies
+STAFFSERV -> ALLERGY : toDTO()
+activate ALLERGY
+ALLERGY --> STAFFSERV : allergyDTO
+deactivate ALLERGY
+STAFFSERV -> ALLERGYLISTDTO : listAdd(allergyDTO)
+activate ALLERGYLISTDTO
+ALLERGYLISTDTO --> STAFFSERV : return
+deactivate ALLERGYLISTDTO
+end
+
+STAFFSERV --> CONTROL : allergiesListDto
+Deactivate STAFFSERV
+
+CONTROL -> CONTROL : Ok(allergiesListDto)
+
+CONTROL --> ROUTE : json
+Deactivate CONTROL
+<-- ROUTE : json
+deactivate ROUTE
+@enduml

@@ -1,0 +1,40 @@
+<body>
+    <div>
+        <app-side-bar-doctor></app-side-bar-doctor>
+    </div>
+    <header>
+        <h1 class="main-title">Add Operation Request to Patient Medical History</h1>
+    </header>
+
+    <div class="information-input">
+        <p style="margin-left: 200px;" font-family="'Poppins', monospace">Insert the following information before
+            submitting:</p>
+
+        <form #operationRequestToPatientForm="ngForm" (ngSubmit)="onSubmit(operationRequestToPatientForm)" novalidate>
+            <!-- Existing input fields -->
+            <div class="input-field">
+                <input name="patientId" #patientId="ngModel" [(ngModel)]="addRemoveFromPatient.patientId"
+                    placeholder="PatientId" [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="patientId.invalid && patientId.touched" />
+                <span></span>
+            </div>
+
+            <div class="input-field">
+                <input name="operationRequestId" #operationRequestId="ngModel"
+                    [(ngModel)]="addRemoveFromPatient.operationRequestId" placeholder="OperationRequestId"
+                    [disabled]="isSubmitted" required
+                    [class.invalid-placeholder]="operationRequestId.invalid && operationRequestId.touched" />
+                <span></span>
+            </div>
+
+            <div class="button">
+                <button type="submit" class="add-button-submit"
+                    [disabled]="operationRequestToPatientForm.invalid || isSubmitted">Submit</button>
+                <button type="button" class="add-button-clear" (click)="clearForm()">Clear Input</button>
+            </div>
+        </form>
+
+    </div>
+    <br>
+    <app-message></app-message>
+</body>

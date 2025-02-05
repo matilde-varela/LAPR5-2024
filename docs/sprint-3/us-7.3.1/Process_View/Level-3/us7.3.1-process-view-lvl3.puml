@@ -1,0 +1,36 @@
+@startuml
+
+title "US 7.3.1 - Process View MDBackoffice [Level 3]"
+
+autonumber
+participant "Routing" as ROUTE <<route>>
+participant "OperationDistributionInitialDto" as InitialDTO <<dto>>
+participant "OperationRequestController" as CTRL <<controller>>
+participant "OperationRequestService" as SVC <<service>>
+participant "AppointmentRepository" as IEL <<repository>>
+
+[o-> ROUTE: PUT api/OperationRequest/put-DistributeOperations
+activate ROUTE
+
+ROUTE -> InitialDTO **
+
+ROUTE -> CTRL: distributeOperationRequestsByRooms(dto)
+activate CTRL
+
+CTRL ->  SVC: distributeOperationRequestsByRooms(dto.roomList, dto.operationList)
+activate SVC
+
+SVC -> : distributeOperationRequestsByRooms
+
+SVC <-o] : operationDistribution
+
+SVC --> CTRL : operationDistribution
+deactivate SVC
+
+CTRL --> ROUTE: operationDistribution
+deactivate CTRL
+
+[o<-- ROUTE : ok(operationDistribution)
+deactivate ROUTE
+
+@enduml

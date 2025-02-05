@@ -1,0 +1,66 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.11. Process View (Level 3 | Visualization)"
+
+autonumber
+actor "Admin" as USER
+participant "EditStaff" as UPP <<component>>
+participant "StaffService" as PS <<service>>
+
+USER -> UPP : asks to edit staff profile
+activate UPP
+
+UPP -> PS : getStaffProfiles()
+activate PS
+
+PS ->o] : GET: api/get-staffs
+
+PS <--o] : Ok(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: shows list of staff profiles
+deactivate UPP
+
+USER-> UPP : selects an staff profile
+activate UPP
+
+USER <-- UPP : shows selected staff profile
+deactivate UPP
+
+USER -> UPP : asks to edit staff profile
+activate UPP
+
+UPP -> PS : editStaffProfile(json)
+activate PS
+
+PS ->o] : PUT: api/edit-staff
+
+PS <--o] : Accepted(StaffDto)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+USER -> UPP : after contact information change is confirmed
+activate UPP
+
+UPP -> PS : ConfirmEmailStaff(json)
+activate PS
+
+PS ->o] : PUT: api/confirm-email-staff
+
+PS <--o] : ok(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+
+@enduml

@@ -1,0 +1,55 @@
+@startuml
+
+title "US 6.3.X - Process View [Level 2]"
+
+autonumber
+
+actor Admin as ADM
+participant "Visualization" as VIS <<Container C4>>
+participant "MDBackoffice" as SYS <<Container C4>>
+
+activate ADM
+ADM -> VIS : schedule operations
+activate VIS
+
+VIS -> SYS: GetAll()
+activate SYS
+
+SYS --> VIS: operationRequests
+deactivate SYS
+
+VIS -> SYS: GetOperatingRooms()
+activate SYS
+
+SYS --> VIS: operatingRooms
+deactivate SYS
+
+VIS --> ADM: select needed information to schedule
+deactivate VIS
+
+ADM -> VIS: selects information
+activate VIS
+
+VIS -> SYS: GetAllStaff()
+activate SYS
+
+SYS --> VIS: staff
+deactivate SYS
+
+VIS --> ADM: select staff for each operation
+deactivate VIS
+
+ADM -> VIS: selects staff for each operation
+activate VIS
+
+VIS -> SYS: ScheduleOperation(ScheduleInformation)
+activate SYS
+
+SYS --> VIS: schedule
+deactivate SYS
+
+VIS --> ADM : grants access to features
+deactivate VIS
+deactivate ADM
+
+@enduml

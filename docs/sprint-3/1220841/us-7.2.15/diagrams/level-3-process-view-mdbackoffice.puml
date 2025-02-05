@@ -1,0 +1,50 @@
+@startuml
+
+title "US 7.2.15 - Process View [Level 3]"
+
+autonumber
+participant "SpecializationRoute" as ROUTE <<route>>
+participant "SpecializationDto" as pat_dto <<dto>>
+participant "SpecializationController" as CTRL <<controller>>
+participant "SpecializationService" as SVC <<service>>
+participant "SpecializationRepository" as REPO <<repository>>
+participant "SpecializationDTO" as DTO <<dto>>
+
+
+[o-> ROUTE: GET  api/Specialization/filtered?Params
+activate ROUTE
+note right of ROUTE:**Params**: **[optional]** code, description, designation
+
+ROUTE -> CTRL: GetSpecializationsByFilters(filters)
+activate CTRL
+
+note right of CTRL: **filters** represent the various variables provided as parameters.
+
+CTRL -> SVC: GetSpecializationByFiltersAsync(filters)
+activate SVC
+
+SVC -> REPO : FindAllConditioned(filters)
+activate REPO
+REPO --> SVC : specializations
+deactivate REPO
+
+SVC -> SVC: ConvertSpecializationToDto(specializations)
+activate SVC
+
+loop for all the specializations
+        SVC -> DTO ** : create(code,designation,description)
+end loop
+
+
+SVC --> SVC : specializationsDtos
+deactivate SVC
+
+SVC --> CTRL: specializationsDTOs
+deactivate SVC
+
+CTRL --> ROUTE: specializationsDTOs
+deactivate CTRL
+
+[o<-- ROUTE: specializationsDTOs
+deactivate ROUTE
+@enduml

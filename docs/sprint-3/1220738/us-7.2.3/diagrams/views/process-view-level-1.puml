@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.3 Process View (Level 1)"
+
+autonumber
+
+actor Doctor
+participant "<<System (C4)>>\n Healthcare System" as SYS
+
+activate Doctor
+Doctor -> SYS : Wants to search\nfor an allergy.
+activate SYS
+
+SYS --> Doctor : Shows list of allergies\nin the system.
+deactivate SYS
+
+deactivate Doctor
+deactivate SYS
+@enduml

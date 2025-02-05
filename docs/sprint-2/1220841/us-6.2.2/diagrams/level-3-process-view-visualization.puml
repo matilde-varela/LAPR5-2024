@@ -1,0 +1,29 @@
+@startuml
+
+title "US 6.2.2 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Patient" as USER 
+participant "UpdatePatientProfile" as UPP <<component>> 
+participant "PatientService" as PS <<service>>
+
+activate USER
+USER -> UPP : update patient's user profile
+activate UPP
+
+UPP -> PS : updateProfile(UpdatedInformationPatientProfile)
+activate PS
+
+PS ->o] : PUT: /api/Patient
+
+PS <--o] : Accepted(PatientDto)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+deactivate USER
+
+
+@enduml

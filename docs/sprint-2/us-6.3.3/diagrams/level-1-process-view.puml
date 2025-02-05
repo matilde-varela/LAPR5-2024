@@ -1,0 +1,24 @@
+@startuml
+
+title "US 6.3.X - Process View [Level 1]"
+
+autonumber
+
+actor Admin as ADM
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+activate ADM
+ADM -> SYS : schedule operations
+activate SYS
+
+SYS --> ADM: select needed information to schedule
+deactivate SYS
+
+ADM -> SYS: selects information
+activate SYS
+
+SYS --> ADM : grants access to features
+deactivate SYS
+deactivate ADM
+
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.1.2 Process View (Level 2)"
+
+autonumber
+
+actor User
+participant "<<Container C4>>\n Visualization" as VISU
+participant "<<Container C4>>\n Backoffice" as BACK
+
+activate User
+User -> VISU : Login Menu
+activate VISU
+
+VISU -> BACK : LoginInternal()\n/\nLoginExternal()
+activate BACK
+
+VISU <-- BACK : token()
+deactivate BACK
+
+User <-- VISU : <Role> Menu
+deactivate VISU
+deactivate User
+
+@enduml

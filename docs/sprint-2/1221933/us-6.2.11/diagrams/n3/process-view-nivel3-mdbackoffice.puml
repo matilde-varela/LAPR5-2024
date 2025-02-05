@@ -1,0 +1,198 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.11. Process View (Level 3 | MDBackoffice)"
+
+autonumber
+
+participant "route:\nEditStaffRoute" as ROUTE
+participant "dto:\nEditStaffDTO" as UpdateDTO
+participant "controller:\nStaffController" as CTRL
+
+participant "service:\nStaffService" as SER
+participant "repository:\nStaffRepo" as REPO
+participant "dto:\nStaffDTO" as DTO
+participant "domain:\nStaff" as Staff
+participant "service:\nUserService" as UserServ
+participant "domain:\nUser" as USER
+participant "service:\nUserManager" as UserMan
+
+participant "service:\nLogService" as logService
+
+participant "dto:\nEmailMessageDTO" as EmailMessDTO
+
+participant "service:\nEmailService" as EMAILServ
+participant "adapter:\nEmailAdapter" as EMAILAdapt
+
+
+
+
+[o-> ROUTE : GET()
+activate ROUTE
+
+ROUTE -> CTRL : getStaffProfiles()
+activate CTRL
+
+CTRL -> SER : getStaffProfiles()
+activate SER
+
+SER -> REPO : findAll()
+activate REPO
+
+REPO --> SER : StaffProfilesList
+deactivate REPO
+
+loop for all the profiles in the list
+SER -> DTO ** : toDTO(StaffProfile)
+
+
+end loop
+
+SER --> CTRL : staffProfileDTOList
+deactivate SER
+
+CTRL --> ROUTE : staffProfileDTOList
+deactivate CTRL
+
+<- ROUTE : ok(staffProfileDTOList)
+deactivate ROUTE
+
+|||
+
+[o-> ROUTE : PUT(json)
+activate ROUTE
+
+ROUTE -> UpdateDTO ** : toDTO(json)
+
+
+ROUTE -> CTRL : editStaffProfile(id, editStaffDto)
+activate CTRL
+
+CTRL -> SER : UpdateAsync(id, editStaffDto)
+activate SER
+
+SER -> REPO : GetByIdAsync(id)
+activate REPO
+
+REPO --> SER : staff
+deactivate REPO
+
+opt when contact information is changed
+
+SER -> SER : VerificationsToSendEmail(phoneChange, emailChange, addressChange, staff)
+activate SER
+
+SER --> SER : changedInformation
+deactivate SER
+
+SER -> SER : EditStaffProfile(oldEmail, dto.Email, emailChange, staff, changedInformation)
+activate SER
+
+SER -> Staff : DeactivateProfile()
+activate Staff
+deactivate Staff
+
+SER -> UserServ : EditStaffUserProfile(oldEmail, newEmail, staffId, emailChange, changedInformation)
+activate UserServ
+
+UserServ -> UserMan : FindByEmailAsync(email)
+activate UserMan
+
+UserMan --> UserServ : user or exception
+deactivate UserMan
+
+UserServ -> UserMan : GenerateChangeEmailTokenAsync(user, newEmail)
+activate UserMan
+UserMan --> UserServ : token
+deactivate UserMan
+
+UserServ -> UserMan : ChangeEmailAsync(user, newEmail, token)
+activate UserMan
+UserMan --> UserServ : result
+deactivate UserMan
+
+UserServ -> USER : changeStatus(false)
+activate USER
+deactivate USER
+
+UserServ -> UserMan : GenerateEmailConfirmationToken(user)
+activate UserMan
+UserMan --> UserServ : emailConfigToken
+deactivate UserMan
+
+UserServ -> UserServ : SendContactInformationConfirmationChange(user, oldEmail,\n emailConfigToken, staffId, changedInformation)
+activate UserServ
+
+UserServ -> UserServ : ConfigureUrlPasswordConfirmation(token, user, staffId)
+activate UserServ
+deactivate UserServ
+
+UserServ -> UserServ : SendEmail(email, head, body)
+activate UserServ
+
+UserServ -> EmailMessDTO** : toDto(emailMessage)
+
+UserServ -> EMAILServ : sendProfileEditEmail(emailDto)
+activate EMAILServ
+
+EMAILServ -> EMAILAdapt : sendEmail(email)
+activate EMAILAdapt
+deactivate EMAILAdapt
+
+EMAILServ --> UserServ :
+deactivate EMAILServ
+
+deactivate UserServ
+|||
+deactivate UserServ
+|||
+end opt
+
+UserServ --> SER :
+deactivate UserServ
+deactivate SER
+
+opt Check and update Staff fields
+SER -> Staff : ChangePhone(Phone)
+activate Staff
+deactivate Staff
+
+SER -> Staff : ChangeEmail(Email)
+activate Staff
+deactivate Staff
+
+SER -> Staff : ChangeAddress(Address)
+activate Staff
+deactivate Staff
+
+SER -> Staff : ChangeSpecialization(Specialization)
+activate Staff
+deactivate Staff
+end opt
+
+SER -> logService : CreateEditLog(Id, Type, log)
+activate logService
+deactivate logService
+
+SER -> DTO ** : toDTO(staff)
+
+SER --> CTRL : staffDto
+deactivate SER
+
+
+CTRL --> ROUTE : staffDto
+deactivate CTRL
+
+alt success
+[o<-- ROUTE : 200 OK
+
+else failure
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+
+
+
+@enduml

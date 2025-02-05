@@ -1,0 +1,29 @@
+@startuml
+
+title "US 7.2.13 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Admin" as USER 
+participant "EditSpecialization" as UPP <<component>> 
+participant "SpecializationService" as PS <<service>>
+
+activate USER
+USER -> UPP : edit specialization
+activate UPP
+
+UPP -> PS : EditSpecialization(EditSpecializationDto)
+activate PS
+
+PS ->o] : PUT: /api/specialization
+
+PS <--o] : Accepted(SpecializationDto)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+deactivate USER
+
+
+@enduml

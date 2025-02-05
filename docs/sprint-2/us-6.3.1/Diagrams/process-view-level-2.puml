@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.3.1 Process View (Level 2)"
+
+autonumber
+
+actor Admin
+participant "<<Container C4>>\n Visualization" as VISU
+participant "<<Container C4>>\n Backoffice" as BACK
+participant "<<Container C4>>\n Planning" as PLAN
+
+activate Admin
+Admin -> VISU : wants better scheduling for a surgery
+activate VISU
+VISU -> BACK : obtainBetterScheduling(roomNumber, date, opCode)
+activate BACK
+BACK -> PLAN : obtainBetterScheduling(roomNumber, date, opCode)
+activate PLAN
+PLAN --> BACK : return
+deactivate PLAN
+BACK --> VISU : success
+deactivate BACK
+VISU --> Admin : success
+deactivate VISU
+
+@enduml

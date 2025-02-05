@@ -1,0 +1,37 @@
+@startuml
+
+title "US 6.2.10 - Process View [Level 3] - Get Specializations"
+
+autonumber
+participant "SpecializationRoute" as ROUTE <<route>>
+participant "SpecializationController" as CTRL <<controller>>
+participant "SpecializationService" as SVC <<service>>
+participant "SpecializationDTO" as SVC <<dto>>
+participant "SpecializationRepository" as REPO <<repository>>
+
+[o-> ROUTE: GET(json) api/Specializations
+activate ROUTE
+
+ROUTE -> CTRL: GetAllAvailable()
+activate CTRL
+
+CTRL -> SVC: GetAllAsync()
+activate SVC
+
+SVC -> REPO : GetAllAsync()
+activate REPO
+REPO --> SVC : specializations
+deactivate REPO
+
+SVC -> SVC: toDto(specializations)
+activate SVC
+SVC --> SVC: specializationDTOs
+deactivate SVC
+
+SVC --> CTRL: specializationDTOs
+deactivate SVC
+CTRL --> ROUTE: specializationDTOs
+deactivate CTRL
+[o<-- ROUTE: 200 Ok
+deactivate ROUTE
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.17 Process View (Level 2)"
+
+autonumber
+
+actor Admin
+participant "<<Container C4>>\n Visualization" as VISU
+participant "<<Container C4>>\n Backoffice" as BACK
+
+activate Admin
+Admin -> VISU : Asks to create a room.
+activate VISU
+VISU -> BACK : createRoom(id,\nmaintenanceSlots,\navailableEquipment,\ncapacity, type)
+activate BACK
+BACK --> VISU : room
+deactivate BACK
+VISU --> Admin : room
+deactivate VISU
+@enduml

@@ -1,0 +1,71 @@
+/* General Reset */
+:host {
+    display: block;
+    height: auto; /* Let height adjust based on content */
+    width: 100vw;
+}
+
+/* Remove body margin */
+body {
+    margin: 0;
+}
+
+/* Parent container for canvas */
+#parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 20px auto; /* Add spacing above the canvas */
+}
+
+/* Canvas Styling */
+canvas {
+    display: block;
+    width: 83%;
+    height: auto; /* Let the height adjust based on content */
+    margin: 0 auto;
+    margin-left: 200px;
+}
+
+/* Overlay Styling */
+#roomInfoOverlay {
+    width: calc(85% - 200px); /* Align width with the canvas */
+    max-width: 750px; /* Limit maximum width */
+    margin: 28px auto; /* Center overlay with spacing above and below */
+    margin-left: 200px;
+    padding: 10px;
+    line-height: 1.0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+#roomInfoOverlay p {
+    margin: 5px 0;
+  }
+
+/* Subwindows Panel Styles */
+#subwindows-panel {
+    position: relative;
+    width: auto; /* Adjust width to content */
+}
+
+/* Title Styles */
+.main-title {
+    font-family: 'Poppins', monospace;
+    font-size: 45px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #0066cc, #45a0a0);
+    color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192);
+    margin: 0 2rem; /* Horizontal margin around the title */
+    margin-left: 14%; /* Aligns title with canvas */
+    max-width: 50%; /* Limits the title width */
+}

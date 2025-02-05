@@ -1,0 +1,29 @@
+@startuml
+
+title "US 7.2.11 - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Admin" as USER
+participant "CreateSpecialization" as UPP <<component>>
+participant "SpecializationService" as PS <<service>>
+
+USER -> UPP : inserts specialization's data (SNOMED code,\n designation, description (optional))
+activate UPP
+
+UPP -> PS : addSpecialization(SNOMED code,\n designation, description (optional))
+activate PS
+
+PS ->o] : POST: api/create-Specialization
+
+PS <--o] : 200 Ok
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+
+
+
+@enduml

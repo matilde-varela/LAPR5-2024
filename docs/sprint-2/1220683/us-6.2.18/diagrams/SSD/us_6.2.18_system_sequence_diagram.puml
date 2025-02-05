@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 6.2.18 - System Sequence Diagram"
+
+autonumber
+
+participant Admin as ADM
+participant System as SYS
+
+ADM -> SYS : wants to create a new operation type
+activate ADM
+activate SYS
+
+SYS --> ADM : asks for the operation type name
+
+ADM -> SYS : provides the operation name
+
+SYS --> ADM : asks for the list of required staff by specialization
+
+loop while there are vacancies in the list
+
+ADM -> SYS : defines a required staff configuration
+
+end loop
+
+loop for each phase of an operation type
+
+SYS --> ADM : asks to indicate an estimated duration
+
+ADM -> SYS : provides an estimated duration
+
+end loop
+
+SYS --> ADM : asks to indicate a total estimated duration
+
+ADM -> SYS : provides a total estimated duration
+
+SYS --> ADM : confirms the creation of a new operation type
+
+deactivate ADM
+deactivate SYS
+
+@enduml

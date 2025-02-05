@@ -1,0 +1,172 @@
+@startuml
+title "US 5.1.18. Process View (Level 3)"
+
+participant "<<Route>>\n OperationRequestRoute" as ROUTE
+participant "<<Controller>>\n OperationRequestController" as CONTROL
+participant "<<DTO>>\n IdPassDto" as OPRESDTO
+participant "<<DTO>>\n AddOrRemoveFromPatientDto" as REMOVEDto
+participant "<<Service>>\n OperationRequestService" as SERV
+participant "<<Service>>\n UserService" as USERServ
+participant "<<Repository>>\n UserRepository" as USERRepo
+participant "<<Repository>>\n StaffRepository" as STAFFRepo
+participant "<<Repository>>\n OperationRequestRepository" as REPO
+participant "<<DTO>>\n OperationRequestListDTO" as LISTDTO
+participant "<<Domain>>\n OperationRequest" as OPRES
+participant "<<Repository>>\n PatientRepository" as PREPO
+participant "<<Domain>>\n Patient" as PAT
+
+[o-> ROUTE : GET(json)
+note right : getting the \nlist of \nall requests
+
+Activate ROUTE
+
+ROUTE -> CONTROL : GetAllFromDoctor()
+
+Activate CONTROL
+
+CONTROL -> CONTROL : string? userEmail =\nUser.FindFirstValue(ClaimTypes.Email)
+
+CONTROL -> SERV : GetAllFromDoctor(userEmail)
+Activate SERV
+
+SERV -> USERServ : FindByEmailAsync(userEmail)
+Activate USERServ
+USERServ -> USERRepo : FindByEmailAsync(userEmail)
+activate USERRepo 
+USERRepo --> USERServ : user
+deactivate USERRepo
+USERServ --> SERV : user
+deactivate USERServ 
+
+SERV -> STAFFRepo : FindStaffWithUserId(user.Id.ToString())
+activate STAFFRepo 
+STAFFRepo --> SERV : staff
+deactivate STAFFRepo
+
+SERV -> REPO : GetAllFromDoctorAsync(staff.Id.ToString())
+activate REPO
+REPO --> SERV : listOfRequests
+deactivate REPO
+
+SERV -> LISTDTO**
+loop for every OpRequest in listOfOpRequests
+SERV -> OPRES : toDTO()
+activate OPRES
+OPRES --> SERV : OpRequestListDto
+deactivate OPRES
+SERV -> LISTDTO : listAdd(opRequestDto)
+activate LISTDTO
+LISTDTO --> SERV : return
+deactivate LISTDTO
+end
+
+SERV --> CONTROL : opRequestListDTO
+Deactivate SERV
+
+CONTROL -> CONTROL : Ok(opRequestListDTO)
+
+CONTROL --> ROUTE : json
+Deactivate CONTROL
+<-- ROUTE : json
+
+Deactivate ROUTE
+
+note right : after choosing\n a request
+
+[o-> ROUTE : DELETE(json)
+note right : after getting\n the confirmation
+
+Activate ROUTE
+
+ROUTE -> CONTROL : DeleteOperationRequest(json)
+
+Activate CONTROL
+
+CONTROL -> OPRESDTO** : toDTO(json)
+
+CONTROL -> CONTROL : string? userEmail =\nUser.FindFirstValue(ClaimTypes.Email)
+
+CONTROL -> SERV : DeleteOperationRequest(idPassDto, userEmail)
+Activate SERV
+
+SERV -> USERServ : FindByEmailAsync(userEmail)
+Activate USERServ
+USERServ -> USERRepo : FindByEmailAsync(userEmail)
+activate USERRepo 
+USERRepo --> USERServ : user
+deactivate USERRepo
+USERServ --> SERV : user
+deactivate USERServ 
+
+SERV -> STAFFRepo : FindStaffWithUserId(user.Id.ToString())
+activate STAFFRepo 
+STAFFRepo --> SERV : staff
+deactivate STAFFRepo
+
+SERV -> REPO : GetByIdAsync(new OperationRequestId(id))
+activate REPO
+REPO --> SERV : opRequest
+deactivate REPO
+
+alt If status is "Requested", opRequestId matches and is from doctor
+SERV -> REPO : Remove(opRequest)
+activate REPO
+REPO --> SERV : opRequest
+deactivate REPO
+SERV -> SERV : CommitAsync()
+end
+
+SERV --> CONTROL : true
+deactivate SERV
+CONTROL --> CONTROL : Ok("Operation request successfully removed.")
+CONTROL --> ROUTE : json
+deactivate CONTROL
+
+<-- ROUTE : json
+deactivate ROUTE
+
+[o-> ROUTE : DELETE(json)
+Activate ROUTE
+
+ROUTE -> CONTROL : DeleteOperationRequestFromPatient(JSON)
+Activate CONTROL
+
+CONTROL -> REMOVEDto** : toDto(JSON)
+
+CONTROL -> SERV : DeleteOperationRequestFromPatient(\nremovingFromPatientDto.PatientId,\nremovingFromPatientDto.OperationRequestId,\nUser.FindFirstValue(ClaimTypes.Email))
+activate SERV
+
+SERV -> USERServ : FindByEmailAsync(userEmail)
+Activate USERServ
+USERServ -> USERRepo : FindByEmailAsync(userEmail)
+activate USERRepo 
+USERRepo --> USERServ : user
+deactivate USERRepo
+USERServ --> SERV : user
+deactivate USERServ 
+
+SERV -> STAFFRepo : FindStaffWithUserId(user.Id.ToString())
+activate STAFFRepo 
+STAFFRepo --> SERV : staff
+deactivate STAFFRepo
+
+SERV -> PREPO : GetByIdAsync(new MedicalRecordNumber(patientId))
+activate PREPO
+PREPO --> SERV : patient
+deactivate PREPO
+
+SERV -> PAT : RemoveRequestFromHistory(new OperationRequestId(operationRequestId)) 
+activate PAT
+deactivate PAT
+
+SERV -> SERV : CommitAsync()
+SERV --> CONTROL : true
+deactivate SERV
+
+CONTROL --> CONTROL : Ok("Operation request successfully removed from patient profile.")
+CONTROL --> ROUTE : json
+
+<-- ROUTE : json
+deactivate ROUTE
+
+@enduml

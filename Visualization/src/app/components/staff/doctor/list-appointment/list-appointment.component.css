@@ -1,0 +1,139 @@
+/* Main Title */
+.main-title {
+  font-family: 'Poppins', monospace;
+  font-size: 45px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #0066cc, #45a0a0);
+  color: #ffffff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192);
+  margin-left: 0px;
+  max-width: 50%;
+}
+
+/* Layout for the content section */
+.conteudo {
+  margin-left: 220px;
+  margin-right: 1rem;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 5px;
+}
+
+/* Styling for the operation request table */
+p-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  font-weight: bold;
+  background-color: #0066cc;
+  color: #fff;
+}
+
+td {
+  background-color: #fff;
+}
+
+/* Button styling inside action buttons */
+.action-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+button {
+  background-color: #0074d9;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Specific styling for the header */
+header {
+  margin-top: 2%;
+  margin-left: 220px;
+  text-align: center;
+}
+
+/* Adjusted layout for left-aligned text */
+.titulo {
+  text-align: left;
+}
+
+/* Styling for the content paragraphs */
+.conteudo p {
+  font-size: 18px;
+}
+
+/* Input Fields */
+.input-field {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.input-field label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.input-field select,
+.input-field textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+  resize: none;
+}
+
+/* Button Styles */
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.add-button-submit {
+  background-color: #0074d9;
+  color: #fff;
+}
+
+.add-button-submit:hover {
+  background-color: #0056b3;
+}
+
+.close-button {
+  background-color: #ff4d4d;
+  color: #fff;
+}
+
+.close-button:hover {
+  background-color: #cc0000;
+}

@@ -1,0 +1,30 @@
+.deletion-page {
+    width: 700px;
+    margin: 50px auto;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .deletion-page h1 {
+    font-family: 'Poppins', monospace;
+    font-size: 30px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #0066cc, #45a0a0);    
+    color: #ffffff; /* Cor do texto do título */
+    padding: 1rem 10rem; /* Espaçamento ao redor do título */
+    border-radius: 8px; /* Bordas arredondadas */
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.192); /* Sombra sutil no texto */
+    margin: auto;
+    max-width: 90%; /* Limita a largura do título */
+  }
+  
+  .deletion-page p {
+    margin-top: 20px;
+    font-size: 16px;
+  }
+
+  .page {
+    overflow-y: scroll;
+  }
+  

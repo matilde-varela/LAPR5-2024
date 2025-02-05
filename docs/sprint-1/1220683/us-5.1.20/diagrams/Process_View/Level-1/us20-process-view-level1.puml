@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title US 5.1.20 Process View (Level 1)
+
+autonumber
+
+actor Admin
+participant "<<system (C4)>>\n Healthcare System" as SYS
+
+Admin -> SYS : create new operation type
+activate SYS
+
+SYS --> Admin : ask to input operation type data
+deactivate SYS
+activate Admin
+
+Admin -> SYS : operation type data
+deactivate Admin
+activate SYS
+
+SYS --> Admin : operation type successfully created/error in data
+deactivate SYS
+
+@enduml

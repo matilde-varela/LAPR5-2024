@@ -1,0 +1,31 @@
+@startuml
+title "US 6.2.16. Process View - Visualization (Level 3)"
+
+actor Admin
+participant "<<Component>>\n OperationType" as USER
+participant "<<Service>>\n OperationTypeService" as SERV
+
+activate Admin
+    Admin -> USER : get all active profiles
+    activate USER
+        USER -> SERV : GetAllOpTypes()
+        activate SERV
+            SERV ->o] : GET: api/Get-AllOpTypes()
+            SERV <--o] : Ok(operationTypes)
+            SERV --> USER : operationTypes
+        deactivate SERV
+        USER --> Admin : operationTypes
+    deactivate USER
+
+    Admin -> USER : edit an opType
+        activate USER
+            USER -> SERV : EditOperationType(\nid, newName,\nnewEstimatedDuration,\nlistOfPhases, listOfStaff)
+            activate SERV
+                SERV ->o] : PUT: api/Edit-OperationType(\nid, newName,\nnewEstimatedDuration,\nlistOfPhases, listOfStaff)
+                SERV <--o] : Ok("Operation type succefully edited.")
+                SERV --> USER : success
+            deactivate SERV
+            USER --> Admin : success
+        deactivate USER
+deactivate Admin
+@enduml

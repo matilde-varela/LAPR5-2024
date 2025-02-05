@@ -1,0 +1,117 @@
+@startuml
+
+title "US 6.3.X - Process View [Level 3 | MDBackoffice]"
+
+autonumber
+participant "OperationRequestRoute" as ROUTE <<route>>
+participant "ScheduleInformationDto" as DTO <<dto>>
+participant "OperationRequestController" as CTRL <<controller>>
+participant "OperationRequestService" as SVC <<service>>
+participant "OperationRequestRepository" as OR_REPO <<repository>>
+participant "StaffRepository" as S_REPO <<repository>>
+participant "RoomRepository" as R_REPO <<repository>>
+participant "ScheduleAdapter" as APT <<adapter>>
+participant "Appointment" as APPTMT <<domain>>
+participant "AppointmentRepository" as A_REPO <<repository>>
+
+[o-> ROUTE: POST(json) /api/OperationRequest/Schedule
+activate ROUTE
+
+ROUTE -> DTO **: create(json)
+
+ROUTE -> CTRL: ScheduleOperations(scheduleInformation)
+activate CTRL
+
+CTRL ->  SVC: ScheduleOperations(scheduleInformation)
+activate SVC
+
+loop for each operation
+
+SVC -> OR_REPO: FindByIdAsync(operationRequestId)
+activate OR_REPO
+deactivate OR_REPO
+
+loop for all staff
+
+SVC -> S_REPO: FindByIdAsync(staffId)
+activate S_REPO
+deactivate S_REPO
+
+end loop
+end loop
+
+SVC -> R_REPO: FindByIdAsync(roomId)
+activate R_REPO
+deactivate R_REPO
+
+
+SVC -> APT: ScheduleOperations(operationsWithAssignedStaffDto, roomDto, day, algorithmType, criteria)
+activate APT
+note right of APT: **operationsWithAssignedStaffDto** is a Map\nwith the key being the\noperationRequestDto and the Value is a\nlist of the assigned staff.
+
+note right of APT: it is here that the data will be adapted:\n* from backoffice to planning;\n*from planning to backoffice;
+|||
+APT -> APT: AdaptDataToPlanning(operationsWithAssignedStaffDto, roomDto, day)
+activate APT
+
+APT --> APT: adaptedData
+deactivate APT
+|||
+APT ->o] : POST: planning-api/schedule-operation
+
+APT <--o] : Ok(scheduledOperations)
+|||
+APT -> APT: AdaptDataToBackoffice(scheduledOperations)
+activate APT
+note right of APT: **CHECK THIS**
+
+APT --> APT: scheduledOperations
+deactivate APT
+
+
+APT -> SVC: scheduledOperations
+deactivate APT
+
+SVC -> SVC: SaveSchedule(scheduledOperations)
+activate SVC
+
+loop for each scheduled operation
+
+SVC -> OR_REPO: FindByIdAsync(operationRequestId)
+activate OR_REPO
+deactivate OR_REPO
+
+SVC -> R_REPO: FindByIdAsync(roomId)
+activate R_REPO
+deactivate R_REPO
+
+SVC -> APPTMT: create(operationRequest,room,date,time,status)
+activate APPTMT
+deactivate APPTMT
+
+SVC -> A_REPO: save(appointment)
+activate A_REPO
+deactivate A_REPO
+
+end loop
+
+SVC --> SVC: success
+deactivate SVC
+
+SVC --> CTRL: success
+deactivate SVC
+
+CTRL --> ROUTE: success
+deactivate CTRL
+
+alt 
+[o<-- ROUTE : 200 Ok
+
+else
+
+[o<-- ROUTE : 400 Bad Request
+deactivate ROUTE
+end alt
+
+
+@enduml

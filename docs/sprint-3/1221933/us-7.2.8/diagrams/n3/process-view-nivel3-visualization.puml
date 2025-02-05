@@ -1,0 +1,27 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 7.2.8. Process View (Level 3 | Visualization)"
+
+autonumber
+actor "Admin" as USER
+participant "CreateAppointment" as UPP <<component>>
+participant "AppointmentService" as PS <<service>>
+
+USER -> UPP : create surgery appointment
+activate UPP
+
+UPP -> PS : CreateSurgeryAppointment(surgeryAppointmentInformation)
+activate PS
+
+PS ->o] : POST: api/Appointment
+
+PS <--o] : Ok(appointment)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+
+@enduml

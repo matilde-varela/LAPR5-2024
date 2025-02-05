@@ -1,0 +1,26 @@
+@startuml
+
+title "US 6.2.2 - Process View [Level 2]"
+
+autonumber
+
+actor Patient as ADM
+participant "Visualization" as VIS <<Container C4>>
+participant "MDBackoffice" as SYS <<Container C4>>
+
+activate ADM
+ADM -> VIS : update user profile
+activate VIS
+
+
+VIS -> SYS : EditPatientProfile(json)
+activate SYS
+
+SYS --> VIS: success/insucess
+deactivate SYS
+
+VIS --> ADM : success/insucess
+deactivate VIS
+deactivate ADM
+
+@enduml

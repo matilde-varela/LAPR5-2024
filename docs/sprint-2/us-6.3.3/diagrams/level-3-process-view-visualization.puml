@@ -1,0 +1,72 @@
+@startuml
+
+title "US 6.3.X - Process View [Level 3 | Visualization]"
+
+autonumber
+actor "Admin" as USER 
+participant "ScheduleOperation" as UPP <<component>> 
+participant "OperationRequestService" as PS <<service>>
+
+activate USER
+USER -> UPP : schedule operations
+activate UPP
+
+UPP -> PS: GetOperationRequests()
+activate PS
+
+PS ->o] : GET: api/OperationRequest/Get-AllOpRequests
+
+PS <--o] : Ok(operationRequests)
+
+PS --> UPP: operationRequests
+deactivate PS
+
+UPP -> PS: GetOperatingRooms()
+activate PS
+
+PS ->o] : GET: api/Room
+
+PS <--o] : Ok(rooms)
+
+PS --> UPP: rooms
+deactivate PS
+
+UPP --> USER: select needed information to schedule
+deactivate UPP
+
+USER -> UPP: selects information
+activate UPP
+
+UPP -> PS: GetAllStaff()
+activate PS
+
+PS ->o] : GET: api/Staff
+
+PS <--o] : Ok(staff)
+
+PS --> UPP: staff
+deactivate PS
+
+UPP --> USER: select staff for each operation
+deactivate UPP
+
+USER -> UPP: selects staff for each operation
+activate UPP
+
+UPP -> PS: ScheduleOperation(ScheduleInformation)
+activate PS
+
+PS ->o] : POST: /api/OperationRequest/Schedule
+
+PS <--o] : Ok()
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: success
+deactivate UPP
+deactivate USER
+
+
+
+@enduml

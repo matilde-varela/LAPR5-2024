@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+title "US 5.1.2. Process View (Level 3 | Visualization)"
+
+autonumber
+actor "Backoffice User" as USER
+participant "ResetPassword" as UPP <<component>>
+participant "UpdatePassword" as UPP2 <<component>>
+participant "PatientService" as PS <<service>>
+
+USER -> UPP : asks to change user password
+activate UPP
+
+UPP -> PS : resetPassword()
+activate PS
+
+PS ->o] : PUT: api/send-passwordemail
+
+PS <--o] : Ok(token)
+
+PS --> UPP: success
+deactivate PS
+
+UPP --> USER: sends password reset email
+deactivate UPP
+
+USER -> UPP2 : provides new password after clicking on the link
+activate UPP2
+
+UPP2 -> PS : updatePassword(json)
+activate PS
+
+PS ->o] : PUT: api/Update-UserPassword
+
+PS <--o] : Ok(token)
+
+PS --> UPP2: success
+deactivate PS
+
+UPP2 --> USER: success
+deactivate UPP2
+
+@enduml
